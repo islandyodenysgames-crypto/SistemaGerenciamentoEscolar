@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use App\Config\App;
+
 class Router
 {
     private array $routes = [];
@@ -16,39 +18,47 @@ class Router
     public function dispatch(): void
     {
         $method = $_SERVER['REQUEST_METHOD'];
-        $uri = $this->normalize(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
-        $base = '/SistemaFrequenciaEscolar/public';
+        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-        if (str_starts_with($uri, $base)) {
+        $base = rtrim(App::BASE_URL, '/');
+
+        if ($base !== '' && str_starts_with($uri, $base)) {
             $uri = substr($uri, strlen($base));
         }
 
         $uri = $this->normalize($uri);
 
         if (!isset($this->routes[$method][$uri])) {
+
             http_response_code(404);
-            echo "Página não encontrada";
+
+            echo "<h1>404</h1>";
+
+            echo "<p>Página não encontrada.</p>";
+
             return;
         }
 
         $action = $this->routes[$method][$uri];
 
         if (is_callable($action)) {
+
             $action();
+
             return;
         }
 
-        [$controller, $method] = $action;
+        [$controller, $controllerMethod] = $action;
 
         $instance = new $controller();
 
-        $instance->$method();
+        $instance->$controllerMethod();
     }
 
     private function normalize(string $uri): string
     {
-        if ($uri === '') {
+        if ($uri === '' || $uri === '/') {
             return '/';
         }
 
