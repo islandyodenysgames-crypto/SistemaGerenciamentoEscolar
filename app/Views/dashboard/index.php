@@ -4,7 +4,7 @@ component('page-header', [
 
     'title' => 'Dashboard',
 
-    'subtitle' => 'Visão geral do Sistema de Frequência Escolar'
+    'subtitle' => 'Bem-vindo ao Sistema de Frequência Escolar'
 
 ]);
 
@@ -36,7 +36,7 @@ component('stat-card', [
 
 component('stat-card', [
 
-    'icon' => 'check-circle',
+    'icon' => 'clipboard-check',
 
     'label' => 'Presentes',
 
@@ -55,5 +55,17 @@ component('stat-card', [
 ]);
 
 ?>
+
+</div>
+
+<div class="dashboard-content">
+
+    <?php component('dashboard-chart'); ?>
+
+    <?php component('quick-actions'); ?>
+
+    <?php component('calendar'); ?>
+
+    <?php component('recent-activities'); ?>
 
 </div>
