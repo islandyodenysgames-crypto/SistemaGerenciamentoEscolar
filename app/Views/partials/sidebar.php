@@ -1,88 +1,67 @@
-<aside class="sidebar" id="sidebar">
+<?php
 
-    <div class="sidebar-header">
+use App\Config\Menu;
 
-        <button
-            id="sidebarToggle"
-            class="sidebar-toggle"
-            type="button"
-            title="Recolher menu">
+$menu = Menu::items();
 
-            <i data-lucide="panel-left-close"></i>
+?>
 
-        </button>
+<aside
+    class="sidebar"
+    id="sidebar">
 
-        <div class="logo">
+    <div>
 
-            <div class="logo-icon">
+        <div class="sidebar-header">
 
-                <i data-lucide="graduation-cap"></i>
+            <button
+                class="sidebar-toggle"
+                id="sidebarToggle"
+                type="button">
 
-            </div>
+                <i data-lucide="panel-left-close"></i>
 
-            <div class="logo-text">
+            </button>
 
-                <strong>SFE</strong>
+            <div class="logo">
 
-                <small>Frequência Escolar</small>
+                <div class="logo-icon">
+
+                    <i data-lucide="graduation-cap"></i>
+
+                </div>
+
+                <div class="logo-text">
+
+                    <strong>SFE</strong>
+
+                    <small>Frequência Escolar</small>
+
+                </div>
 
             </div>
 
         </div>
 
+        <nav class="sidebar-menu">
+
+            <?php foreach ($menu as $item): ?>
+
+                <a
+                    href="<?= $item['url'] ?>"
+                    class="<?= $item['active'] ? 'active' : '' ?>">
+
+                    <i data-lucide="<?= $item['icon'] ?>"></i>
+
+                    <span><?= $item['title'] ?></span>
+
+                </a>
+
+            <?php endforeach; ?>
+
+        </nav>
+
     </div>
-
-    <nav class="sidebar-menu">
-
-        <a href="#" class="active">
-
-            <i data-lucide="layout-dashboard"></i>
-
-            <span>Dashboard</span>
-
-        </a>
-
-        <a href="#">
-
-            <i data-lucide="users"></i>
-
-            <span>Alunos</span>
-
-        </a>
-
-        <a href="#">
-
-            <i data-lucide="school"></i>
-
-            <span>Turmas</span>
-
-        </a>
-
-        <a href="#">
-
-            <i data-lucide="clipboard-check"></i>
-
-            <span>Frequência</span>
-
-        </a>
-
-        <a href="#">
-
-            <i data-lucide="chart-column"></i>
-
-            <span>Relatórios</span>
-
-        </a>
-
-        <a href="#">
-
-            <i data-lucide="settings"></i>
-
-            <span>Configurações</span>
-
-        </a>
-
-    </nav>
 
     <div class="sidebar-footer">
 
