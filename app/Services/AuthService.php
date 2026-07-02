@@ -20,7 +20,7 @@ class AuthService
         ");
 
         $stmt->execute([
-            'email' => $email
+            'email' => $email,
         ]);
 
         $user = $stmt->fetch();

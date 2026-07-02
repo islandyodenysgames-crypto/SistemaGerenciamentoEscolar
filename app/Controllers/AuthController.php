@@ -14,12 +14,18 @@ class AuthController extends Controller
 {
     public function login(): void
     {
-        $this->view('auth/login', [
-            'title' => 'Login - ' . app_name(),
-            'error' => Session::get('login_error'),
-        ], 'auth');
+        if (Session::has('user')) {
+            Response::redirect(base_url());
+        }
+
+        $error = Session::get('login_error');
 
         Session::remove('login_error');
+
+        $this->view('auth/login', [
+            'title' => 'Login - ' . app_name(),
+            'error' => $error,
+        ], 'auth');
     }
 
     public function authenticate(): void
