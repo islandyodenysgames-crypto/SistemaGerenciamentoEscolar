@@ -6,9 +6,13 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Config\App;
 use App\Core\App as Application;
+use App\Core\Session;
 
-// Configura o fuso horário da aplicação
+// Configuração da aplicação
 date_default_timezone_set(App::TIMEZONE);
+
+// Inicializa a sessão
+Session::start();
 
 // Inicializa a aplicação
 $app = new Application();
