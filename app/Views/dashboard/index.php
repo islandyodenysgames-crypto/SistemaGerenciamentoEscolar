@@ -1,8 +1,11 @@
 <?php
 
-component('page-title', [
+component('page-header', [
+
     'title' => 'Dashboard',
-    'subtitle' => 'Bem-vindo ao Sistema de Frequência Escolar'
+
+    'subtitle' => 'Visão geral do Sistema de Frequência Escolar'
+
 ]);
 
 ?>
@@ -12,27 +15,43 @@ component('page-title', [
 <?php
 
 component('stat-card', [
-    'icon' => '👨‍🎓',
+
+    'icon' => 'graduation-cap',
+
     'label' => 'Alunos',
-    'value' => '0'
+
+    'value' => 0
+
 ]);
 
 component('stat-card', [
-    'icon' => '🏫',
+
+    'icon' => 'school',
+
     'label' => 'Turmas',
-    'value' => '0'
+
+    'value' => 0
+
 ]);
 
 component('stat-card', [
-    'icon' => '✅',
+
+    'icon' => 'check-circle',
+
     'label' => 'Presentes',
-    'value' => '0'
+
+    'value' => 0
+
 ]);
 
 component('stat-card', [
-    'icon' => '❌',
+
+    'icon' => 'circle-x',
+
     'label' => 'Faltas',
-    'value' => '0'
+
+    'value' => 0
+
 ]);
 
 ?>

@@ -2,13 +2,13 @@
 
     <div class="stat-card-icon">
 
-        <?= $icon ?>
+        <i data-lucide="<?= $icon ?>"></i>
 
     </div>
 
-    <div class="stat-card-content">
+    <div class="stat-card-info">
 
-        <span class="stat-card-label">
+        <span>
 
             <?= $label ?>
 
