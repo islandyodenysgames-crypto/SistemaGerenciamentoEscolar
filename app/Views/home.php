@@ -1,17 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<h1>Bem-vindo ao Sistema de Frequência Escolar 👋</h1>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Sistema de Frequência Escolar</title>
-</head>
+<p>
 
-<body>
+Nossa arquitetura está pronta para começar o desenvolvimento.
 
-    <h1>🚀 Sistema de Frequência Escolar</h1>
-
-    <p>Nossa arquitetura MVC está funcionando.</p>
-
-</body>
-
-</html>
+</p>

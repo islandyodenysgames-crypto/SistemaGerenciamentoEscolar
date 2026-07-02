@@ -10,6 +10,12 @@ class View
     {
         extract($data);
 
+        ob_start();
+
         require dirname(__DIR__) . "/Views/{$view}.php";
+
+        $content = ob_get_clean();
+
+        require dirname(__DIR__) . "/Views/layouts/app.php";
     }
 }
