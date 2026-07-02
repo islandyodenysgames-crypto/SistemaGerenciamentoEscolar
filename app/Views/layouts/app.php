@@ -9,7 +9,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-    <title><?= $title ?? 'Sistema de Frequência Escolar' ?></title>
+    <title><?= $title ?? app_name() ?></title>
 
     <link
         rel="preconnect"
@@ -26,29 +26,29 @@
 
     <link
         rel="stylesheet"
-        href="/SistemaFrequenciaEscolar/public/assets/css/main.css">
+        href="<?= base_url('assets/css/main.css') ?>">
 
 </head>
 
 <body>
 
-<?php require __DIR__.'/../partials/sidebar.php'; ?>
+    <?php require __DIR__ . '/../partials/sidebar.php'; ?>
 
-<div class="app">
+    <div class="app">
 
-<?php require __DIR__.'/../partials/header.php'; ?>
+        <?php require __DIR__ . '/../partials/header.php'; ?>
 
-<main class="content">
+        <main class="content">
 
-<?= $content ?>
+            <?= $content ?>
 
-</main>
+        </main>
 
-<?php require __DIR__.'/../partials/footer.php'; ?>
+        <?php require __DIR__ . '/../partials/footer.php'; ?>
 
-</div>
+    </div>
 
-<script src="/SistemaFrequenciaEscolar/public/assets/js/app.js"></script>
+    <script src="<?= base_url('assets/js/app.js') ?>"></script>
 
 </body>
 

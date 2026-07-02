@@ -1,5 +1,13 @@
 <footer class="footer">
 
-Sistema de Frequência Escolar © <?= date('Y') ?>
+    <span>
+
+        <?= app_name() ?>
+
+        v<?= app_version() ?>
+
+        © <?= date('Y') ?>
+
+    </span>
 
 </footer>

@@ -2,7 +2,7 @@
 
     <div>
 
-        <h2>Sistema de Frequência Escolar</h2>
+        <h2><?= app_name() ?></h2>
 
     </div>
 
