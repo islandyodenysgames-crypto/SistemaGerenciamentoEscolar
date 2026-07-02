@@ -1,7 +1,9 @@
 <?php
 
-use App\Controllers\HomeController;
+declare(strict_types=1);
+
+use App\Controllers\DashboardController;
 
 /** @var \App\Core\Router $router */
 
-$router->get('/', [HomeController::class, 'index']);
+$router->get('/', [DashboardController::class, 'index']);

@@ -26,7 +26,7 @@
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/main.css') ?>">
+        href="<?= base_url('assets/css/app.css') ?>">
 
 </head>
 

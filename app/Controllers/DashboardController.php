@@ -6,10 +6,10 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 
-class HomeController extends Controller
+class DashboardController extends Controller
 {
     public function index(): void
     {
-        $this->view('home');
+        $this->view('dashboard/index');
     }
 }
