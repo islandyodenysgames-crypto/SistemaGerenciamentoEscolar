@@ -30,7 +30,7 @@ class UserController extends Controller
     {
         $this->guard();
 
-        $this->view('users/index', [
+        $this->view('usuarios/index', [
             'title' => 'Usuários - ' . app_name(),
             'users' => $this->service->all(),
         ]);
@@ -40,7 +40,7 @@ class UserController extends Controller
     {
         $this->guard();
 
-        $this->view('users/create', [
+        $this->view('usuarios/create', [
             'title' => 'Novo Usuário - ' . app_name(),
         ]);
     }
@@ -86,7 +86,7 @@ class UserController extends Controller
             Response::redirect(base_url('usuarios'));
         }
 
-        $this->view('users/edit', [
+        $this->view('usuarios/edit', [
             'title' => 'Editar Usuário - ' . app_name(),
             'user'  => $user,
         ]);
@@ -101,7 +101,6 @@ class UserController extends Controller
         $email = trim((string) Request::post('email'));
 
         if ($this->service->emailExists($email, $id)) {
-
             Session::set(
                 'user_error',
                 'Já existe outro usuário utilizando este e-mail.'
@@ -136,7 +135,6 @@ class UserController extends Controller
         $loggedUser = Session::get('user');
 
         if ((int) $loggedUser['id'] === $id) {
-
             Session::set(
                 'user_error',
                 'Você não pode excluir o usuário que está logado.'
@@ -146,19 +144,15 @@ class UserController extends Controller
         }
 
         if ($this->service->delete($id)) {
-
             Session::set(
                 'user_success',
                 'Usuário excluído com sucesso.'
             );
-
         } else {
-
             Session::set(
                 'user_error',
                 'Não foi possível excluir o usuário.'
             );
-
         }
 
         Response::redirect(base_url('usuarios'));
