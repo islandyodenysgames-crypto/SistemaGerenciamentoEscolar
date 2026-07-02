@@ -1,1 +1,1 @@
-console.log("Sistema de Frequência Escolar iniciado.");
+console.log('Sistema de Frequência Escolar iniciado.');

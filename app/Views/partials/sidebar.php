@@ -1,27 +1,107 @@
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
 
-    <div class="logo">
+    <div class="sidebar-header">
 
-        📚
+        <button
+            id="sidebarToggle"
+            class="sidebar-toggle"
+            type="button"
+            title="Recolher menu">
 
-        <span>SFE</span>
+            <i data-lucide="panel-left-close"></i>
+
+        </button>
+
+        <div class="logo">
+
+            <div class="logo-icon">
+
+                <i data-lucide="graduation-cap"></i>
+
+            </div>
+
+            <div class="logo-text">
+
+                <strong>SFE</strong>
+
+                <small>Frequência Escolar</small>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <nav>
+    <nav class="sidebar-menu">
 
-        <a href="#">🏠 Dashboard</a>
+        <a href="#" class="active">
 
-        <a href="#">👨‍🎓 Alunos</a>
+            <i data-lucide="layout-dashboard"></i>
 
-        <a href="#">🏫 Turmas</a>
+            <span>Dashboard</span>
 
-        <a href="#">✅ Frequência</a>
+        </a>
 
-        <a href="#">📊 Relatórios</a>
+        <a href="#">
 
-        <a href="#">⚙ Configurações</a>
+            <i data-lucide="users"></i>
+
+            <span>Alunos</span>
+
+        </a>
+
+        <a href="#">
+
+            <i data-lucide="school"></i>
+
+            <span>Turmas</span>
+
+        </a>
+
+        <a href="#">
+
+            <i data-lucide="clipboard-check"></i>
+
+            <span>Frequência</span>
+
+        </a>
+
+        <a href="#">
+
+            <i data-lucide="chart-column"></i>
+
+            <span>Relatórios</span>
+
+        </a>
+
+        <a href="#">
+
+            <i data-lucide="settings"></i>
+
+            <span>Configurações</span>
+
+        </a>
 
     </nav>
+
+    <div class="sidebar-footer">
+
+        <a href="#">
+
+            <i data-lucide="circle-help"></i>
+
+            <span>Ajuda</span>
+
+        </a>
+
+        <a href="#">
+
+            <i data-lucide="log-out"></i>
+
+            <span>Sair</span>
+
+        </a>
+
+    </div>
 
 </aside>
