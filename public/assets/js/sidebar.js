@@ -1,13 +1,21 @@
 const sidebar = document.getElementById('sidebar');
 
-const toggle = document.getElementById('sidebarToggle');
+const sidebarButtons = [
 
-if (sidebar && toggle) {
+    document.getElementById('sidebarToggle'),
 
-    toggle.addEventListener('click', () => {
+    document.getElementById('sidebarToggleTop')
+
+];
+
+sidebarButtons.forEach(button => {
+
+    if (!button) return;
+
+    button.addEventListener('click', () => {
 
         sidebar.classList.toggle('collapsed');
 
     });
 
-}
+});

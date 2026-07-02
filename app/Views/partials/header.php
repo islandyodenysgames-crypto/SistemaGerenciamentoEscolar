@@ -1,18 +1,62 @@
 <header class="header">
 
-    <div>
+    <div class="header-left">
 
-        <h2><?= app_name() ?></h2>
+        <button
+            id="sidebarToggleTop"
+            class="header-icon-button"
+            type="button"
+            title="Menu">
+
+            <i data-lucide="menu"></i>
+
+        </button>
+
+        <div class="header-search">
+
+            <i data-lucide="search"></i>
+
+            <input
+                type="text"
+                placeholder="Pesquisar..." />
+
+        </div>
 
     </div>
 
     <div class="header-right">
 
-        <span>Professor</span>
+        <button
+            class="header-icon-button"
+            title="Notificações">
 
-        <div class="avatar">
+            <i data-lucide="bell"></i>
 
-            I
+        </button>
+
+        <button
+            class="header-icon-button"
+            title="Tema">
+
+            <i data-lucide="moon"></i>
+
+        </button>
+
+        <div class="user-profile">
+
+            <div class="user-avatar">
+
+                ID
+
+            </div>
+
+            <div class="user-info">
+
+                <strong>Islandyo</strong>
+
+                <small>Professor</small>
+
+            </div>
 
         </div>
 
