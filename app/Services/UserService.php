@@ -1,0 +1,178 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services;
+
+use App\Database\Connection;
+
+class UserService
+{
+    public function all(): array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->query("
+            SELECT
+                id,
+                name,
+                email,
+                active,
+                created_at
+            FROM users
+            ORDER BY name ASC
+        ");
+
+        return $stmt->fetchAll();
+    }
+
+    public function find(int $id): ?array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            SELECT
+                id,
+                name,
+                email,
+                active
+            FROM users
+            WHERE id = :id
+            LIMIT 1
+        ");
+
+        $stmt->execute([
+            'id' => $id,
+        ]);
+
+        $user = $stmt->fetch();
+
+        return $user ?: null;
+    }
+
+    public function create(array $data): void
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            INSERT INTO users (
+                name,
+                email,
+                password,
+                active,
+                created_at,
+                updated_at
+            )
+            VALUES (
+                :name,
+                :email,
+                :password,
+                :active,
+                NOW(),
+                NOW()
+            )
+        ");
+
+        $stmt->execute([
+            'name'     => $data['name'],
+            'email'    => $data['email'],
+            'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+            'active'   => 1,
+        ]);
+    }
+
+    public function update(int $id, array $data): void
+    {
+        $db = Connection::getInstance();
+
+        if (!empty($data['password'])) {
+
+            $stmt = $db->prepare("
+                UPDATE users
+                SET
+                    name = :name,
+                    email = :email,
+                    password = :password,
+                    active = :active,
+                    updated_at = NOW()
+                WHERE id = :id
+            ");
+
+            $stmt->execute([
+                'id'       => $id,
+                'name'     => $data['name'],
+                'email'    => $data['email'],
+                'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+                'active'   => $data['active'],
+            ]);
+
+            return;
+        }
+
+        $stmt = $db->prepare("
+            UPDATE users
+            SET
+                name = :name,
+                email = :email,
+                active = :active,
+                updated_at = NOW()
+            WHERE id = :id
+        ");
+
+        $stmt->execute([
+            'id'     => $id,
+            'name'   => $data['name'],
+            'email'  => $data['email'],
+            'active' => $data['active'],
+        ]);
+    }
+
+    public function delete(int $id): bool
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            DELETE FROM users
+            WHERE id = :id
+        ");
+
+        return $stmt->execute([
+            'id' => $id,
+        ]);
+    }
+
+    public function emailExists(string $email, ?int $ignoreId = null): bool
+    {
+        $db = Connection::getInstance();
+
+        if ($ignoreId === null) {
+
+            $stmt = $db->prepare("
+                SELECT COUNT(*)
+                FROM users
+                WHERE email = :email
+            ");
+
+            $stmt->execute([
+                'email' => $email,
+            ]);
+
+        } else {
+
+            $stmt = $db->prepare("
+                SELECT COUNT(*)
+                FROM users
+                WHERE email = :email
+                  AND id <> :id
+            ");
+
+            $stmt->execute([
+                'email' => $email,
+                'id'    => $ignoreId,
+            ]);
+
+        }
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+}
