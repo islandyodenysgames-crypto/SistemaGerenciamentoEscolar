@@ -6,8 +6,11 @@ namespace App\Core;
 
 class View
 {
-    public static function render(string $view, array $data = []): void
-    {
+    public static function render(
+        string $view,
+        array $data = [],
+        string $layout = 'app'
+    ): void {
         extract($data);
 
         ob_start();
@@ -16,6 +19,6 @@ class View
 
         $content = ob_get_clean();
 
-        require dirname(__DIR__) . "/Views/layouts/app.php";
+        require dirname(__DIR__) . "/Views/layouts/{$layout}.php";
     }
 }

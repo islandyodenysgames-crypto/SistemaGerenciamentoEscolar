@@ -10,7 +10,7 @@ class App
     {
         $router = new Router();
 
-        require_once dirname(__DIR__, 2) . '/routes/web.php';
+        require dirname(__DIR__, 2) . '/routes/web.php';
 
         $router->dispatch();
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Console;
 
 use App\Console\Commands\MigrateCommand;
+use App\Console\Commands\SeedCommand;
 
 class Kernel
 {
@@ -13,29 +14,22 @@ class Kernel
         $command = $argv[1] ?? '';
 
         switch ($command) {
-
             case 'migrate':
-
                 (new MigrateCommand())->handle();
+                break;
 
+            case 'seed':
+                (new SeedCommand())->handle();
                 break;
 
             default:
-
                 echo PHP_EOL;
-
                 echo "Sistema de Frequência Escolar" . PHP_EOL;
-
                 echo PHP_EOL;
-
                 echo "Comandos disponíveis:" . PHP_EOL;
-
-                echo PHP_EOL;
-
                 echo "php console.php migrate" . PHP_EOL;
-
+                echo "php console.php seed" . PHP_EOL;
                 echo PHP_EOL;
-
         }
     }
 }

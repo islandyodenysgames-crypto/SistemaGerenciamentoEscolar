@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-use App\Config\App;
-
 class Router
 {
     private array $routes = [];
@@ -15,27 +13,32 @@ class Router
         $this->routes['GET'][$this->normalize($uri)] = $action;
     }
 
+    public function post(string $uri, callable|array $action): void
+    {
+        $this->routes['POST'][$this->normalize($uri)] = $action;
+    }
+
     public function dispatch(): void
     {
-        $method = $_SERVER['REQUEST_METHOD'];
+        $method = Request::method();
 
-        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $uri = Request::uri();
 
-        $base = rtrim(App::BASE_URL, '/');
+        $baseUrl = Config::get('app.url', '');
 
-        if ($base !== '' && str_starts_with($uri, $base)) {
-            $uri = substr($uri, strlen($base));
+        $basePath = parse_url($baseUrl, PHP_URL_PATH) ?: '';
+
+        if ($basePath !== '' && str_starts_with($uri, $basePath)) {
+            $uri = substr($uri, strlen($basePath));
         }
 
         $uri = $this->normalize($uri);
 
         if (!isset($this->routes[$method][$uri])) {
-
             http_response_code(404);
 
-            echo "<h1>404</h1>";
-
-            echo "<p>Página não encontrada.</p>";
+            echo '<h1>404</h1>';
+            echo '<p>Página não encontrada.</p>';
 
             return;
         }
@@ -43,9 +46,7 @@ class Router
         $action = $this->routes[$method][$uri];
 
         if (is_callable($action)) {
-
             $action();
-
             return;
         }
 
