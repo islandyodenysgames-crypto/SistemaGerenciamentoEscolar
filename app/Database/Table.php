@@ -21,20 +21,23 @@ class Table
         return $column;
     }
 
-    public function string(
-        string $name,
-        int $length = 255
-    ): Column {
-
-        $column = new Column(
-            'VARCHAR',
-            $name,
-            $length
-        );
+    public function string(string $name, int $length = 255): Column
+    {
+        $column = new Column('VARCHAR', $name, $length);
 
         $this->columns[] = $column;
 
         return $column;
+    }
+
+    public function email(string $name = 'email'): Column
+    {
+        return $this->string($name, 180);
+    }
+
+    public function password(string $name = 'password'): Column
+    {
+        return $this->string($name, 255);
     }
 
     public function integer(string $name): Column
@@ -55,17 +58,21 @@ class Table
         return $column;
     }
 
+    public function createdAt(): void
+    {
+        $this->columns[] = new Column('TIMESTAMP', 'created_at');
+    }
+
+    public function updatedAt(): void
+    {
+        $this->columns[] = new Column('TIMESTAMP', 'updated_at');
+    }
+
     public function timestamps(): void
     {
-        $this->columns[] = new Column(
-            'TIMESTAMP',
-            'created_at'
-        );
+        $this->createdAt();
 
-        $this->columns[] = new Column(
-            'TIMESTAMP',
-            'updated_at'
-        );
+        $this->updatedAt();
     }
 
     public function getColumns(): array

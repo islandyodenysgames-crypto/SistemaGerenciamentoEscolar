@@ -9,12 +9,14 @@ class Schema
     public static function create(
         string $table,
         callable $callback
-    ): Table {
+    ): void {
 
         $blueprint = new Table();
 
         $callback($blueprint);
 
-        return $blueprint;
+        $sql = SqlGenerator::createTable($table, $blueprint);
+
+        Connection::getInstance()->exec($sql);
     }
 }

@@ -4,48 +4,45 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Database\MigrationRunner;
+use App\Database\Connection;
+use App\Database\MigrationRepository;
 
 class MigrateCommand
 {
     public function handle(): void
     {
-        echo PHP_EOL;
+        $path = dirname(__DIR__, 3) . '/database/migrations';
 
-        echo "======================================" . PHP_EOL;
+        $files = glob($path . '/*.php');
 
-        echo " Sistema de Frequência Escolar" . PHP_EOL;
+        sort($files);
 
-        echo " Executando migrações" . PHP_EOL;
+        $db = Connection::getInstance();
 
-        echo "======================================" . PHP_EOL;
+        $repository = new MigrationRepository($db);
 
-        echo PHP_EOL;
-
-        $runner = new MigrationRunner();
-
-        $files = $runner->getMigrationFiles();
+        $repository->createTableIfNotExists();
 
         if (empty($files)) {
-
             echo "Nenhuma migração encontrada." . PHP_EOL;
-
-            echo PHP_EOL;
-
             return;
-
         }
-
-        echo "Migrações encontradas:" . PHP_EOL;
-
-        echo PHP_EOL;
 
         foreach ($files as $file) {
+            $migrationName = basename($file);
 
-            echo " • " . basename($file) . PHP_EOL;
+            if ($repository->hasRun($migrationName)) {
+                echo "Ignorada: {$migrationName}" . PHP_EOL;
+                continue;
+            }
 
+            $migration = require $file;
+
+            $migration->up();
+
+            $repository->log($migrationName);
+
+            echo "Executada: {$migrationName}" . PHP_EOL;
         }
-
-        echo PHP_EOL;
     }
 }
