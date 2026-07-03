@@ -12,97 +12,79 @@
 
     <?php else: ?>
 
-        <table class="data-table">
+        <div style="display:grid;gap:16px;margin-top:18px;">
 
-            <thead>
-                <tr>
-                    <th>Posição</th>
-                    <th>Turma</th>
-                    <th>Turno</th>
-                    <th>Frequência</th>
-                    <th>IFE</th>
-                    <th>Faltas</th>
-                    <th>Justificadas</th>
-                    <th>Atestados</th>
-                    <th>Ônibus</th>
-                    <th>Total</th>
-                    <th>Situação</th>
-                </tr>
-            </thead>
+            <?php foreach ($ranking as $index => $item): ?>
 
-            <tbody>
+                <?php
+                    $hasAttendance = (int) ($item['has_attendance'] ?? 0) === 1;
+                    $percentage = $hasAttendance ? (float) ($item['attendance_percentage'] ?? 0) : 0;
+                ?>
 
-                <?php foreach ($ranking as $index => $item): ?>
+                <div
+                    style="
+                        display:grid;
+                        grid-template-columns:90px 1fr 130px;
+                        gap:18px;
+                        align-items:center;
+                        padding:18px;
+                        border-radius:18px;
+                        background:#f8fafc;
+                    "
+                >
 
-                    <?php
-                        $hasAttendance = (int) ($item['has_attendance'] ?? 0) === 1;
-                    ?>
+                    <div style="font-size:24px;font-weight:900;text-align:center;">
+                        <?php if (!$hasAttendance): ?>
+                            —
+                        <?php else: ?>
+                            <?= $index === 0 ? '🥇' : ($index === 1 ? '🥈' : ($index === 2 ? '🥉' : ($index + 1) . 'º')) ?>
+                        <?php endif; ?>
+                    </div>
 
-                    <tr>
-                        <td>
-                            <?php if (!$hasAttendance): ?>
-                                —
-                            <?php else: ?>
-                                <?= $index === 0 ? '🥇 1º' : ($index === 1 ? '🥈 2º' : ($index === 2 ? '🥉 3º' : ($index + 1) . 'º')) ?>
-                            <?php endif; ?>
-                        </td>
+                    <div>
 
-                        <td>
+                        <h3 style="margin-bottom:6px;">
                             <?= htmlspecialchars($item['class_name']) ?> — <?= $item['year'] ?>
-                        </td>
+                        </h3>
 
-                        <td>
-                            <?= htmlspecialchars($item['shift']) ?>
-                        </td>
+                        <p style="margin-bottom:10px;color:#64748b;">
+                            Turno: <?= htmlspecialchars($item['shift']) ?>
+                        </p>
 
-                        <td>
-                            <?php if ($hasAttendance): ?>
-                                <strong>
-                                    <?= number_format((float) $item['attendance_percentage'], 1, ',', '.') ?>%
-                                </strong>
-                            <?php else: ?>
-                                —
-                            <?php endif; ?>
-                        </td>
+                        <?php if ($hasAttendance): ?>
 
-                        <td>
-                            <?php if ($hasAttendance): ?>
-                                <strong>
-                                    <?= number_format((float) $item['ife_score'], 2, ',', '.') ?>
-                                </strong>
-                            <?php else: ?>
-                                —
-                            <?php endif; ?>
-                        </td>
+                            <div style="display:flex;gap:12px;flex-wrap:wrap;line-height:1.9;">
+                                <span>✅ Presentes: <strong><?= (int) $item['presentes'] ?></strong></span>
+                                <span>❌ Faltas: <strong><?= (int) $item['ranking_absences'] ?></strong></span>
+                                <span>🟡 Justificadas: <strong><?= (int) $item['justificadas'] ?></strong></span>
+                                <span>🔵 Atestados: <strong><?= (int) $item['atestados'] ?></strong></span>
+                                <span>🟣 Ônibus: <strong><?= (int) $item['onibus'] ?></strong></span>
+                                <span>⭐ IFE: <strong><?= number_format((float) $item['ife_score'], 2, ',', '.') ?></strong></span>
+                            </div>
 
-                        <td><?= $hasAttendance ? (int) $item['ranking_absences'] : '-' ?></td>
+                        <?php else: ?>
 
-                        <td><?= $hasAttendance ? (int) $item['justificadas'] : '-' ?></td>
+                            <span class="badge badge-danger">
+                                Sem chamada
+                            </span>
 
-                        <td><?= $hasAttendance ? (int) $item['atestados'] : '-' ?></td>
+                        <?php endif; ?>
 
-                        <td><?= $hasAttendance ? (int) $item['onibus'] : '-' ?></td>
+                    </div>
 
-                        <td><?= $hasAttendance ? (int) $item['total_students'] : '-' ?></td>
+                    <div>
+                        <?php component('attendance-progress-circle', [
+                            'percentage' => $percentage,
+                            'label' => $hasAttendance ? 'Freq.' : 'Pendente',
+                            'size' => 110
+                        ]); ?>
+                    </div>
 
-                        <td>
-                            <?php if ($hasAttendance): ?>
-                                <span class="badge badge-success">
-                                    Com chamada
-                                </span>
-                            <?php else: ?>
-                                <span class="badge badge-danger">
-                                    Sem chamada
-                                </span>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
+                </div>
 
-                <?php endforeach; ?>
+            <?php endforeach; ?>
 
-            </tbody>
-
-        </table>
+        </div>
 
     <?php endif; ?>
 

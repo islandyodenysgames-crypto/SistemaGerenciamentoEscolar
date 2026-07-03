@@ -4,92 +4,105 @@
         <h3>Indicadores da Escola</h3>
     </div>
 
-    <table class="data-table">
+    <?php
+        $periods = [
+            'Hoje' => $today ?? [],
+            'Semana' => $week ?? [],
+            'Mês' => $month ?? [],
+            'Ano' => $year ?? [],
+        ];
+    ?>
 
-        <thead>
+    <div
+        style="
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:18px;
+            margin-top:18px;
+        "
+    >
 
-            <tr>
+        <?php foreach ($periods as $label => $data): ?>
 
-                <th>Período</th>
+            <div
+                style="
+                    background:#f8fafc;
+                    border-radius:18px;
+                    padding:20px;
+                    text-align:center;
+                "
+            >
 
-                <th>Frequência</th>
+                <h3 style="margin-bottom:16px;">
+                    <?= $label ?>
+                </h3>
 
-                <th>Presentes</th>
+                <?php component('attendance-progress-circle', [
+                    'percentage' => (float) ($data['percentage'] ?? 0),
+                    'label' => 'Frequência',
+                    'size' => 130
+                ]); ?>
 
-                <th>Faltas</th>
+                <div
+                    style="
+                        margin-top:18px;
+                        display:grid;
+                        gap:8px;
+                        text-align:left;
+                        font-size:15px;
+                    "
+                >
 
-            </tr>
+                    <div>
+                        👥 Registros:
+                        <strong><?= (int) ($data['total_students'] ?? 0) ?></strong>
+                    </div>
 
-        </thead>
+                    <div>
+                        ✅ Presentes:
+                        <strong><?= (int) ($data['presentes'] ?? 0) ?></strong>
+                    </div>
 
-        <tbody>
+                    <div>
+                        ❌ Faltas:
+                        <strong><?= (int) ($data['faltas'] ?? 0) ?></strong>
+                    </div>
 
-            <tr>
+                    <div>
+                        🟡 Justificadas:
+                        <strong><?= (int) ($data['justificadas'] ?? 0) ?></strong>
+                    </div>
 
-                <td>Hoje</td>
+                    <div>
+                        🔵 Atestados:
+                        <strong><?= (int) ($data['atestados'] ?? 0) ?></strong>
+                    </div>
 
-                <td>
-                    <strong>
-                        <?= $today['percentage'] ?>%
-                    </strong>
-                </td>
+                    <div>
+                        🟣 Ônibus:
+                        <strong><?= (int) ($data['onibus'] ?? 0) ?></strong>
+                    </div>
 
-                <td><?= $today['presentes'] ?></td>
+                </div>
 
-                <td><?= $today['faltas'] ?></td>
+            </div>
 
-            </tr>
+        <?php endforeach; ?>
 
-            <tr>
-
-                <td>Semana</td>
-
-                <td>
-                    <strong>
-                        <?= $week['percentage'] ?>%
-                    </strong>
-                </td>
-
-                <td><?= $week['presentes'] ?></td>
-
-                <td><?= $week['faltas'] ?></td>
-
-            </tr>
-
-            <tr>
-
-                <td>Mês</td>
-
-                <td>
-                    <strong>
-                        <?= $month['percentage'] ?>%
-                    </strong>
-                </td>
-
-                <td><?= $month['presentes'] ?></td>
-
-                <td><?= $month['faltas'] ?></td>
-
-            </tr>
-
-            <tr>
-
-                <td>Ano</td>
-
-                <td>
-                    <strong>
-                        <?= $year['percentage'] ?>%
-                    </strong>
-                </td>
-
-                <td><?= $year['presentes'] ?></td>
-
-                <td><?= $year['faltas'] ?></td>
-
-            </tr>
-
-        </tbody>
-
-    </table>
+    </div>
 
 </div>
+
+<style>
+@media (max-width: 1100px) {
+    .card > div[style*="grid-template-columns:repeat(4,1fr)"] {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 700px) {
+    .card > div[style*="grid-template-columns:repeat(4,1fr)"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
