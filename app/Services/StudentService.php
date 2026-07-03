@@ -14,16 +14,88 @@ class StudentService
 
         $stmt = $db->query("
             SELECT
-                id,
-                name,
-                registration,
-                birth_date,
-                guardian_name,
-                guardian_phone,
-                active,
-                created_at
+                students.id,
+                students.name,
+                students.registration,
+                students.birth_date,
+                students.guardian_name,
+                students.guardian_phone,
+                students.active,
+                students.created_at,
+
+                school_classes.name AS class_name,
+                school_classes.year AS class_year,
+                school_classes.shift AS class_shift,
+
+                COUNT(attendance_items.id) AS total_records,
+
+                SUM(
+                    CASE
+                        WHEN attendance_items.status = 'P'
+                        THEN 1 ELSE 0
+                    END
+                ) AS total_presentes,
+
+                ROUND(
+                    (
+                        SUM(
+                            CASE
+                                WHEN attendance_items.status = 'P'
+                                THEN 1 ELSE 0
+                            END
+                        ) / COUNT(attendance_items.id)
+                    ) * 100,
+                    1
+                ) AS attendance_percentage
+
             FROM students
-            ORDER BY name ASC
+
+            LEFT JOIN enrollments
+                ON enrollments.student_id = students.id
+               AND enrollments.active = 1
+
+            LEFT JOIN school_classes
+                ON school_classes.id = enrollments.school_class_id
+
+            LEFT JOIN attendance_items
+                ON attendance_items.student_id = students.id
+
+            GROUP BY
+                students.id,
+                students.name,
+                students.registration,
+                students.birth_date,
+                students.guardian_name,
+                students.guardian_phone,
+                students.active,
+                students.created_at,
+                school_classes.name,
+                school_classes.year,
+                school_classes.shift
+
+            ORDER BY students.name ASC
+        ");
+
+        return $stmt->fetchAll();
+    }
+
+    public function availableForEnrollment(): array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->query("
+            SELECT
+                students.id,
+                students.name,
+                students.registration
+            FROM students
+            WHERE students.active = 1
+              AND students.id NOT IN (
+                  SELECT enrollments.student_id
+                  FROM enrollments
+                  WHERE enrollments.active = 1
+              )
+            ORDER BY students.name ASC
         ");
 
         return $stmt->fetchAll();
@@ -84,12 +156,12 @@ class StudentService
         ");
 
         $stmt->execute([
-            'name'             => $data['name'],
-            'registration'     => $data['registration'],
-            'birth_date'       => $data['birth_date'],
-            'guardian_name'    => $data['guardian_name'],
-            'guardian_phone'   => $data['guardian_phone'],
-            'active'           => 1,
+            'name'           => $data['name'],
+            'registration'   => $data['registration'],
+            'birth_date'     => $data['birth_date'],
+            'guardian_name'  => $data['guardian_name'],
+            'guardian_phone' => $data['guardian_phone'],
+            'active'         => 1,
         ]);
     }
 
@@ -111,13 +183,13 @@ class StudentService
         ");
 
         $stmt->execute([
-            'id'               => $id,
-            'name'             => $data['name'],
-            'registration'     => $data['registration'],
-            'birth_date'       => $data['birth_date'],
-            'guardian_name'    => $data['guardian_name'],
-            'guardian_phone'   => $data['guardian_phone'],
-            'active'           => $data['active'],
+            'id'             => $id,
+            'name'           => $data['name'],
+            'registration'   => $data['registration'],
+            'birth_date'     => $data['birth_date'],
+            'guardian_name'  => $data['guardian_name'],
+            'guardian_phone' => $data['guardian_phone'],
+            'active'         => $data['active'],
         ]);
     }
 
@@ -142,7 +214,6 @@ class StudentService
         $db = Connection::getInstance();
 
         if ($ignoreId === null) {
-
             $stmt = $db->prepare("
                 SELECT COUNT(*)
                 FROM students
@@ -152,9 +223,7 @@ class StudentService
             $stmt->execute([
                 'registration' => $registration,
             ]);
-
         } else {
-
             $stmt = $db->prepare("
                 SELECT COUNT(*)
                 FROM students
@@ -166,7 +235,6 @@ class StudentService
                 'registration' => $registration,
                 'id'           => $ignoreId,
             ]);
-
         }
 
         return (int) $stmt->fetchColumn() > 0;

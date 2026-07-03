@@ -40,18 +40,18 @@ $studentError = \App\Core\Session::get('student_error');
     <table class="data-table">
 
         <thead>
-
             <tr>
-                <th width="70">ID</th>
+                <th width="60">ID</th>
                 <th>Nome</th>
-                <th width="150">Matrícula</th>
-                <th width="140">Nascimento</th>
-                <th>Responsável</th>
-                <th width="150">Telefone</th>
-                <th width="110">Status</th>
+                <th width="130">Matrícula</th>
+                <th width="150">Turma Atual</th>
+                <th width="80">Ano</th>
+                <th width="100">Turno</th>
+                <th width="130">Frequência</th>
+                <th width="120">Situação</th>
+                <th width="100">Status</th>
                 <th width="170">Ações</th>
             </tr>
-
         </thead>
 
         <tbody>
@@ -59,65 +59,104 @@ $studentError = \App\Core\Session::get('student_error');
         <?php if (empty($students)): ?>
 
             <tr>
-
-                <td colspan="8" style="text-align:center;padding:40px;">
+                <td colspan="10" style="text-align:center;padding:40px;">
                     Nenhum aluno cadastrado.
                 </td>
-
             </tr>
 
         <?php else: ?>
 
             <?php foreach ($students as $student): ?>
 
+                <?php
+                    $totalRecords = (int) ($student['total_records'] ?? 0);
+                    $percentage = $totalRecords > 0
+                        ? (float) $student['attendance_percentage']
+                        : null;
+                ?>
+
                 <tr>
+                    <td><?= $student['id'] ?></td>
+
+                    <td><?= htmlspecialchars($student['name']) ?></td>
+
+                    <td><?= htmlspecialchars($student['registration']) ?></td>
 
                     <td>
-                        <?= $student['id'] ?>
+                        <?php if (!empty($student['class_name'])): ?>
+                            <?= htmlspecialchars($student['class_name']) ?>
+                        <?php else: ?>
+                            <span style="color:#d97706;font-weight:600;">
+                                Sem matrícula
+                            </span>
+                        <?php endif; ?>
                     </td>
 
-                    <td>
-                        <?= htmlspecialchars($student['name']) ?>
-                    </td>
+                    <td><?= $student['class_year'] ?? '-' ?></td>
 
                     <td>
-                        <?= htmlspecialchars($student['registration']) ?>
-                    </td>
-
-                    <td>
-                        <?= !empty($student['birth_date'])
-                            ? date('d/m/Y', strtotime($student['birth_date']))
+                        <?= !empty($student['class_shift'])
+                            ? htmlspecialchars($student['class_shift'])
                             : '-' ?>
                     </td>
 
                     <td>
-                        <?= htmlspecialchars($student['guardian_name'] ?? '-') ?>
+                        <?php if ($percentage === null): ?>
+                            -
+                        <?php else: ?>
+                            <strong>
+                                <?= number_format($percentage, 1, ',', '.') ?>%
+                            </strong>
+                        <?php endif; ?>
                     </td>
 
                     <td>
-                        <?= htmlspecialchars($student['guardian_phone'] ?? '-') ?>
-                    </td>
+                        <?php if ($percentage === null): ?>
 
-                    <td>
+                            <span class="badge badge-danger">
+                                Sem dados
+                            </span>
 
-                        <?php if ((int) $student['active'] === 1): ?>
+                        <?php elseif ($percentage >= 95): ?>
 
                             <span class="badge badge-success">
-                                Ativo
+                                Excelente
+                            </span>
+
+                        <?php elseif ($percentage >= 85): ?>
+
+                            <span class="badge badge-success">
+                                Regular
+                            </span>
+
+                        <?php elseif ($percentage >= 75): ?>
+
+                            <span class="badge badge-danger">
+                                Atenção
                             </span>
 
                         <?php else: ?>
 
                             <span class="badge badge-danger">
-                                Inativo
+                                Crítico
                             </span>
 
                         <?php endif; ?>
-
                     </td>
 
                     <td>
+                        <?php if ((int) $student['active'] === 1): ?>
+                            <span class="badge badge-success">
+                                Ativo
+                            </span>
+                        <?php else: ?>
+                            <span class="badge badge-danger">
+                                Inativo
+                            </span>
+                        <?php endif; ?>
+                    </td>
 
+                    <td>
                         <div class="table-actions">
 
                             <a
@@ -132,7 +171,6 @@ $studentError = \App\Core\Session::get('student_error');
                                 method="POST"
                                 onsubmit="return confirm('Deseja realmente excluir este aluno?');"
                             >
-
                                 <input
                                     type="hidden"
                                     name="id"
@@ -145,13 +183,10 @@ $studentError = \App\Core\Session::get('student_error');
                                 >
                                     Excluir
                                 </button>
-
                             </form>
 
                         </div>
-
                     </td>
-
                 </tr>
 
             <?php endforeach; ?>

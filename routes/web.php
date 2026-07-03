@@ -8,6 +8,7 @@ use App\Controllers\DashboardController;
 use App\Controllers\EnrollmentController;
 use App\Controllers\ReportController;
 use App\Controllers\SchoolClassController;
+use App\Controllers\SearchController;
 use App\Controllers\StudentController;
 use App\Controllers\UserController;
 
@@ -91,3 +92,10 @@ $router->get('/frequencia/ver', [AttendanceController::class, 'show']);
 
 $router->get('/relatorios', [ReportController::class, 'index']);
 $router->get('/relatorios/diario', [ReportController::class, 'daily']);
+
+
+// ======================================================
+// Busca Inteligente
+// ======================================================
+
+$router->get('/busca', [SearchController::class, 'index']);

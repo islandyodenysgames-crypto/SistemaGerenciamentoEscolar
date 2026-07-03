@@ -20,6 +20,7 @@
                     <th>Turma</th>
                     <th>Turno</th>
                     <th>Frequência</th>
+                    <th>IFE</th>
                     <th>Faltas penalizadas</th>
                     <th>Atenuadas</th>
                     <th>Total</th>
@@ -44,7 +45,15 @@
                         </td>
 
                         <td>
-                            <strong><?= $item['attendance_percentage'] ?>%</strong>
+                            <strong>
+                                <?= number_format((float) $item['attendance_percentage'], 1, ',', '.') ?>%
+                            </strong>
+                        </td>
+
+                        <td>
+                            <strong>
+                                <?= number_format((float) $item['ife_score'], 2, ',', '.') ?>
+                            </strong>
                         </td>
 
                         <td><?= (int) $item['ranking_absences'] ?></td>

@@ -201,7 +201,17 @@ class AttendanceService
                         / COUNT(attendance_items.id)
                     ) * 100,
                     1
-                ) AS attendance_percentage
+                ) AS attendance_percentage,
+                ROUND(
+                    100 -
+                    (
+                        (
+                            SUM(CASE WHEN attendance_items.status = 'F' THEN 1 ELSE 0 END)
+                            / COUNT(attendance_items.id)
+                        ) * 100
+                    ),
+                    2
+                ) AS ife_score
             FROM attendance
             INNER JOIN school_classes
                 ON school_classes.id = attendance.school_class_id
@@ -214,7 +224,7 @@ class AttendanceService
                 school_classes.year,
                 school_classes.shift
             ORDER BY
-                ranking_absences ASC,
+                ife_score DESC,
                 attendance_percentage DESC,
                 raw_absences ASC,
                 school_classes.name ASC

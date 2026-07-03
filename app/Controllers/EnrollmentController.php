@@ -45,9 +45,23 @@ class EnrollmentController extends Controller
         $studentService = new StudentService();
         $classService = new SchoolClassService();
 
+        $students = $studentService->availableForEnrollment();
+
+        if (empty($students)) {
+
+            Session::set(
+                'enrollment_error',
+                'Não existem alunos disponíveis para matrícula. Todos os alunos ativos já estão vinculados a uma turma.'
+            );
+
+            Response::redirect(base_url('matriculas'));
+
+            return;
+        }
+
         $this->view('matriculas/create', [
             'title' => 'Nova Matrícula - ' . app_name(),
-            'students' => $studentService->all(),
+            'students' => $students,
             'classes' => $classService->all(),
         ]);
     }
@@ -60,12 +74,15 @@ class EnrollmentController extends Controller
         $classId = (int) Request::post('school_class_id');
 
         if ($this->service->exists($studentId, $classId)) {
+
             Session::set(
                 'enrollment_error',
                 'Este aluno já está matriculado nesta turma.'
             );
 
             Response::redirect(base_url('matriculas/novo'));
+
+            return;
         }
 
         $this->service->create([
@@ -89,15 +106,19 @@ class EnrollmentController extends Controller
         $id = (int) Request::post('id');
 
         if ($this->service->cancel($id)) {
+
             Session::set(
                 'enrollment_success',
                 'Matrícula cancelada com sucesso.'
             );
+
         } else {
+
             Session::set(
                 'enrollment_error',
                 'Não foi possível cancelar a matrícula.'
             );
+
         }
 
         Response::redirect(base_url('matriculas'));
