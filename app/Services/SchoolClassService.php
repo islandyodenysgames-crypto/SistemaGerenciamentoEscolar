@@ -27,6 +27,19 @@ class SchoolClassService
         return $stmt->fetchAll();
     }
 
+    public function countActive(): int
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->query("
+            SELECT COUNT(*)
+            FROM school_classes
+            WHERE active = 1
+        ");
+
+        return (int) $stmt->fetchColumn();
+    }
+
     public function find(int $id): ?array
     {
         $db = Connection::getInstance();

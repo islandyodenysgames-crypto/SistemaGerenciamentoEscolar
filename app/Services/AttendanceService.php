@@ -190,47 +190,79 @@ class AttendanceService
                 school_classes.name AS class_name,
                 school_classes.year,
                 school_classes.shift,
+
                 COUNT(attendance_items.id) AS total_students,
+
                 SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) AS presentes,
+
                 SUM(CASE WHEN attendance_items.status = 'F' THEN 1 ELSE 0 END) AS ranking_absences,
+
                 SUM(CASE WHEN attendance_items.status IN ('FJ', 'AM', 'FO') THEN 1 ELSE 0 END) AS attenuated_absences,
+
                 SUM(CASE WHEN attendance_items.status <> 'P' THEN 1 ELSE 0 END) AS raw_absences,
-                ROUND(
-                    (
-                        SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END)
-                        / COUNT(attendance_items.id)
-                    ) * 100,
-                    1
-                ) AS attendance_percentage,
-                ROUND(
-                    100 -
-                    (
+
+                CASE
+                    WHEN COUNT(attendance_items.id) = 0
+                    THEN NULL
+                    ELSE ROUND(
                         (
-                            SUM(CASE WHEN attendance_items.status = 'F' THEN 1 ELSE 0 END)
+                            SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END)
                             / COUNT(attendance_items.id)
-                        ) * 100
-                    ),
-                    2
-                ) AS ife_score
-            FROM attendance
-            INNER JOIN school_classes
-                ON school_classes.id = attendance.school_class_id
-            INNER JOIN attendance_items
+                        ) * 100,
+                        1
+                    )
+                END AS attendance_percentage,
+
+                CASE
+                    WHEN COUNT(attendance_items.id) = 0
+                    THEN NULL
+                    ELSE ROUND(
+                        100 -
+                        (
+                            (
+                                SUM(CASE WHEN attendance_items.status = 'F' THEN 1 ELSE 0 END)
+                                / COUNT(attendance_items.id)
+                            ) * 100
+                        ),
+                        2
+                    )
+                END AS ife_score,
+
+                CASE
+                    WHEN attendance.id IS NULL
+                    THEN 0
+                    ELSE 1
+                END AS has_attendance
+
+            FROM school_classes
+
+            LEFT JOIN attendance
+                ON attendance.school_class_id = school_classes.id
+               AND attendance.attendance_date = :date
+
+            LEFT JOIN attendance_items
                 ON attendance_items.attendance_id = attendance.id
-            WHERE attendance.attendance_date = :date
+
+            WHERE school_classes.active = 1
+
             GROUP BY
                 school_classes.id,
                 school_classes.name,
                 school_classes.year,
-                school_classes.shift
+                school_classes.shift,
+                attendance.id
+
             ORDER BY
+                has_attendance DESC,
                 ife_score DESC,
                 attendance_percentage DESC,
                 raw_absences ASC,
                 school_classes.name ASC
         ");
 
-        $stmt->execute(['date' => $date]);
+        $stmt->execute([
+            'date' => $date,
+        ]);
 
         return $stmt->fetchAll();
     }

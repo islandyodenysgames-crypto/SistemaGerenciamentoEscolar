@@ -32,7 +32,8 @@ class StudentService
                 SUM(
                     CASE
                         WHEN attendance_items.status = 'P'
-                        THEN 1 ELSE 0
+                        THEN 1
+                        ELSE 0
                     END
                 ) AS total_presentes,
 
@@ -41,9 +42,11 @@ class StudentService
                         SUM(
                             CASE
                                 WHEN attendance_items.status = 'P'
-                                THEN 1 ELSE 0
+                                THEN 1
+                                ELSE 0
                             END
-                        ) / COUNT(attendance_items.id)
+                        ) /
+                        NULLIF(COUNT(attendance_items.id), 0)
                     ) * 100,
                     1
                 ) AS attendance_percentage
@@ -79,6 +82,19 @@ class StudentService
         return $stmt->fetchAll();
     }
 
+    public function countActive(): int
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->query("
+            SELECT COUNT(*)
+            FROM students
+            WHERE active = 1
+        ");
+
+        return (int) $stmt->fetchColumn();
+    }
+
     public function availableForEnrollment(): array
     {
         $db = Connection::getInstance();
@@ -91,9 +107,9 @@ class StudentService
             FROM students
             WHERE students.active = 1
               AND students.id NOT IN (
-                  SELECT enrollments.student_id
-                  FROM enrollments
-                  WHERE enrollments.active = 1
+                    SELECT enrollments.student_id
+                    FROM enrollments
+                    WHERE enrollments.active = 1
               )
             ORDER BY students.name ASC
         ");
@@ -156,12 +172,12 @@ class StudentService
         ");
 
         $stmt->execute([
-            'name'           => $data['name'],
-            'registration'   => $data['registration'],
-            'birth_date'     => $data['birth_date'],
-            'guardian_name'  => $data['guardian_name'],
+            'name' => $data['name'],
+            'registration' => $data['registration'],
+            'birth_date' => $data['birth_date'],
+            'guardian_name' => $data['guardian_name'],
             'guardian_phone' => $data['guardian_phone'],
-            'active'         => 1,
+            'active' => 1,
         ]);
     }
 
@@ -183,13 +199,13 @@ class StudentService
         ");
 
         $stmt->execute([
-            'id'             => $id,
-            'name'           => $data['name'],
-            'registration'   => $data['registration'],
-            'birth_date'     => $data['birth_date'],
-            'guardian_name'  => $data['guardian_name'],
+            'id' => $id,
+            'name' => $data['name'],
+            'registration' => $data['registration'],
+            'birth_date' => $data['birth_date'],
+            'guardian_name' => $data['guardian_name'],
             'guardian_phone' => $data['guardian_phone'],
-            'active'         => $data['active'],
+            'active' => $data['active'],
         ]);
     }
 
@@ -214,6 +230,7 @@ class StudentService
         $db = Connection::getInstance();
 
         if ($ignoreId === null) {
+
             $stmt = $db->prepare("
                 SELECT COUNT(*)
                 FROM students
@@ -223,7 +240,9 @@ class StudentService
             $stmt->execute([
                 'registration' => $registration,
             ]);
+
         } else {
+
             $stmt = $db->prepare("
                 SELECT COUNT(*)
                 FROM students
@@ -233,8 +252,9 @@ class StudentService
 
             $stmt->execute([
                 'registration' => $registration,
-                'id'           => $ignoreId,
+                'id' => $ignoreId,
             ]);
+
         }
 
         return (int) $stmt->fetchColumn() > 0;

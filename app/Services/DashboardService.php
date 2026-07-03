@@ -7,10 +7,14 @@ namespace App\Services;
 class DashboardService
 {
     private AttendanceService $attendanceService;
+    private StudentService $studentService;
+    private SchoolClassService $schoolClassService;
 
     public function __construct()
     {
         $this->attendanceService = new AttendanceService();
+        $this->studentService = new StudentService();
+        $this->schoolClassService = new SchoolClassService();
     }
 
     public function data(): array
@@ -18,6 +22,10 @@ class DashboardService
         $today = date('Y-m-d');
 
         return [
+            'totalStudents' => $this->studentService->countActive(),
+
+            'totalClasses' => $this->schoolClassService->countActive(),
+
             'ranking' => $this->attendanceService->dailyRanking($today),
 
             'schoolFrequencyToday' =>

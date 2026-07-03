@@ -7,7 +7,7 @@
     <?php if (empty($ranking)): ?>
 
         <div class="activity-empty">
-            Nenhuma chamada registrada hoje.
+            Nenhuma turma ativa cadastrada.
         </div>
 
     <?php else: ?>
@@ -24,6 +24,7 @@
                     <th>Faltas penalizadas</th>
                     <th>Atenuadas</th>
                     <th>Total</th>
+                    <th>Situação</th>
                 </tr>
             </thead>
 
@@ -31,9 +32,17 @@
 
                 <?php foreach ($ranking as $index => $item): ?>
 
+                    <?php
+                        $hasAttendance = (int) ($item['has_attendance'] ?? 0) === 1;
+                    ?>
+
                     <tr>
                         <td>
-                            <?= $index === 0 ? '🥇 1º' : ($index === 1 ? '🥈 2º' : ($index === 2 ? '🥉 3º' : ($index + 1) . 'º')) ?>
+                            <?php if (!$hasAttendance): ?>
+                                —
+                            <?php else: ?>
+                                <?= $index === 0 ? '🥇 1º' : ($index === 1 ? '🥈 2º' : ($index === 2 ? '🥉 3º' : ($index + 1) . 'º')) ?>
+                            <?php endif; ?>
                         </td>
 
                         <td>
@@ -45,22 +54,48 @@
                         </td>
 
                         <td>
-                            <strong>
-                                <?= number_format((float) $item['attendance_percentage'], 1, ',', '.') ?>%
-                            </strong>
+                            <?php if ($hasAttendance): ?>
+                                <strong>
+                                    <?= number_format((float) $item['attendance_percentage'], 1, ',', '.') ?>%
+                                </strong>
+                            <?php else: ?>
+                                —
+                            <?php endif; ?>
                         </td>
 
                         <td>
-                            <strong>
-                                <?= number_format((float) $item['ife_score'], 2, ',', '.') ?>
-                            </strong>
+                            <?php if ($hasAttendance): ?>
+                                <strong>
+                                    <?= number_format((float) $item['ife_score'], 2, ',', '.') ?>
+                                </strong>
+                            <?php else: ?>
+                                —
+                            <?php endif; ?>
                         </td>
 
-                        <td><?= (int) $item['ranking_absences'] ?></td>
+                        <td>
+                            <?= $hasAttendance ? (int) $item['ranking_absences'] : '-' ?>
+                        </td>
 
-                        <td><?= (int) $item['attenuated_absences'] ?></td>
+                        <td>
+                            <?= $hasAttendance ? (int) $item['attenuated_absences'] : '-' ?>
+                        </td>
 
-                        <td><?= (int) $item['total_students'] ?></td>
+                        <td>
+                            <?= $hasAttendance ? (int) $item['total_students'] : '-' ?>
+                        </td>
+
+                        <td>
+                            <?php if ($hasAttendance): ?>
+                                <span class="badge badge-success">
+                                    Com chamada
+                                </span>
+                            <?php else: ?>
+                                <span class="badge badge-danger">
+                                    Sem chamada
+                                </span>
+                            <?php endif; ?>
+                        </td>
                     </tr>
 
                 <?php endforeach; ?>

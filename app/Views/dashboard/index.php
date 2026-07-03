@@ -14,13 +14,13 @@ component('page-header', [
 component('stat-card', [
     'icon' => 'graduation-cap',
     'label' => 'Alunos',
-    'value' => 0
+    'value' => $totalStudents ?? 0
 ]);
 
 component('stat-card', [
     'icon' => 'school',
     'label' => 'Turmas',
-    'value' => 0
+    'value' => $totalClasses ?? 0
 ]);
 
 component('stat-card', [
