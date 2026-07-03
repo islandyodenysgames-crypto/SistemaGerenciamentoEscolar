@@ -1,3 +1,7 @@
+/* ==========================================================
+   TABELAS
+========================================================== */
+
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -21,6 +25,7 @@
     color: var(--text-light);
     font-weight: 800;
     text-transform: uppercase;
+    letter-spacing: .3px;
 }
 
 .data-table td {
@@ -28,16 +33,24 @@
     font-size: 14px;
 }
 
+.data-table tbody tr {
+    transition: var(--transition);
+}
+
 .data-table tbody tr:hover {
     background: var(--surface-soft);
 }
+
+/* ==========================================================
+   CABEÇALHO DA TABELA
+========================================================== */
 
 .table-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
 .table-actions {
@@ -47,10 +60,19 @@
     flex-wrap: wrap;
 }
 
+/* ==========================================================
+   LINKS E AÇÕES
+========================================================== */
+
 .table-link {
     color: var(--info);
     font-weight: 800;
     text-decoration: none;
+    transition: var(--transition);
+}
+
+.table-link:hover {
+    color: var(--primary);
 }
 
 .table-delete {
@@ -59,9 +81,30 @@
     color: var(--danger);
     font-weight: 800;
     cursor: pointer;
+    transition: var(--transition);
 }
 
+.table-delete:hover {
+    color: #b91c1c;
+}
+
+/* ==========================================================
+   ESTADOS
+========================================================== */
+
+.table-empty {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+/* ==========================================================
+   RESPONSIVIDADE
+========================================================== */
+
 @media (max-width: 900px) {
+
     .data-table {
         display: block;
         overflow-x: auto;
@@ -72,4 +115,10 @@
         flex-direction: column;
         align-items: flex-start;
     }
+
+    .table-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
 }

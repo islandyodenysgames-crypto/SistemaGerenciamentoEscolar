@@ -13,7 +13,13 @@ component('page-header', [
 
         <div class="form-group">
             <label>Data</label>
-            <input class="form-control" type="date" name="data" value="<?= htmlspecialchars($date) ?>">
+
+            <input
+                class="form-control"
+                type="date"
+                name="data"
+                value="<?= htmlspecialchars($date) ?>"
+            >
         </div>
 
         <div class="form-actions">
@@ -30,15 +36,18 @@ component('page-header', [
 
 </div>
 
-<div style="margin-top:24px;">
+<div class="mt-24">
 
-    <?php component('school-frequency-summary', [
-        'schoolFrequencyToday' => $summary
+    <?php component('frequency-period-summary', [
+        'today' => $summary,
+        'week' => [],
+        'month' => [],
+        'year' => [],
     ]); ?>
 
 </div>
 
-<div style="margin-top:24px;">
+<div class="mt-24">
 
     <?php component('daily-ranking', [
         'ranking' => $ranking
@@ -46,7 +55,7 @@ component('page-header', [
 
 </div>
 
-<div style="margin-top:24px;">
+<div class="mt-24">
 
     <?php component('classes-without-attendance', [
         'classesWithoutAttendance' => $classesWithoutAttendance

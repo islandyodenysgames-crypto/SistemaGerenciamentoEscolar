@@ -15,13 +15,13 @@ $enrollmentError = \App\Core\Session::get('enrollment_error');
 
 <?php if ($enrollmentSuccess): ?>
     <div class="alert alert-success">
-        <?= htmlspecialchars($enrollmentSuccess) ?>
+        <?= e($enrollmentSuccess) ?>
     </div>
 <?php endif; ?>
 
 <?php if ($enrollmentError): ?>
     <div class="alert alert-danger">
-        <?= htmlspecialchars($enrollmentError) ?>
+        <?= e($enrollmentError) ?>
     </div>
 <?php endif; ?>
 
@@ -40,7 +40,6 @@ $enrollmentError = \App\Core\Session::get('enrollment_error');
     <table class="data-table">
 
         <thead>
-
             <tr>
                 <th width="70">ID</th>
                 <th>Aluno</th>
@@ -52,7 +51,6 @@ $enrollmentError = \App\Core\Session::get('enrollment_error');
                 <th width="110">Status</th>
                 <th width="140">Ações</th>
             </tr>
-
         </thead>
 
         <tbody>
@@ -60,11 +58,9 @@ $enrollmentError = \App\Core\Session::get('enrollment_error');
         <?php if (empty($enrollments)): ?>
 
             <tr>
-
-                <td colspan="9" style="text-align:center;padding:40px;">
+                <td colspan="9" class="table-empty">
                     Nenhuma matrícula cadastrada.
                 </td>
-
             </tr>
 
         <?php else: ?>
@@ -73,54 +69,33 @@ $enrollmentError = \App\Core\Session::get('enrollment_error');
 
                 <tr>
 
-                    <td>
-                        <?= $enrollment['id'] ?>
-                    </td>
+                    <td><?= $enrollment['id'] ?></td>
+
+                    <td><?= e($enrollment['student_name']) ?></td>
+
+                    <td><?= e($enrollment['registration']) ?></td>
+
+                    <td><?= e($enrollment['class_name']) ?></td>
+
+                    <td><?= $enrollment['year'] ?></td>
+
+                    <td><?= e($enrollment['shift']) ?></td>
+
+                    <td><?= date('d/m/Y', strtotime($enrollment['enrollment_date'])) ?></td>
 
                     <td>
-                        <?= htmlspecialchars($enrollment['student_name']) ?>
-                    </td>
-
-                    <td>
-                        <?= htmlspecialchars($enrollment['registration']) ?>
-                    </td>
-
-                    <td>
-                        <?= htmlspecialchars($enrollment['class_name']) ?>
-                    </td>
-
-                    <td>
-                        <?= $enrollment['year'] ?>
-                    </td>
-
-                    <td>
-                        <?= htmlspecialchars($enrollment['shift']) ?>
-                    </td>
-
-                    <td>
-                        <?= date('d/m/Y', strtotime($enrollment['enrollment_date'])) ?>
-                    </td>
-
-                    <td>
-
                         <?php if ((int) $enrollment['active'] === 1): ?>
-
                             <span class="badge badge-success">
                                 Ativa
                             </span>
-
                         <?php else: ?>
-
                             <span class="badge badge-danger">
                                 Cancelada
                             </span>
-
                         <?php endif; ?>
-
                     </td>
 
                     <td>
-
                         <?php if ((int) $enrollment['active'] === 1): ?>
 
                             <form
@@ -128,30 +103,24 @@ $enrollmentError = \App\Core\Session::get('enrollment_error');
                                 method="POST"
                                 onsubmit="return confirm('Deseja realmente cancelar esta matrícula?');"
                             >
-
                                 <input
                                     type="hidden"
                                     name="id"
                                     value="<?= $enrollment['id'] ?>"
                                 >
 
-                                <button
-                                    type="submit"
-                                    class="table-delete"
-                                >
+                                <button type="submit" class="table-delete">
                                     Cancelar
                                 </button>
-
                             </form>
 
                         <?php else: ?>
 
-                            <span style="color:#999;">
+                            <span class="text-muted">
                                 —
                             </span>
 
                         <?php endif; ?>
-
                     </td>
 
                 </tr>

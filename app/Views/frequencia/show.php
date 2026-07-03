@@ -9,10 +9,10 @@ component('page-header', [
 
 <div class="card">
 
-    <h3 style="margin-bottom:16px;">
-        <?= htmlspecialchars($attendance['class_name']) ?>
+    <h3 class="mb-16">
+        <?= e($attendance['class_name']) ?>
         — <?= $attendance['year'] ?>
-        — <?= htmlspecialchars($attendance['shift']) ?>
+        — <?= e($attendance['shift']) ?>
     </h3>
 
     <p>
@@ -22,12 +22,12 @@ component('page-header', [
 
     <p>
         <strong>Observações:</strong>
-        <?= htmlspecialchars($attendance['notes'] ?: '-') ?>
+        <?= e($attendance['notes'] ?: '-') ?>
     </p>
 
 </div>
 
-<div class="card" style="margin-top:24px;">
+<div class="card mt-24">
 
     <div class="table-header">
         <h3>Alunos da chamada</h3>
@@ -53,16 +53,16 @@ component('page-header', [
         <?php foreach ($items as $item): ?>
 
             <tr>
-                <td><?= htmlspecialchars($item['student_name']) ?></td>
+                <td><?= e($item['student_name']) ?></td>
 
-                <td><?= htmlspecialchars($item['registration']) ?></td>
+                <td><?= e($item['registration']) ?></td>
 
                 <td>
-                    <?= htmlspecialchars($statusOptions[$item['status']] ?? $item['status']) ?>
+                    <?= e($statusOptions[$item['status']] ?? $item['status']) ?>
                 </td>
 
                 <td>
-                    <?= htmlspecialchars($item['justification'] ?: '-') ?>
+                    <?= e($item['justification'] ?: '-') ?>
                 </td>
             </tr>
 

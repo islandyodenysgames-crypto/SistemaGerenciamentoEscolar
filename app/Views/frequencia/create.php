@@ -17,170 +17,6 @@ $existingStatuses = $existingStatuses ?? [];
 
 ?>
 
-<style>
-.attendance-layout {
-    display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 24px;
-}
-
-.attendance-panel,
-.attendance-main {
-    background: #fff;
-    border-radius: 18px;
-    padding: 24px;
-    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
-}
-
-.attendance-summary {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 14px;
-    margin-bottom: 18px;
-}
-
-.attendance-card {
-    padding: 18px;
-    border-radius: 16px;
-    background: #f8fafc;
-    text-align: center;
-}
-
-.attendance-card strong {
-    display: block;
-    font-size: 26px;
-}
-
-.student-attendance {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-}
-
-.student-card {
-    border: 2px solid #e5e7eb;
-    border-radius: 18px;
-    padding: 18px;
-    background: #fff;
-}
-
-.student-name {
-    font-size: 22px;
-    font-weight: 900;
-}
-
-.student-registration {
-    font-size: 14px;
-    color: #64748b;
-}
-
-.status-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 16px;
-}
-
-.status-option {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 130px;
-    padding: 14px 18px;
-    border-radius: 14px;
-    border: 2px solid #dbe3ef;
-    font-weight: 900;
-    cursor: pointer;
-    background: #fff;
-}
-
-.status-option input {
-    display: none;
-}
-
-.status-option.selected {
-    color: #fff;
-    border-color: transparent;
-}
-
-.status-p { color: #16a34a; }
-.status-f { color: #dc2626; }
-.status-fj { color: #d97706; }
-.status-am { color: #2563eb; }
-.status-fo { color: #7c3aed; }
-
-.status-p.selected { background: #16a34a; }
-.status-f.selected { background: #dc2626; }
-.status-fj.selected { background: #d97706; }
-.status-am.selected { background: #2563eb; }
-.status-fo.selected { background: #7c3aed; }
-
-.attendance-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin: 20px 0;
-}
-
-.history-item {
-    padding: 12px 0;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.attendance-done {
-    margin-bottom: 20px;
-    padding: 16px;
-    border-radius: 14px;
-    background: #dcfce7;
-    color: #166534;
-    font-weight: 800;
-}
-
-.attendance-pending {
-    margin-bottom: 20px;
-    padding: 16px;
-    border-radius: 14px;
-    background: #fef3c7;
-    color: #92400e;
-    font-weight: 800;
-}
-
-.attendance-progress {
-    margin-bottom: 24px;
-    background: #e5e7eb;
-    border-radius: 999px;
-    overflow: hidden;
-    height: 18px;
-}
-
-.attendance-progress-bar {
-    width: 100%;
-    height: 100%;
-    background: #16a34a;
-    transition: .3s;
-}
-
-@media (max-width: 1100px) {
-    .attendance-summary {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 900px) {
-    .attendance-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .attendance-summary {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .status-option {
-        min-width: 100%;
-    }
-}
-</style>
-
 <div class="attendance-layout">
 
     <aside class="attendance-panel">
@@ -198,9 +34,9 @@ $existingStatuses = $existingStatuses ?? [];
                             value="<?= $class['id'] ?>"
                             <?= (int) $classId === (int) $class['id'] ? 'selected' : '' ?>
                         >
-                            <?= htmlspecialchars($class['name']) ?>
+                            <?= e($class['name']) ?>
                             — <?= $class['year'] ?>
-                            — <?= htmlspecialchars($class['shift']) ?>
+                            — <?= e($class['shift']) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -210,18 +46,15 @@ $existingStatuses = $existingStatuses ?? [];
 
         <?php if ($classInfo): ?>
 
-            <hr style="margin:20px 0;">
+            <div class="divider"></div>
 
             <?php if (!empty($existingAttendance)): ?>
 
                 <div class="attendance-done">
                     ✅ Chamada de hoje já realizada
 
-                    <div style="margin-top:12px;">
-                        <a
-                            href="<?= base_url('frequencia/ver?id=' . $existingAttendance['id']) ?>"
-                            class="btn-primary"
-                        >
+                    <div class="mt-12">
+                        <a href="<?= base_url('frequencia/ver?id=' . $existingAttendance['id']) ?>" class="btn-primary">
                             Ver chamada registrada
                         </a>
                     </div>
@@ -235,14 +68,14 @@ $existingStatuses = $existingStatuses ?? [];
 
             <?php endif; ?>
 
-            <h3><?= htmlspecialchars($classInfo['name']) ?></h3>
+            <h3><?= e($classInfo['name']) ?></h3>
 
             <p>
                 <strong>Ano:</strong> <?= $classInfo['year'] ?><br>
-                <strong>Turno:</strong> <?= htmlspecialchars($classInfo['shift']) ?>
+                <strong>Turno:</strong> <?= e($classInfo['shift']) ?>
             </p>
 
-            <hr style="margin:20px 0;">
+            <div class="divider"></div>
 
             <h3>Últimas chamadas</h3>
 
@@ -258,7 +91,7 @@ $existingStatuses = $existingStatuses ?? [];
 
                     <div class="history-item">
                         <strong><?= date('d/m/Y', strtotime($item['attendance_date'])) ?></strong><br>
-                        <small><?= htmlspecialchars($item['notes'] ?: 'Sem observações') ?></small>
+                        <small><?= e($item['notes'] ?: 'Sem observações') ?></small>
                     </div>
 
                 <?php endforeach; ?>
@@ -375,18 +208,16 @@ $existingStatuses = $existingStatuses ?? [];
 
                     <?php foreach ($students as $student): ?>
 
-                        <?php
-                            $currentStatus = $existingStatuses[$student['id']] ?? 'P';
-                        ?>
+                        <?php $currentStatus = $existingStatuses[$student['id']] ?? 'P'; ?>
 
                         <div class="student-card">
 
                             <div class="student-name">
-                                <?= htmlspecialchars($student['name']) ?>
+                                <?= e($student['name']) ?>
                             </div>
 
                             <div class="student-registration">
-                                Matrícula: <?= htmlspecialchars($student['registration']) ?>
+                                Matrícula: <?= e($student['registration']) ?>
                             </div>
 
                             <div class="status-options">
@@ -397,7 +228,6 @@ $existingStatuses = $existingStatuses ?? [];
                                         class="status-option status-<?= strtolower($code) ?>"
                                         onclick="selectStatus(this)"
                                     >
-
                                         <input
                                             type="radio"
                                             name="status[<?= $student['id'] ?>]"
@@ -405,8 +235,7 @@ $existingStatuses = $existingStatuses ?? [];
                                             <?= $currentStatus === $code ? 'checked' : '' ?>
                                         >
 
-                                        <?= htmlspecialchars($label) ?>
-
+                                        <?= e($label) ?>
                                     </label>
 
                                 <?php endforeach; ?>
@@ -419,7 +248,7 @@ $existingStatuses = $existingStatuses ?? [];
 
                 </div>
 
-                <div class="form-actions" style="margin-top:28px;">
+                <div class="form-actions mt-28">
 
                     <a href="<?= base_url('frequencia') ?>" class="btn-secondary">
                         Cancelar
@@ -427,22 +256,13 @@ $existingStatuses = $existingStatuses ?? [];
 
                     <?php if (!empty($existingAttendance)): ?>
 
-                        <button
-                            type="button"
-                            class="btn-secondary"
-                            style="font-size:20px;padding:18px 32px;opacity:.7;cursor:not-allowed;"
-                            disabled
-                        >
+                        <button type="button" class="btn-secondary btn-large btn-disabled" disabled>
                             Chamada de hoje já realizada
                         </button>
 
                     <?php else: ?>
 
-                        <button
-                            type="submit"
-                            class="btn-primary"
-                            style="font-size:20px;padding:18px 32px;"
-                        >
+                        <button type="submit" class="btn-primary btn-large">
                             Salvar chamada
                         </button>
 

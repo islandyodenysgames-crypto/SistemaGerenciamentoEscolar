@@ -15,13 +15,13 @@ $userError = \App\Core\Session::get('user_error');
 
 <?php if ($userSuccess): ?>
     <div class="alert alert-success">
-        <?= htmlspecialchars($userSuccess) ?>
+        <?= e($userSuccess) ?>
     </div>
 <?php endif; ?>
 
 <?php if ($userError): ?>
     <div class="alert alert-danger">
-        <?= htmlspecialchars($userError) ?>
+        <?= e($userError) ?>
     </div>
 <?php endif; ?>
 
@@ -40,7 +40,6 @@ $userError = \App\Core\Session::get('user_error');
     <table class="data-table">
 
         <thead>
-
             <tr>
                 <th width="70">ID</th>
                 <th>Nome</th>
@@ -49,7 +48,6 @@ $userError = \App\Core\Session::get('user_error');
                 <th width="180">Criado em</th>
                 <th width="170">Ações</th>
             </tr>
-
         </thead>
 
         <tbody>
@@ -57,11 +55,9 @@ $userError = \App\Core\Session::get('user_error');
         <?php if (empty($users)): ?>
 
             <tr>
-
-                <td colspan="6" style="text-align:center;padding:40px;">
+                <td colspan="6" class="table-empty">
                     Nenhum usuário cadastrado.
                 </td>
-
             </tr>
 
         <?php else: ?>
@@ -69,35 +65,22 @@ $userError = \App\Core\Session::get('user_error');
             <?php foreach ($users as $user): ?>
 
                 <tr>
+                    <td><?= $user['id'] ?></td>
+
+                    <td><?= e($user['name']) ?></td>
+
+                    <td><?= e($user['email']) ?></td>
 
                     <td>
-                        <?= $user['id'] ?>
-                    </td>
-
-                    <td>
-                        <?= htmlspecialchars($user['name']) ?>
-                    </td>
-
-                    <td>
-                        <?= htmlspecialchars($user['email']) ?>
-                    </td>
-
-                    <td>
-
-                        <?php if ((int)$user['active'] === 1): ?>
-
+                        <?php if ((int) $user['active'] === 1): ?>
                             <span class="badge badge-success">
                                 Ativo
                             </span>
-
                         <?php else: ?>
-
                             <span class="badge badge-danger">
                                 Inativo
                             </span>
-
                         <?php endif; ?>
-
                     </td>
 
                     <td>
@@ -105,7 +88,6 @@ $userError = \App\Core\Session::get('user_error');
                     </td>
 
                     <td>
-
                         <div class="table-actions">
 
                             <a
@@ -120,26 +102,19 @@ $userError = \App\Core\Session::get('user_error');
                                 method="POST"
                                 onsubmit="return confirm('Deseja realmente excluir este usuário?');"
                             >
-
                                 <input
                                     type="hidden"
                                     name="id"
                                     value="<?= $user['id'] ?>"
                                 >
 
-                                <button
-                                    type="submit"
-                                    class="table-delete"
-                                >
+                                <button type="submit" class="table-delete">
                                     Excluir
                                 </button>
-
                             </form>
 
                         </div>
-
                     </td>
-
                 </tr>
 
             <?php endforeach; ?>

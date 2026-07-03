@@ -12,7 +12,7 @@
 
     <?php else: ?>
 
-        <div style="display:flex;align-items:end;gap:8px;height:220px;margin-top:24px;">
+        <div class="frequency-chart">
 
             <?php foreach ($frequencyLast30Days as $day): ?>
 
@@ -21,9 +21,11 @@
                     $height = max(8, $percentage * 2);
                 ?>
 
-                <div title="<?= date('d/m/Y', strtotime($day['attendance_date'])) ?> - <?= $percentage ?>%"
-                     style="flex:1;height:<?= $height ?>px;background:var(--primary);border-radius:8px 8px 0 0;">
-                </div>
+                <div
+                    class="frequency-chart-bar"
+                    title="<?= date('d/m/Y', strtotime($day['attendance_date'])) ?> - <?= number_format($percentage, 1, ',', '.') ?>%"
+                    style="--bar-height: <?= $height ?>px;"
+                ></div>
 
             <?php endforeach; ?>
 

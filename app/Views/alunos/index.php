@@ -59,7 +59,7 @@ $studentError = \App\Core\Session::get('student_error');
         <?php if (empty($students)): ?>
 
             <tr>
-                <td colspan="10" style="text-align:center;padding:40px;">
+                <td colspan="10" class="table-empty">
                     Nenhum aluno cadastrado.
                 </td>
             </tr>
@@ -86,7 +86,7 @@ $studentError = \App\Core\Session::get('student_error');
                         <?php if (!empty($student['class_name'])): ?>
                             <?= htmlspecialchars($student['class_name']) ?>
                         <?php else: ?>
-                            <span style="color:#d97706;font-weight:600;">
+                            <span class="text-warning text-strong">
                                 Sem matrícula
                             </span>
                         <?php endif; ?>

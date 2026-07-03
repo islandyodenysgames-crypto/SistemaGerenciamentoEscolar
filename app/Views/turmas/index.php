@@ -15,13 +15,13 @@ $classError = \App\Core\Session::get('class_error');
 
 <?php if ($classSuccess): ?>
     <div class="alert alert-success">
-        <?= htmlspecialchars($classSuccess) ?>
+        <?= e($classSuccess) ?>
     </div>
 <?php endif; ?>
 
 <?php if ($classError): ?>
     <div class="alert alert-danger">
-        <?= htmlspecialchars($classError) ?>
+        <?= e($classError) ?>
     </div>
 <?php endif; ?>
 
@@ -40,7 +40,6 @@ $classError = \App\Core\Session::get('class_error');
     <table class="data-table">
 
         <thead>
-
             <tr>
                 <th width="70">ID</th>
                 <th>Turma</th>
@@ -50,7 +49,6 @@ $classError = \App\Core\Session::get('class_error');
                 <th width="180">Criada em</th>
                 <th width="170">Ações</th>
             </tr>
-
         </thead>
 
         <tbody>
@@ -58,11 +56,9 @@ $classError = \App\Core\Session::get('class_error');
         <?php if (empty($classes)): ?>
 
             <tr>
-
-                <td colspan="7" style="text-align:center;padding:40px;">
+                <td colspan="7" class="table-empty">
                     Nenhuma turma cadastrada.
                 </td>
-
             </tr>
 
         <?php else: ?>
@@ -70,39 +66,24 @@ $classError = \App\Core\Session::get('class_error');
             <?php foreach ($classes as $class): ?>
 
                 <tr>
+                    <td><?= $class['id'] ?></td>
+
+                    <td><?= e($class['name']) ?></td>
+
+                    <td><?= $class['year'] ?></td>
+
+                    <td><?= e($class['shift']) ?></td>
 
                     <td>
-                        <?= $class['id'] ?>
-                    </td>
-
-                    <td>
-                        <?= htmlspecialchars($class['name']) ?>
-                    </td>
-
-                    <td>
-                        <?= $class['year'] ?>
-                    </td>
-
-                    <td>
-                        <?= htmlspecialchars($class['shift']) ?>
-                    </td>
-
-                    <td>
-
                         <?php if ((int) $class['active'] === 1): ?>
-
                             <span class="badge badge-success">
                                 Ativa
                             </span>
-
                         <?php else: ?>
-
                             <span class="badge badge-danger">
                                 Inativa
                             </span>
-
                         <?php endif; ?>
-
                     </td>
 
                     <td>
@@ -110,7 +91,6 @@ $classError = \App\Core\Session::get('class_error');
                     </td>
 
                     <td>
-
                         <div class="table-actions">
 
                             <a
@@ -125,26 +105,19 @@ $classError = \App\Core\Session::get('class_error');
                                 method="POST"
                                 onsubmit="return confirm('Deseja realmente excluir esta turma?');"
                             >
-
                                 <input
                                     type="hidden"
                                     name="id"
                                     value="<?= $class['id'] ?>"
                                 >
 
-                                <button
-                                    type="submit"
-                                    class="table-delete"
-                                >
+                                <button type="submit" class="table-delete">
                                     Excluir
                                 </button>
-
                             </form>
 
                         </div>
-
                     </td>
-
                 </tr>
 
             <?php endforeach; ?>

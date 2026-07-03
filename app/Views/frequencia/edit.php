@@ -15,110 +15,19 @@ $statusLabels = $statusOptions ?? [
 
 ?>
 
-<style>
-.attendance-summary {
-    display:grid;
-    grid-template-columns:repeat(6,1fr);
-    gap:14px;
-    margin:24px 0;
-}
-
-.attendance-card,
-.student-card {
-    background:#fff;
-    border-radius:18px;
-    padding:18px;
-    box-shadow:0 8px 30px rgba(15,23,42,.08);
-}
-
-.attendance-card {
-    text-align:center;
-}
-
-.attendance-card strong {
-    display:block;
-    font-size:26px;
-    margin-top:6px;
-}
-
-.student-list {
-    display:grid;
-    gap:16px;
-}
-
-.student-name {
-    font-size:22px;
-    font-weight:900;
-}
-
-.student-registration {
-    color:#64748b;
-    margin-top:4px;
-}
-
-.status-options {
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-top:16px;
-}
-
-.status-option {
-    min-width:140px;
-    padding:14px 18px;
-    border-radius:14px;
-    border:2px solid #dbe3ef;
-    font-weight:900;
-    cursor:pointer;
-    text-align:center;
-    background:#fff;
-}
-
-.status-option input {
-    display:none;
-}
-
-.status-option.selected {
-    color:#fff;
-    border-color:transparent;
-}
-
-.status-p { color:#16a34a; }
-.status-f { color:#dc2626; }
-.status-fj { color:#d97706; }
-.status-am { color:#2563eb; }
-.status-fo { color:#7c3aed; }
-
-.status-p.selected { background:#16a34a; }
-.status-f.selected { background:#dc2626; }
-.status-fj.selected { background:#d97706; }
-.status-am.selected { background:#2563eb; }
-.status-fo.selected { background:#7c3aed; }
-
-@media (max-width:900px) {
-    .attendance-summary {
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .status-option {
-        min-width:100%;
-    }
-}
-</style>
-
 <div class="card">
 
     <h3>
-        <?= htmlspecialchars($attendance['class_name']) ?>
+        <?= e($attendance['class_name']) ?>
         — <?= $attendance['year'] ?>
-        — <?= htmlspecialchars($attendance['shift']) ?>
+        — <?= e($attendance['shift']) ?>
     </h3>
 
     <form method="POST" action="<?= base_url('frequencia/editar') ?>">
 
         <input type="hidden" name="id" value="<?= $attendance['id'] ?>">
 
-        <div class="user-form" style="margin-top:20px;">
+        <div class="user-form mt-20">
 
             <div class="form-group">
                 <label>Data da chamada</label>
@@ -127,7 +36,7 @@ $statusLabels = $statusOptions ?? [
                     class="form-control"
                     type="date"
                     name="attendance_date"
-                    value="<?= htmlspecialchars($attendance['attendance_date']) ?>"
+                    value="<?= e($attendance['attendance_date']) ?>"
                     required
                 >
             </div>
@@ -139,7 +48,7 @@ $statusLabels = $statusOptions ?? [
                     class="form-control"
                     type="text"
                     name="notes"
-                    value="<?= htmlspecialchars($attendance['notes'] ?? '') ?>"
+                    value="<?= e($attendance['notes'] ?? '') ?>"
                 >
             </div>
 
@@ -199,15 +108,15 @@ $statusLabels = $statusOptions ?? [
 
         <div
             class="student-card"
-            data-student-name="<?= htmlspecialchars(mb_strtolower($item['student_name'])) ?>"
+            data-student-name="<?= e(mb_strtolower($item['student_name'])) ?>"
         >
 
             <div class="student-name">
-                <?= htmlspecialchars($item['student_name']) ?>
+                <?= e($item['student_name']) ?>
             </div>
 
             <div class="student-registration">
-                Matrícula: <?= htmlspecialchars($item['registration']) ?>
+                Matrícula: <?= e($item['registration']) ?>
             </div>
 
             <div class="status-options">
@@ -226,7 +135,7 @@ $statusLabels = $statusOptions ?? [
                             <?= $item['status'] === $code ? 'checked' : '' ?>
                         >
 
-                        <?= htmlspecialchars($label) ?>
+                        <?= e($label) ?>
 
                     </label>
 
@@ -240,13 +149,13 @@ $statusLabels = $statusOptions ?? [
 
 </div>
 
-<div class="form-actions" style="margin-top:28px;">
+<div class="form-actions mt-28">
 
     <a href="<?= base_url('frequencia') ?>" class="btn-secondary">
         Cancelar
     </a>
 
-    <button type="submit" class="btn-primary" style="font-size:18px;padding:16px 28px;">
+    <button type="submit" class="btn-primary btn-large">
         Salvar alterações
     </button>
 

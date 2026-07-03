@@ -9,11 +9,7 @@ component('page-header', [
 
 <div class="dashboard-grid">
 
-    <a
-        href="<?= base_url('relatorios/diario') ?>"
-        class="card"
-        style="text-decoration:none;color:inherit;"
-    >
+    <a href="<?= base_url('relatorios/diario') ?>" class="card card-link">
         <h3>📅 Relatório Diário</h3>
 
         <p>
@@ -22,11 +18,7 @@ component('page-header', [
         </p>
     </a>
 
-    <a
-        href="#"
-        class="card"
-        style="text-decoration:none;color:inherit;"
-    >
+    <a href="#" class="card card-link">
         <h3>🏫 Relatório por Turma</h3>
 
         <p>
@@ -35,11 +27,7 @@ component('page-header', [
         </p>
     </a>
 
-    <a
-        href="#"
-        class="card"
-        style="text-decoration:none;color:inherit;"
-    >
+    <a href="#" class="card card-link">
         <h3>👨‍🎓 Relatório por Aluno</h3>
 
         <p>
@@ -48,11 +36,7 @@ component('page-header', [
         </p>
     </a>
 
-    <a
-        href="#"
-        class="card"
-        style="text-decoration:none;color:inherit;"
-    >
+    <a href="#" class="card card-link">
         <h3>🏆 Ranking por Período</h3>
 
         <p>
@@ -61,11 +45,7 @@ component('page-header', [
         </p>
     </a>
 
-    <a
-        href="#"
-        class="card"
-        style="text-decoration:none;color:inherit;"
-    >
+    <a href="#" class="card card-link">
         <h3>📈 Evolução da Frequência</h3>
 
         <p>
@@ -74,11 +54,7 @@ component('page-header', [
         </p>
     </a>
 
-    <a
-        href="#"
-        class="card"
-        style="text-decoration:none;color:inherit;"
-    >
+    <a href="#" class="card card-link">
         <h3>⚠️ Turmas sem Chamada</h3>
 
         <p>
@@ -87,11 +63,7 @@ component('page-header', [
         </p>
     </a>
 
-    <a
-        href="#"
-        class="card"
-        style="text-decoration:none;color:inherit;"
-    >
+    <a href="#" class="card card-link">
         <h3>🚨 Alunos em Alerta</h3>
 
         <p>
@@ -100,11 +72,7 @@ component('page-header', [
         </p>
     </a>
 
-    <a
-        href="#"
-        class="card"
-        style="text-decoration:none;color:inherit;"
-    >
+    <a href="#" class="card card-link">
         <h3>📄 Exportações</h3>
 
         <p>

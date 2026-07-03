@@ -83,29 +83,3 @@ component('stat-card', [
     </div>
 
 </div>
-
-<style>
-
-.dashboard-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:24px;
-    margin-top:24px;
-    align-items:start;
-}
-
-.dashboard-column{
-    display:flex;
-    flex-direction:column;
-    gap:24px;
-}
-
-@media (max-width:1200px){
-
-    .dashboard-row{
-        grid-template-columns:1fr;
-    }
-
-}
-
-</style>

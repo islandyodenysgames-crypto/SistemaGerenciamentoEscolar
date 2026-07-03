@@ -8,21 +8,18 @@ $description = $description ?? '';
 $color = $color ?? 'blue';
 $url = $url ?? '#';
 
-$colors = [
-    'green' => '#16a34a',
-    'yellow' => '#d97706',
-    'red' => '#dc2626',
-    'blue' => '#2563eb',
-];
-
-$mainColor = $colors[$color] ?? $colors['blue'];
+$colorClass = match ($color) {
+    'green' => 'metric-green',
+    'yellow' => 'metric-yellow',
+    'red' => 'metric-red',
+    default => 'metric-blue',
+};
 
 ?>
 
 <a
-    href="<?= $url ?>"
-    class="metric-card"
-    style="border-top-color:<?= $mainColor ?>;"
+    href="<?= htmlspecialchars($url) ?>"
+    class="metric-card <?= $colorClass ?>"
 >
     <div class="metric-card-header">
         <span><?= $icon ?></span>
