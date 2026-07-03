@@ -1,0 +1,181 @@
+/* ==========================================================
+   ANIMAÇÕES
+========================================================== */
+
+:root {
+    --animation-speed: .25s;
+}
+
+/* ==========================================================
+   FADE
+========================================================== */
+
+.fade-in {
+    animation: fadeIn var(--animation-speed) ease;
+}
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+/* ==========================================================
+   SLIDE
+========================================================== */
+
+.slide-up {
+    animation: slideUp .35s ease;
+}
+
+@keyframes slideUp {
+
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+/* ==========================================================
+   SCALE
+========================================================== */
+
+.scale-in {
+    animation: scaleIn .25s ease;
+}
+
+@keyframes scaleIn {
+
+    from {
+        opacity: 0;
+        transform: scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}
+
+/* ==========================================================
+   HOVER PADRÃO
+========================================================== */
+
+.hover-lift {
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+.hover-lift:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow: var(--shadow-md);
+
+}
+
+/* ==========================================================
+   BOTÕES
+========================================================== */
+
+.btn,
+.btn-primary,
+.btn-secondary {
+
+    transition:
+        transform .2s ease,
+        filter .2s ease,
+        box-shadow .2s ease;
+
+}
+
+.btn:hover,
+.btn-primary:hover,
+.btn-secondary:hover {
+
+    transform: translateY(-1px);
+
+}
+
+/* ==========================================================
+   CARDS
+========================================================== */
+
+.card,
+.metric-card,
+.executive-card,
+.pending-card,
+.period-card,
+.ranking-item {
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+
+}
+
+.card:hover,
+.metric-card:hover,
+.executive-card:hover,
+.pending-card:hover,
+.period-card:hover,
+.ranking-item:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: var(--shadow-lg);
+
+}
+
+/* ==========================================================
+   LINKS
+========================================================== */
+
+a {
+
+    transition:
+        color .2s ease,
+        opacity .2s ease;
+
+}
+
+a:hover {
+
+    opacity: .92;
+
+}
+
+/* ==========================================================
+   PROGRESS CIRCLE
+========================================================== */
+
+.progress-circle {
+
+    transition:
+        background .35s ease,
+        transform .2s ease;
+
+}
+
+.progress-circle:hover {
+
+    transform: scale(1.03);
+
+}

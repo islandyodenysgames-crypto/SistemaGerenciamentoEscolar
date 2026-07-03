@@ -1,54 +1,67 @@
 <div class="card">
 
     <div class="card-header">
+
         <h3>Turmas sem chamada hoje</h3>
+
+        <?php if (!empty($classesWithoutAttendance)): ?>
+
+            <span class="badge badge-warning">
+                <?= count($classesWithoutAttendance) ?> pendente(s)
+            </span>
+
+        <?php endif; ?>
+
     </div>
 
     <?php if (empty($classesWithoutAttendance)): ?>
 
-        <div class="activity-empty">
-            Todas as turmas já tiveram chamada registrada hoje.
+        <div class="attendance-success">
+
+            <div class="attendance-success-icon">
+                ✅
+            </div>
+
+            <h3>Todas as turmas já registraram frequência hoje</h3>
+
+            <p>
+                Excelente! Nenhuma turma está pendente.
+            </p>
+
         </div>
 
     <?php else: ?>
 
-        <div
-            style="
-                display:grid;
-                grid-template-columns:repeat(3,1fr);
-                gap:16px;
-                margin-top:18px;
-            "
-        >
+        <div class="pending-grid">
 
             <?php foreach ($classesWithoutAttendance as $class): ?>
 
-                <div
-                    style="
-                        background:#fef3c7;
-                        border-radius:18px;
-                        padding:18px;
-                        border:1px solid #fde68a;
-                    "
+                <a
+                    href="<?= base_url('frequencia/novo?turma=' . $class['id']) ?>"
+                    class="pending-card"
                 >
 
-                    <h3 style="margin-bottom:8px;">
-                        🏫 <?= htmlspecialchars($class['name']) ?>
-                    </h3>
+                    <div class="pending-icon">
+                        🏫
+                    </div>
 
-                    <p style="margin-bottom:14px;color:#92400e;">
-                        Ano: <strong><?= $class['year'] ?></strong><br>
-                        Turno: <strong><?= htmlspecialchars($class['shift']) ?></strong>
-                    </p>
+                    <div class="pending-title">
+                        <?= htmlspecialchars($class['name']) ?>
+                    </div>
 
-                    <a
-                        href="<?= base_url('frequencia/novo?turma=' . $class['id']) ?>"
-                        class="btn-primary"
-                    >
-                        Registrar frequência
-                    </a>
+                    <div class="pending-year">
+                        <?= $class['year'] ?>
+                    </div>
 
-                </div>
+                    <div class="pending-shift">
+                        <?= htmlspecialchars($class['shift']) ?>
+                    </div>
+
+                    <div class="pending-action">
+                        Registrar frequência →
+                    </div>
+
+                </a>
 
             <?php endforeach; ?>
 
@@ -57,17 +70,3 @@
     <?php endif; ?>
 
 </div>
-
-<style>
-@media (max-width: 1100px) {
-    .card > div[style*="grid-template-columns:repeat(3,1fr)"] {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-}
-
-@media (max-width: 700px) {
-    .card > div[style*="grid-template-columns:repeat(3,1fr)"] {
-        grid-template-columns: 1fr !important;
-    }
-}
-</style>

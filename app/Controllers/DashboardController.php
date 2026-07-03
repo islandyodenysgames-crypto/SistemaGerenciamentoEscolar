@@ -11,20 +11,29 @@ use App\Services\DashboardService;
 
 class DashboardController extends Controller
 {
-    public function index(): void
+    private DashboardService $service;
+
+    public function __construct()
+    {
+        $this->service = new DashboardService();
+    }
+
+    private function guard(): void
     {
         if (!Session::has('user')) {
             Response::redirect(base_url('login'));
         }
+    }
 
-        $dashboardService = new DashboardService();
+    public function index(): void
+    {
+        $this->guard();
 
         $this->view('dashboard/index', array_merge(
             [
                 'title' => 'Dashboard - ' . app_name(),
-                'user' => Session::get('user'),
             ],
-            $dashboardService->data()
+            $this->service->data()
         ));
     }
 }

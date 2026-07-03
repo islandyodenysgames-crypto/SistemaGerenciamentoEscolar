@@ -39,76 +39,73 @@ component('stat-card', [
 
 </div>
 
-<div class="card" style="margin-top:24px;">
+<?php component('executive-dashboard', $executive ?? []); ?>
 
-    <div class="card-header">
-        <h3>Painel Executivo de Frequência</h3>
+<div class="dashboard-row">
+
+    <div class="dashboard-column">
+
+        <?php component('daily-ranking', [
+            'ranking' => $ranking ?? []
+        ]); ?>
+
     </div>
 
-    <div
-        style="
-            display:grid;
-            grid-template-columns:repeat(4,1fr);
-            gap:20px;
-            margin-top:20px;
-        "
-    >
+    <div class="dashboard-column">
 
-        <div style="text-align:center;">
-            <?php component('attendance-progress-circle', [
-                'percentage' => (float) ($schoolFrequencyToday['percentage'] ?? 0),
-                'label' => 'Hoje',
-                'size' => 150
-            ]); ?>
-        </div>
-
-        <div style="text-align:center;">
-            <?php component('attendance-progress-circle', [
-                'percentage' => (float) ($schoolFrequencyWeek['percentage'] ?? 0),
-                'label' => 'Semana',
-                'size' => 150
-            ]); ?>
-        </div>
-
-        <div style="text-align:center;">
-            <?php component('attendance-progress-circle', [
-                'percentage' => (float) ($schoolFrequencyMonth['percentage'] ?? 0),
-                'label' => 'Mês',
-                'size' => 150
-            ]); ?>
-        </div>
-
-        <div style="text-align:center;">
-            <?php component('attendance-progress-circle', [
-                'percentage' => (float) ($schoolFrequencyYear['percentage'] ?? 0),
-                'label' => 'Ano',
-                'size' => 150
-            ]); ?>
-        </div>
+        <?php component('frequency-period-summary', [
+            'today' => $schoolFrequencyToday ?? [],
+            'week' => $schoolFrequencyWeek ?? [],
+            'month' => $schoolFrequencyMonth ?? [],
+            'year' => $schoolFrequencyYear ?? [],
+        ]); ?>
 
     </div>
 
 </div>
 
-<div class="dashboard-content" style="margin-top:24px;">
+<div class="dashboard-row">
 
-    <?php component('daily-ranking', [
-        'ranking' => $ranking ?? []
-    ]); ?>
+    <div class="dashboard-column">
 
-    <?php component('frequency-period-summary', [
-        'today' => $schoolFrequencyToday ?? [],
-        'week' => $schoolFrequencyWeek ?? [],
-        'month' => $schoolFrequencyMonth ?? [],
-        'year' => $schoolFrequencyYear ?? [],
-    ]); ?>
+        <?php component('classes-without-attendance', [
+            'classesWithoutAttendance' => $classesWithoutAttendance ?? []
+        ]); ?>
 
-    <?php component('classes-without-attendance', [
-        'classesWithoutAttendance' => $classesWithoutAttendance ?? []
-    ]); ?>
+    </div>
 
-    <?php component('frequency-chart', [
-        'frequencyLast30Days' => $frequencyLast30Days ?? []
-    ]); ?>
+    <div class="dashboard-column">
+
+        <?php component('frequency-chart', [
+            'frequencyLast30Days' => $frequencyLast30Days ?? []
+        ]); ?>
+
+    </div>
 
 </div>
+
+<style>
+
+.dashboard-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    margin-top:24px;
+    align-items:start;
+}
+
+.dashboard-column{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+}
+
+@media (max-width:1200px){
+
+    .dashboard-row{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>

@@ -21,9 +21,10 @@ class DashboardService
     {
         $today = date('Y-m-d');
 
+        $central = $this->attendanceService->dailyCentral($today);
+
         return [
             'totalStudents' => $this->studentService->countActive(),
-
             'totalClasses' => $this->schoolClassService->countActive(),
 
             'ranking' => $this->attendanceService->dailyRanking($today),
@@ -45,6 +46,14 @@ class DashboardService
 
             'classesWithoutAttendance' =>
                 $this->attendanceService->classesWithoutAttendanceToday($today),
+
+            'executive' => [
+                'generalPercentage' => (float) ($central['generalPercentage'] ?? 0),
+                'doneClasses' => (int) ($central['doneClasses'] ?? 0),
+                'pendingClasses' => (int) ($central['pendingClasses'] ?? 0),
+                'totalClasses' => (int) ($central['totalClasses'] ?? 0),
+                'studentsInAlert' => $this->studentService->countInAlert(),
+            ],
         ];
     }
 }

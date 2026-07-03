@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card daily-ranking-card">
 
     <div class="card-header">
         <h3>Ranking Diário de Frequência</h3>
@@ -12,54 +12,48 @@
 
     <?php else: ?>
 
-        <div style="display:grid;gap:16px;margin-top:18px;">
+        <div class="ranking-list">
 
             <?php foreach ($ranking as $index => $item): ?>
 
                 <?php
                     $hasAttendance = (int) ($item['has_attendance'] ?? 0) === 1;
                     $percentage = $hasAttendance ? (float) ($item['attendance_percentage'] ?? 0) : 0;
+
+                    $position = $index + 1;
+                    $medal = $position === 1
+                        ? '🥇'
+                        : ($position === 2
+                            ? '🥈'
+                            : ($position === 3 ? '🥉' : $position . 'º'));
                 ?>
 
-                <div
-                    style="
-                        display:grid;
-                        grid-template-columns:90px 1fr 130px;
-                        gap:18px;
-                        align-items:center;
-                        padding:18px;
-                        border-radius:18px;
-                        background:#f8fafc;
-                    "
-                >
+                <div class="ranking-item">
 
-                    <div style="font-size:24px;font-weight:900;text-align:center;">
-                        <?php if (!$hasAttendance): ?>
-                            —
-                        <?php else: ?>
-                            <?= $index === 0 ? '🥇' : ($index === 1 ? '🥈' : ($index === 2 ? '🥉' : ($index + 1) . 'º')) ?>
-                        <?php endif; ?>
+                    <div class="ranking-position">
+                        <?= $hasAttendance ? $medal : '—' ?>
                     </div>
 
-                    <div>
+                    <div class="ranking-info">
 
-                        <h3 style="margin-bottom:6px;">
-                            <?= htmlspecialchars($item['class_name']) ?> — <?= $item['year'] ?>
-                        </h3>
+                        <div class="ranking-title">
+                            <?= htmlspecialchars($item['class_name']) ?>
+                            — <?= $item['year'] ?>
+                        </div>
 
-                        <p style="margin-bottom:10px;color:#64748b;">
+                        <div class="ranking-subtitle">
                             Turno: <?= htmlspecialchars($item['shift']) ?>
-                        </p>
+                        </div>
 
                         <?php if ($hasAttendance): ?>
 
-                            <div style="display:flex;gap:12px;flex-wrap:wrap;line-height:1.9;">
-                                <span>✅ Presentes: <strong><?= (int) $item['presentes'] ?></strong></span>
-                                <span>❌ Faltas: <strong><?= (int) $item['ranking_absences'] ?></strong></span>
-                                <span>🟡 Justificadas: <strong><?= (int) $item['justificadas'] ?></strong></span>
-                                <span>🔵 Atestados: <strong><?= (int) $item['atestados'] ?></strong></span>
-                                <span>🟣 Ônibus: <strong><?= (int) $item['onibus'] ?></strong></span>
-                                <span>⭐ IFE: <strong><?= number_format((float) $item['ife_score'], 2, ',', '.') ?></strong></span>
+                            <div class="ranking-metrics">
+                                <span>✅ <?= (int) $item['presentes'] ?> presentes</span>
+                                <span>❌ <?= (int) $item['ranking_absences'] ?> faltas</span>
+                                <span>🟡 <?= (int) $item['justificadas'] ?> justificadas</span>
+                                <span>🔵 <?= (int) $item['atestados'] ?> atestados</span>
+                                <span>🟣 <?= (int) $item['onibus'] ?> ônibus</span>
+                                <span>⭐ IFE <?= number_format((float) $item['ife_score'], 2, ',', '.') ?></span>
                             </div>
 
                         <?php else: ?>
@@ -72,12 +66,14 @@
 
                     </div>
 
-                    <div>
+                    <div class="ranking-progress">
+
                         <?php component('attendance-progress-circle', [
                             'percentage' => $percentage,
                             'label' => $hasAttendance ? 'Freq.' : 'Pendente',
-                            'size' => 110
+                            'size' => 105
                         ]); ?>
+
                     </div>
 
                 </div>

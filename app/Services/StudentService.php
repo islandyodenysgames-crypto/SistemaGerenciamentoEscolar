@@ -22,47 +22,26 @@ class StudentService
                 students.guardian_phone,
                 students.active,
                 students.created_at,
-
                 school_classes.name AS class_name,
                 school_classes.year AS class_year,
                 school_classes.shift AS class_shift,
-
                 COUNT(attendance_items.id) AS total_records,
-
-                SUM(
-                    CASE
-                        WHEN attendance_items.status = 'P'
-                        THEN 1
-                        ELSE 0
-                    END
-                ) AS total_presentes,
-
+                SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) AS total_presentes,
                 ROUND(
                     (
-                        SUM(
-                            CASE
-                                WHEN attendance_items.status = 'P'
-                                THEN 1
-                                ELSE 0
-                            END
-                        ) /
-                        NULLIF(COUNT(attendance_items.id), 0)
+                        SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END)
+                        / NULLIF(COUNT(attendance_items.id), 0)
                     ) * 100,
                     1
                 ) AS attendance_percentage
-
             FROM students
-
             LEFT JOIN enrollments
                 ON enrollments.student_id = students.id
                AND enrollments.active = 1
-
             LEFT JOIN school_classes
                 ON school_classes.id = enrollments.school_class_id
-
             LEFT JOIN attendance_items
                 ON attendance_items.student_id = students.id
-
             GROUP BY
                 students.id,
                 students.name,
@@ -75,7 +54,6 @@ class StudentService
                 school_classes.name,
                 school_classes.year,
                 school_classes.shift
-
             ORDER BY students.name ASC
         ");
 
@@ -90,6 +68,34 @@ class StudentService
             SELECT COUNT(*)
             FROM students
             WHERE active = 1
+        ");
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function countInAlert(): int
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->query("
+            SELECT COUNT(*)
+            FROM (
+                SELECT
+                    students.id,
+                    ROUND(
+                        (
+                            SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END)
+                            / NULLIF(COUNT(attendance_items.id), 0)
+                        ) * 100,
+                        1
+                    ) AS percentage
+                FROM students
+                INNER JOIN attendance_items
+                    ON attendance_items.student_id = students.id
+                WHERE students.active = 1
+                GROUP BY students.id
+                HAVING percentage < 85
+            ) AS alert_students
         ");
 
         return (int) $stmt->fetchColumn();
@@ -135,9 +141,7 @@ class StudentService
             LIMIT 1
         ");
 
-        $stmt->execute([
-            'id' => $id,
-        ]);
+        $stmt->execute(['id' => $id]);
 
         $student = $stmt->fetch();
 
@@ -218,9 +222,7 @@ class StudentService
             WHERE id = :id
         ");
 
-        return $stmt->execute([
-            'id' => $id,
-        ]);
+        return $stmt->execute(['id' => $id]);
     }
 
     public function registrationExists(
@@ -230,7 +232,6 @@ class StudentService
         $db = Connection::getInstance();
 
         if ($ignoreId === null) {
-
             $stmt = $db->prepare("
                 SELECT COUNT(*)
                 FROM students
@@ -240,9 +241,7 @@ class StudentService
             $stmt->execute([
                 'registration' => $registration,
             ]);
-
         } else {
-
             $stmt = $db->prepare("
                 SELECT COUNT(*)
                 FROM students
@@ -254,7 +253,6 @@ class StudentService
                 'registration' => $registration,
                 'id' => $ignoreId,
             ]);
-
         }
 
         return (int) $stmt->fetchColumn() > 0;

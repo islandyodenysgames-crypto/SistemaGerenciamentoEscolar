@@ -1,0 +1,269 @@
+/* ==========================================================
+   BADGES
+========================================================== */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.badge-success {
+    background: var(--green-soft);
+    color: var(--success);
+}
+
+.badge-warning {
+    background: var(--yellow-soft);
+    color: var(--warning);
+}
+
+.badge-danger {
+    background: var(--red-soft);
+    color: var(--danger);
+}
+
+.badge-info {
+    background: var(--blue-soft);
+    color: var(--info);
+}
+
+/* ==========================================================
+   BOTÕES
+========================================================== */
+
+.btn,
+.btn-primary,
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 12px 18px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    filter: brightness(.95);
+}
+
+.btn-secondary {
+    background: #eef2f7;
+    color: var(--text);
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+}
+
+/* ==========================================================
+   CÍRCULO DE PROGRESSO
+========================================================== */
+
+.progress-circle {
+
+    width: var(--circle-size);
+
+    height: var(--circle-size);
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin: auto;
+
+    background:
+        conic-gradient(
+            var(--circle-color) var(--circle-progress),
+            var(--border) var(--circle-progress)
+        );
+
+    box-shadow: inset 0 0 0 1px rgba(15,23,42,.04);
+
+}
+
+.progress-circle-inner {
+
+    width: 74%;
+
+    height: 74%;
+
+    border-radius: 50%;
+
+    background: var(--surface);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    box-shadow: var(--shadow-sm);
+
+}
+
+.progress-circle-inner strong {
+
+    color: var(--text-dark);
+
+    font-weight: 900;
+
+    font-size: var(--circle-font-size);
+
+    line-height: 1;
+
+}
+
+.progress-circle-inner small {
+
+    margin-top: 6px;
+
+    color: var(--text-light);
+
+    font-weight: 700;
+
+    font-size: 12px;
+
+    text-align: center;
+
+    line-height: 1.2;
+
+}
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+.activity-empty,
+.empty-state {
+
+    padding: 50px 20px;
+
+    text-align: center;
+
+    color: var(--text-light);
+
+}
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.status-success {
+    color: var(--success);
+}
+
+.status-warning {
+    color: var(--warning);
+}
+
+.status-danger {
+    color: var(--danger);
+}
+
+.status-info {
+    color: var(--info);
+}
+
+/* ==========================================================
+   SOMBRAS
+========================================================== */
+
+.shadow-sm {
+    box-shadow: var(--shadow-sm);
+}
+
+.shadow-md {
+    box-shadow: var(--shadow-md);
+}
+
+.shadow-lg {
+    box-shadow: var(--shadow-lg);
+}
+
+/* ==========================================================
+   TRANSIÇÕES
+========================================================== */
+
+.transition {
+    transition: var(--transition);
+}
+
+/* ==========================================================
+   CURSOR
+========================================================== */
+
+.pointer {
+    cursor: pointer;
+}
+
+/* ==========================================================
+   ÍCONES
+========================================================== */
+
+.icon-lg {
+    font-size: 32px;
+}
+
+.icon-md {
+    font-size: 24px;
+}
+
+.icon-sm {
+    font-size: 18px;
+}
+
+/* ==========================================================
+   DIVISORES
+========================================================== */
+
+.divider {
+
+    width: 100%;
+
+    height: 1px;
+
+    background: var(--border);
+
+    margin: 20px 0;
+
+}
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.loading {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 40px;
+
+    color: var(--text-light);
+
+}

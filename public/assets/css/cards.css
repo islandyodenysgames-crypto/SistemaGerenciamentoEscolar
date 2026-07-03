@@ -1,0 +1,68 @@
+.card {
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.card-header h3 {
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.metric-card,
+.executive-card,
+.period-card,
+.pending-card,
+.attendance-card,
+.student-card,
+.attendance-class-card,
+.ranking-item {
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+.metric-card:hover,
+.executive-card:hover,
+.pending-card:hover,
+.attendance-class-card:hover,
+.ranking-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.metric-card,
+.executive-card {
+    text-decoration: none;
+    color: inherit;
+    padding: 22px;
+    text-align: center;
+    border-top: 5px solid var(--info);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 250px;
+}
+
+.metric-value {
+    font-size: 42px;
+    font-weight: 900;
+    margin: 14px 0 8px;
+}
+
+.metric-subtitle,
+.metric-description,
+.executive-footer {
+    color: var(--text-light);
+    font-weight: 700;
+}

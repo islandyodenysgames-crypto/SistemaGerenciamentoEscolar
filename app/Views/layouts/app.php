@@ -28,6 +28,46 @@
         rel="stylesheet"
         href="<?= base_url('assets/css/app.css') ?>">
 
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/themes.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/cards.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/components.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/dashboard.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/forms.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/tables.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/attendance.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/utilities.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/responsive.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/animations.css') ?>">
+
 </head>
 
 <body>

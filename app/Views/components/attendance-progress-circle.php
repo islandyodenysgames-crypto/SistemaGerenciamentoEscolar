@@ -2,53 +2,42 @@
 
 $percentage = (float) ($percentage ?? 0);
 $label = $label ?? 'Frequência';
+$size = (int) ($size ?? 120);
 
-$color = '#16a34a';
+$percentage = max(0, min(100, $percentage));
+
+$color = 'var(--success)';
 
 if ($percentage < 75) {
-    $color = '#dc2626';
+    $color = 'var(--danger)';
 } elseif ($percentage < 85) {
-    $color = '#f97316';
+    $color = 'var(--secondary)';
 } elseif ($percentage < 95) {
-    $color = '#d97706';
+    $color = 'var(--warning)';
 }
+
+$fontSize = max(20, (int) ($size * 0.20));
 
 ?>
 
 <div
+    class="progress-circle"
     style="
-        width:<?= $size ?? 120 ?>px;
-        height:<?= $size ?? 120 ?>px;
-        border-radius:50%;
-        background:conic-gradient(
-            <?= $color ?> <?= $percentage ?>%,
-            #e5e7eb <?= $percentage ?>%
-        );
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        margin:auto;
+        --circle-size: <?= $size ?>px;
+        --circle-color: <?= $color ?>;
+        --circle-progress: <?= $percentage ?>%;
+        --circle-font-size: <?= $fontSize ?>px;
     "
 >
-    <div
-        style="
-            width:75%;
-            height:75%;
-            border-radius:50%;
-            background:#fff;
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            justify-content:center;
-            font-weight:900;
-        "
-    >
-        <strong style="font-size:24px;">
+    <div class="progress-circle-inner">
+
+        <strong>
             <?= number_format($percentage, 1, ',', '.') ?>%
         </strong>
 
-        <small style="color:#64748b;">
+        <small>
             <?= htmlspecialchars($label) ?>
         </small>
+
     </div>
 </div>
