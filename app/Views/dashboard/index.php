@@ -2,7 +2,7 @@
 
 component('page-header', [
     'title' => 'Dashboard',
-    'subtitle' => 'Bem-vindo ao Sistema de Frequência Escolar'
+    'subtitle' => 'Centro de monitoramento da frequência escolar'
 ]);
 
 ?>
@@ -45,8 +45,19 @@ component('stat-card', [
         'schoolFrequencyToday' => $schoolFrequencyToday ?? []
     ]); ?>
 
+    <?php component('frequency-period-summary', [
+        'today' => $schoolFrequencyToday ?? [],
+        'week' => $schoolFrequencyWeek ?? [],
+        'month' => $schoolFrequencyMonth ?? [],
+        'year' => $schoolFrequencyYear ?? [],
+    ]); ?>
+
     <?php component('daily-ranking', [
         'ranking' => $ranking ?? []
+    ]); ?>
+
+    <?php component('classes-without-attendance', [
+        'classesWithoutAttendance' => $classesWithoutAttendance ?? []
     ]); ?>
 
     <?php component('frequency-chart', [

@@ -22,11 +22,31 @@ class DashboardController extends Controller
         $today = date('Y-m-d');
 
         $this->view('dashboard/index', [
+
             'title' => 'Dashboard - ' . app_name(),
+
             'user' => Session::get('user'),
+
             'ranking' => $attendanceService->dailyRanking($today),
-            'schoolFrequencyToday' => $attendanceService->schoolFrequencyToday($today),
-            'frequencyLast30Days' => $attendanceService->schoolFrequencyLast30Days(),
+
+            'schoolFrequencyToday' =>
+                $attendanceService->schoolFrequencyToday($today),
+
+            'schoolFrequencyWeek' =>
+                $attendanceService->schoolFrequencyWeek(),
+
+            'schoolFrequencyMonth' =>
+                $attendanceService->schoolFrequencyMonth(),
+
+            'schoolFrequencyYear' =>
+                $attendanceService->schoolFrequencyYear(),
+
+            'frequencyLast30Days' =>
+                $attendanceService->schoolFrequencyLast30Days(),
+
+            'classesWithoutAttendance' =>
+                $attendanceService->classesWithoutAttendanceToday($today),
+
         ]);
     }
 }

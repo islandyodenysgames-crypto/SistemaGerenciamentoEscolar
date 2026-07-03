@@ -190,17 +190,11 @@ class AttendanceService
                 school_classes.name AS class_name,
                 school_classes.year,
                 school_classes.shift,
-
                 COUNT(attendance_items.id) AS total_students,
-
                 SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) AS presentes,
-
                 SUM(CASE WHEN attendance_items.status = 'F' THEN 1 ELSE 0 END) AS ranking_absences,
-
                 SUM(CASE WHEN attendance_items.status IN ('FJ', 'AM', 'FO') THEN 1 ELSE 0 END) AS attenuated_absences,
-
                 SUM(CASE WHEN attendance_items.status <> 'P' THEN 1 ELSE 0 END) AS raw_absences,
-
                 ROUND(
                     (
                         SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END)
@@ -208,23 +202,17 @@ class AttendanceService
                     ) * 100,
                     1
                 ) AS attendance_percentage
-
             FROM attendance
-
             INNER JOIN school_classes
                 ON school_classes.id = attendance.school_class_id
-
             INNER JOIN attendance_items
                 ON attendance_items.attendance_id = attendance.id
-
             WHERE attendance.attendance_date = :date
-
             GROUP BY
                 school_classes.id,
                 school_classes.name,
                 school_classes.year,
                 school_classes.shift
-
             ORDER BY
                 ranking_absences ASC,
                 attendance_percentage DESC,
@@ -239,51 +227,29 @@ class AttendanceService
 
     public function schoolFrequencyToday(string $date): array
     {
-        $db = Connection::getInstance();
+        return $this->frequencyByPeriod($date, $date);
+    }
 
-        $stmt = $db->prepare("
-            SELECT
-                COUNT(attendance_items.id) AS total_students,
-
-                SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) AS presentes,
-
-                SUM(CASE WHEN attendance_items.status = 'F' THEN 1 ELSE 0 END) AS faltas,
-
-                SUM(CASE WHEN attendance_items.status = 'FJ' THEN 1 ELSE 0 END) AS justificadas,
-
-                SUM(CASE WHEN attendance_items.status = 'AM' THEN 1 ELSE 0 END) AS atestados,
-
-                SUM(CASE WHEN attendance_items.status = 'FO' THEN 1 ELSE 0 END) AS onibus,
-
-                ROUND(
-                    (
-                        SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END)
-                        / COUNT(attendance_items.id)
-                    ) * 100,
-                    1
-                ) AS percentage
-
-            FROM attendance
-
-            INNER JOIN attendance_items
-                ON attendance_items.attendance_id = attendance.id
-
-            WHERE attendance.attendance_date = :date
+    public function schoolFrequencyWeek(): array
+    {
+        return $this->frequencyBySqlCondition("
+            YEARWEEK(attendance.attendance_date, 1) = YEARWEEK(CURDATE(), 1)
         ");
+    }
 
-        $stmt->execute(['date' => $date]);
+    public function schoolFrequencyMonth(): array
+    {
+        return $this->frequencyBySqlCondition("
+            YEAR(attendance.attendance_date) = YEAR(CURDATE())
+            AND MONTH(attendance.attendance_date) = MONTH(CURDATE())
+        ");
+    }
 
-        $data = $stmt->fetch();
-
-        return $data ?: [
-            'total_students' => 0,
-            'presentes' => 0,
-            'faltas' => 0,
-            'justificadas' => 0,
-            'atestados' => 0,
-            'onibus' => 0,
-            'percentage' => 0,
-        ];
+    public function schoolFrequencyYear(): array
+    {
+        return $this->frequencyBySqlCondition("
+            YEAR(attendance.attendance_date) = YEAR(CURDATE())
+        ");
     }
 
     public function schoolFrequencyLast30Days(): array
@@ -293,7 +259,6 @@ class AttendanceService
         $stmt = $db->query("
             SELECT
                 attendance.attendance_date,
-
                 ROUND(
                     (
                         SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END)
@@ -301,19 +266,121 @@ class AttendanceService
                     ) * 100,
                     1
                 ) AS percentage
-
             FROM attendance
-
             INNER JOIN attendance_items
                 ON attendance_items.attendance_id = attendance.id
-
             WHERE attendance.attendance_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-
             GROUP BY attendance.attendance_date
-
             ORDER BY attendance.attendance_date ASC
         ");
 
         return $stmt->fetchAll();
+    }
+
+    public function classesWithoutAttendanceToday(string $date): array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            SELECT
+                school_classes.id,
+                school_classes.name,
+                school_classes.year,
+                school_classes.shift
+            FROM school_classes
+            WHERE school_classes.active = 1
+              AND school_classes.id NOT IN (
+                  SELECT attendance.school_class_id
+                  FROM attendance
+                  WHERE attendance.attendance_date = :date
+              )
+            ORDER BY
+                school_classes.year DESC,
+                school_classes.name ASC
+        ");
+
+        $stmt->execute([
+            'date' => $date,
+        ]);
+
+        return $stmt->fetchAll();
+    }
+
+    private function frequencyByPeriod(string $startDate, string $endDate): array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            SELECT
+                COUNT(attendance_items.id) AS total_students,
+                SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) AS presentes,
+                SUM(CASE WHEN attendance_items.status = 'F' THEN 1 ELSE 0 END) AS faltas,
+                SUM(CASE WHEN attendance_items.status = 'FJ' THEN 1 ELSE 0 END) AS justificadas,
+                SUM(CASE WHEN attendance_items.status = 'AM' THEN 1 ELSE 0 END) AS atestados,
+                SUM(CASE WHEN attendance_items.status = 'FO' THEN 1 ELSE 0 END) AS onibus,
+                ROUND(
+                    (
+                        SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END)
+                        / COUNT(attendance_items.id)
+                    ) * 100,
+                    1
+                ) AS percentage
+            FROM attendance
+            INNER JOIN attendance_items
+                ON attendance_items.attendance_id = attendance.id
+            WHERE attendance.attendance_date BETWEEN :start_date AND :end_date
+        ");
+
+        $stmt->execute([
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+        ]);
+
+        return $this->normalizeFrequencyResult($stmt->fetch());
+    }
+
+    private function frequencyBySqlCondition(string $condition): array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->query("
+            SELECT
+                COUNT(attendance_items.id) AS total_students,
+                SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) AS presentes,
+                SUM(CASE WHEN attendance_items.status = 'F' THEN 1 ELSE 0 END) AS faltas,
+                SUM(CASE WHEN attendance_items.status = 'FJ' THEN 1 ELSE 0 END) AS justificadas,
+                SUM(CASE WHEN attendance_items.status = 'AM' THEN 1 ELSE 0 END) AS atestados,
+                SUM(CASE WHEN attendance_items.status = 'FO' THEN 1 ELSE 0 END) AS onibus,
+                ROUND(
+                    (
+                        SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END)
+                        / COUNT(attendance_items.id)
+                    ) * 100,
+                    1
+                ) AS percentage
+            FROM attendance
+            INNER JOIN attendance_items
+                ON attendance_items.attendance_id = attendance.id
+            WHERE {$condition}
+        ");
+
+        return $this->normalizeFrequencyResult($stmt->fetch());
+    }
+
+    private function normalizeFrequencyResult(array|false $data): array
+    {
+        if (!$data || (int) ($data['total_students'] ?? 0) === 0) {
+            return [
+                'total_students' => 0,
+                'presentes' => 0,
+                'faltas' => 0,
+                'justificadas' => 0,
+                'atestados' => 0,
+                'onibus' => 0,
+                'percentage' => 0,
+            ];
+        }
+
+        return $data;
     }
 }
