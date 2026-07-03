@@ -23,15 +23,17 @@ $fontSize = max(20, (int) ($size * 0.20));
 <div
     class="progress-circle"
     style="
-        --circle-size: <?= $size ?>px;
-        --circle-color: <?= $color ?>;
-        --circle-progress: <?= $percentage ?>%;
-        --circle-font-size: <?= $fontSize ?>px;
+        width: <?= $size ?>px;
+        height: <?= $size ?>px;
+        background: conic-gradient(
+            <?= $color ?> <?= $percentage ?>%,
+            var(--border) <?= $percentage ?>%
+        );
     "
 >
     <div class="progress-circle-inner">
 
-        <strong>
+        <strong style="font-size: <?= $fontSize ?>px;">
             <?= number_format($percentage, 1, ',', '.') ?>%
         </strong>
 

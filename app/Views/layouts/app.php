@@ -24,9 +24,13 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
+    <!-- ======================================================
+         BASE
+    ======================================================= -->
+
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/app.css') ?>">
+        href="<?= base_url('assets/css/variables.css') ?>">
 
     <link
         rel="stylesheet"
@@ -34,27 +38,79 @@
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/cards.css') ?>">
+        href="<?= base_url('assets/css/app.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/layout.css') ?>">
+
+    <!-- ======================================================
+         COMPONENTES
+    ======================================================= -->
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/components/badge.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/components/button.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/components/cards.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/components/content.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/components/form.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/components/header.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/components/stat-card.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/components/tables.css') ?>">
 
     <link
         rel="stylesheet"
         href="<?= base_url('assets/css/components.css') ?>">
 
-    <link
-        rel="stylesheet"
-        href="<?= base_url('assets/css/dashboard.css') ?>">
+    <!-- ======================================================
+         PÁGINAS
+    ======================================================= -->
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/forms.css') ?>">
+        href="<?= base_url('assets/css/pages/dashboard.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/tables.css') ?>">
+        href="<?= base_url('assets/css/pages/frequencia.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/attendance.css') ?>">
+        href="<?= base_url('assets/css/pages/alunos.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/pages/turmas.css') ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/pages/users.css') ?>">
+
+    <!-- ======================================================
+         UTILITÁRIOS
+    ======================================================= -->
 
     <link
         rel="stylesheet"
@@ -95,7 +151,9 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script>
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
     </script>
 
 </body>

@@ -1,23 +1,40 @@
-:root{
+:root {
+    --font-family: 'Inter', sans-serif;
 
---primary:#16A34A;
+    --primary: #16a34a;
+    --secondary: #f97316;
 
---primary-light:#22C55E;
+    --success: #22c55e;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --info: #2563eb;
 
---secondary:#F97316;
+    --background: #f8fafc;
+    --surface: #ffffff;
+    --surface-soft: #f8fafc;
 
---secondary-light:#FB923C;
+    --text: #334155;
+    --text-light: #64748b;
+    --text-dark: #0f172a;
 
---background:#F5F7FA;
+    --border: #e5e7eb;
 
---surface:#FFFFFF;
+    --green-soft: #dcfce7;
+    --yellow-soft: #fef3c7;
+    --orange-soft: #fff7ed;
+    --red-soft: #fee2e2;
+    --blue-soft: #dbeafe;
+    --purple-soft: #ede9fe;
 
---text:#334155;
+    --shadow-sm: 0 4px 16px rgba(15, 23, 42, .06);
+    --shadow-md: 0 8px 30px rgba(15, 23, 42, .08);
+    --shadow-lg: 0 12px 36px rgba(15, 23, 42, .12);
 
---border:#E2E8F0;
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 22px;
+    --radius-full: 999px;
 
---shadow:0 8px 25px rgba(0,0,0,.08);
-
---radius:14px;
-
+    --transition: .2s ease;
 }

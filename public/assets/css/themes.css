@@ -1,38 +1,33 @@
-:root {
-    --primary: #16a34a;
-    --secondary: #f97316;
+body {
+    background: var(--background);
+    color: var(--text);
+    font-family: var(--font-family);
+}
 
-    --success: #22c55e;
-    --warning: #d97706;
-    --danger: #dc2626;
-    --info: #2563eb;
+a {
+    color: inherit;
+}
 
-    --background: #f8fafc;
-    --surface: #ffffff;
-    --surface-soft: #f8fafc;
+.text-primary {
+    color: var(--primary);
+}
 
-    --text: #334155;
-    --text-light: #64748b;
-    --text-dark: #0f172a;
+.text-secondary {
+    color: var(--secondary);
+}
 
-    --border: #e5e7eb;
+.bg-primary {
+    background: var(--primary);
+}
 
-    --green-soft: #dcfce7;
-    --yellow-soft: #fef3c7;
-    --orange-soft: #fff7ed;
-    --red-soft: #fee2e2;
-    --blue-soft: #dbeafe;
-    --purple-soft: #ede9fe;
+.bg-secondary {
+    background: var(--secondary);
+}
 
-    --shadow-sm: 0 4px 16px rgba(15, 23, 42, .06);
-    --shadow-md: 0 8px 30px rgba(15, 23, 42, .08);
-    --shadow-lg: 0 12px 36px rgba(15, 23, 42, .12);
+.bg-surface {
+    background: var(--surface);
+}
 
-    --radius-sm: 10px;
-    --radius-md: 14px;
-    --radius-lg: 18px;
-    --radius-xl: 22px;
-    --radius-full: 999px;
-
-    --transition: .2s ease;
+.bg-soft {
+    background: var(--surface-soft);
 }

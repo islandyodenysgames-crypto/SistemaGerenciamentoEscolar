@@ -1,0 +1,75 @@
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+}
+
+.data-table thead {
+    background: var(--surface-soft);
+}
+
+.data-table th,
+.data-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.data-table th {
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.data-table td {
+    color: var(--text);
+    font-size: 14px;
+}
+
+.data-table tbody tr:hover {
+    background: var(--surface-soft);
+}
+
+.table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.table-link {
+    color: var(--info);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.table-delete {
+    border: none;
+    background: transparent;
+    color: var(--danger);
+    font-weight: 800;
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .data-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
