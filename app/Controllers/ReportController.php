@@ -8,7 +8,7 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
-use App\Services\AttendanceService;
+use App\Services\ReportService;
 
 class ReportController extends Controller
 {
@@ -34,14 +34,14 @@ class ReportController extends Controller
 
         $date = (string) Request::get('data', date('Y-m-d'));
 
-        $service = new AttendanceService();
+        $reportService = new ReportService();
 
-        $this->view('relatorios/diario', [
-            'title' => 'Relatório Diário - ' . app_name(),
-            'date' => $date,
-            'summary' => $service->schoolFrequencyToday($date),
-            'ranking' => $service->dailyRanking($date),
-            'classesWithoutAttendance' => $service->classesWithoutAttendanceToday($date),
-        ]);
+        $this->view('relatorios/diario', array_merge(
+            [
+                'title' => 'Relatório Diário - ' . app_name(),
+                'date' => $date,
+            ],
+            $reportService->daily($date)
+        ));
     }
 }

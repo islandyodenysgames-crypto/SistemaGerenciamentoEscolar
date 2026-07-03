@@ -7,7 +7,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Core\Response;
 use App\Core\Session;
-use App\Services\AttendanceService;
+use App\Services\DashboardService;
 
 class DashboardController extends Controller
 {
@@ -17,36 +17,14 @@ class DashboardController extends Controller
             Response::redirect(base_url('login'));
         }
 
-        $attendanceService = new AttendanceService();
+        $dashboardService = new DashboardService();
 
-        $today = date('Y-m-d');
-
-        $this->view('dashboard/index', [
-
-            'title' => 'Dashboard - ' . app_name(),
-
-            'user' => Session::get('user'),
-
-            'ranking' => $attendanceService->dailyRanking($today),
-
-            'schoolFrequencyToday' =>
-                $attendanceService->schoolFrequencyToday($today),
-
-            'schoolFrequencyWeek' =>
-                $attendanceService->schoolFrequencyWeek(),
-
-            'schoolFrequencyMonth' =>
-                $attendanceService->schoolFrequencyMonth(),
-
-            'schoolFrequencyYear' =>
-                $attendanceService->schoolFrequencyYear(),
-
-            'frequencyLast30Days' =>
-                $attendanceService->schoolFrequencyLast30Days(),
-
-            'classesWithoutAttendance' =>
-                $attendanceService->classesWithoutAttendanceToday($today),
-
-        ]);
+        $this->view('dashboard/index', array_merge(
+            [
+                'title' => 'Dashboard - ' . app_name(),
+                'user' => Session::get('user'),
+            ],
+            $dashboardService->data()
+        ));
     }
 }
