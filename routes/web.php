@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
+use App\Controllers\EnrollmentController;
 use App\Controllers\SchoolClassController;
 use App\Controllers\StudentController;
 use App\Controllers\UserController;
@@ -41,3 +42,8 @@ $router->post('/alunos', [StudentController::class, 'store']);
 $router->get('/alunos/editar', [StudentController::class, 'edit']);
 $router->post('/alunos/editar', [StudentController::class, 'update']);
 $router->post('/alunos/excluir', [StudentController::class, 'delete']);
+
+// Matrículas
+$router->get('/matriculas', [EnrollmentController::class, 'index']);
+$router->get('/matriculas/novo', [EnrollmentController::class, 'create']);
+$router->post('/matriculas', [EnrollmentController::class, 'store']);
