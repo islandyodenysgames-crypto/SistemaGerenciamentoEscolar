@@ -19,7 +19,7 @@ class Menu
 
             [
                 'title'  => 'Alunos',
-                'icon'   => 'users',
+                'icon'   => 'graduation-cap',
                 'url'    => base_url('alunos'),
                 'active' => false,
             ],
@@ -32,6 +32,13 @@ class Menu
             ],
 
             [
+                'title'  => 'Matrículas',
+                'icon'   => 'clipboard-list',
+                'url'    => base_url('matriculas'),
+                'active' => false,
+            ],
+
+            [
                 'title'  => 'Frequência',
                 'icon'   => 'clipboard-check',
                 'url'    => base_url('frequencia'),
@@ -40,7 +47,7 @@ class Menu
 
             [
                 'title'  => 'Usuários',
-                'icon'   => 'user-cog',
+                'icon'   => 'users',
                 'url'    => base_url('usuarios'),
                 'active' => false,
             ],
