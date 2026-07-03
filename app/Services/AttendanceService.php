@@ -67,7 +67,36 @@ class AttendanceService
             LIMIT 1
         ");
 
-        $stmt->execute(['id' => $id]);
+        $stmt->execute([
+            'id' => $id,
+        ]);
+
+        $attendance = $stmt->fetch();
+
+        return $attendance ?: null;
+    }
+
+    public function findByClassAndDate(int $classId, string $date): ?array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            SELECT
+                id,
+                school_class_id,
+                attendance_date,
+                notes,
+                created_at
+            FROM attendance
+            WHERE school_class_id = :class_id
+              AND attendance_date = :attendance_date
+            LIMIT 1
+        ");
+
+        $stmt->execute([
+            'class_id' => $classId,
+            'attendance_date' => $date,
+        ]);
 
         $attendance = $stmt->fetch();
 
@@ -92,7 +121,9 @@ class AttendanceService
             ORDER BY students.name ASC
         ");
 
-        $stmt->execute(['attendance_id' => $attendanceId]);
+        $stmt->execute([
+            'attendance_id' => $attendanceId,
+        ]);
 
         return $stmt->fetchAll();
     }
@@ -127,6 +158,49 @@ class AttendanceService
         return (int) $db->lastInsertId();
     }
 
+    public function existsForClassAndDate(int $classId, string $date): bool
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            SELECT COUNT(*)
+            FROM attendance
+            WHERE school_class_id = :class_id
+              AND attendance_date = :attendance_date
+        ");
+
+        $stmt->execute([
+            'class_id' => $classId,
+            'attendance_date' => $date,
+        ]);
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
+    public function classInfo(int $classId): ?array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            SELECT
+                id,
+                name,
+                year,
+                shift
+            FROM school_classes
+            WHERE id = :id
+            LIMIT 1
+        ");
+
+        $stmt->execute([
+            'id' => $classId,
+        ]);
+
+        $class = $stmt->fetch();
+
+        return $class ?: null;
+    }
+
     public function classStudents(int $classId): array
     {
         $db = Connection::getInstance();
@@ -144,7 +218,32 @@ class AttendanceService
             ORDER BY students.name
         ");
 
-        $stmt->execute(['class' => $classId]);
+        $stmt->execute([
+            'class' => $classId,
+        ]);
+
+        return $stmt->fetchAll();
+    }
+
+    public function classAttendanceHistory(int $classId): array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            SELECT
+                id,
+                attendance_date,
+                notes,
+                created_at
+            FROM attendance
+            WHERE school_class_id = :class_id
+            ORDER BY attendance_date DESC, id DESC
+            LIMIT 10
+        ");
+
+        $stmt->execute([
+            'class_id' => $classId,
+        ]);
 
         return $stmt->fetchAll();
     }
