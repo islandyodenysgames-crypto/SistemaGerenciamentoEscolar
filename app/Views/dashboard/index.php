@@ -39,6 +39,42 @@ component('stat-card', [
 
 </div>
 
+<div class="dashboard-grid" style="margin-top:24px;">
+
+    <div class="card" style="text-align:center;">
+        <?php component('attendance-progress-circle', [
+            'percentage' => (float) ($schoolFrequencyToday['percentage'] ?? 0),
+            'label' => 'Hoje',
+            'size' => 140
+        ]); ?>
+    </div>
+
+    <div class="card" style="text-align:center;">
+        <?php component('attendance-progress-circle', [
+            'percentage' => (float) ($schoolFrequencyWeek['percentage'] ?? 0),
+            'label' => 'Semana',
+            'size' => 140
+        ]); ?>
+    </div>
+
+    <div class="card" style="text-align:center;">
+        <?php component('attendance-progress-circle', [
+            'percentage' => (float) ($schoolFrequencyMonth['percentage'] ?? 0),
+            'label' => 'Mês',
+            'size' => 140
+        ]); ?>
+    </div>
+
+    <div class="card" style="text-align:center;">
+        <?php component('attendance-progress-circle', [
+            'percentage' => (float) ($schoolFrequencyYear['percentage'] ?? 0),
+            'label' => 'Ano',
+            'size' => 140
+        ]); ?>
+    </div>
+
+</div>
+
 <div class="dashboard-content">
 
     <?php component('school-frequency-summary', [

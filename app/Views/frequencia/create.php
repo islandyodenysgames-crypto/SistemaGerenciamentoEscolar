@@ -34,9 +34,9 @@ $existingStatuses = $existingStatuses ?? [];
 
 .attendance-summary {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     gap: 14px;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
 }
 
 .attendance-card {
@@ -48,7 +48,7 @@ $existingStatuses = $existingStatuses ?? [];
 
 .attendance-card strong {
     display: block;
-    font-size: 28px;
+    font-size: 26px;
 }
 
 .student-attendance {
@@ -143,6 +143,27 @@ $existingStatuses = $existingStatuses ?? [];
     background: #fef3c7;
     color: #92400e;
     font-weight: 800;
+}
+
+.attendance-progress {
+    margin-bottom: 24px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+    height: 18px;
+}
+
+.attendance-progress-bar {
+    width: 100%;
+    height: 100%;
+    background: #16a34a;
+    transition: .3s;
+}
+
+@media (max-width: 1100px) {
+    .attendance-summary {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 @media (max-width: 900px) {
@@ -313,10 +334,29 @@ $existingStatuses = $existingStatuses ?? [];
                     </div>
 
                     <div class="attendance-card">
+                        <span>Justificadas</span>
+                        <strong id="justifiedCount">0</strong>
+                    </div>
+
+                    <div class="attendance-card">
+                        <span>Atestados</span>
+                        <strong id="medicalCount">0</strong>
+                    </div>
+
+                    <div class="attendance-card">
+                        <span>Ônibus</span>
+                        <strong id="busCount">0</strong>
+                    </div>
+
+                    <div class="attendance-card">
                         <span>Frequência</span>
                         <strong id="percentageCount">0%</strong>
                     </div>
 
+                </div>
+
+                <div class="attendance-progress">
+                    <div id="attendanceProgress" class="attendance-progress-bar"></div>
                 </div>
 
                 <div class="attendance-actions">
@@ -455,19 +495,24 @@ function markAll(status) {
 
 function updateSummary() {
     const total = document.querySelectorAll('.student-card').length;
-    const presentes = document.querySelectorAll('input[type="radio"][value="P"]:checked').length;
-    const faltas = total - presentes;
-    const percentage = total > 0 ? ((presentes / total) * 100).toFixed(1) : 0;
 
-    const totalCount = document.getElementById('totalCount');
-    const presentCount = document.getElementById('presentCount');
-    const absenceCount = document.getElementById('absenceCount');
-    const percentageCount = document.getElementById('percentageCount');
+    const presentes = document.querySelectorAll('input[value="P"]:checked').length;
+    const faltas = document.querySelectorAll('input[value="F"]:checked').length;
+    const justificadas = document.querySelectorAll('input[value="FJ"]:checked').length;
+    const atestados = document.querySelectorAll('input[value="AM"]:checked').length;
+    const onibus = document.querySelectorAll('input[value="FO"]:checked').length;
 
-    if (totalCount) totalCount.innerText = total;
-    if (presentCount) presentCount.innerText = presentes;
-    if (absenceCount) absenceCount.innerText = faltas;
-    if (percentageCount) percentageCount.innerText = percentage.replace('.', ',') + '%';
+    const percentual = total > 0 ? ((presentes / total) * 100).toFixed(1) : 0;
+    const progress = total > 0 ? (presentes / total) * 100 : 0;
+
+    document.getElementById('totalCount').innerText = total;
+    document.getElementById('presentCount').innerText = presentes;
+    document.getElementById('absenceCount').innerText = faltas;
+    document.getElementById('justifiedCount').innerText = justificadas;
+    document.getElementById('medicalCount').innerText = atestados;
+    document.getElementById('busCount').innerText = onibus;
+    document.getElementById('percentageCount').innerText = percentual.replace('.', ',') + '%';
+    document.getElementById('attendanceProgress').style.width = progress + '%';
 }
 
 document.addEventListener('change', function (event) {

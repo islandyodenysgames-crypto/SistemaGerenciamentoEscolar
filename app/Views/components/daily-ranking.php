@@ -21,8 +21,10 @@
                     <th>Turno</th>
                     <th>Frequência</th>
                     <th>IFE</th>
-                    <th>Faltas penalizadas</th>
-                    <th>Atenuadas</th>
+                    <th>Faltas</th>
+                    <th>Justificadas</th>
+                    <th>Atestados</th>
+                    <th>Ônibus</th>
                     <th>Total</th>
                     <th>Situação</th>
                 </tr>
@@ -73,17 +75,15 @@
                             <?php endif; ?>
                         </td>
 
-                        <td>
-                            <?= $hasAttendance ? (int) $item['ranking_absences'] : '-' ?>
-                        </td>
+                        <td><?= $hasAttendance ? (int) $item['ranking_absences'] : '-' ?></td>
 
-                        <td>
-                            <?= $hasAttendance ? (int) $item['attenuated_absences'] : '-' ?>
-                        </td>
+                        <td><?= $hasAttendance ? (int) $item['justificadas'] : '-' ?></td>
 
-                        <td>
-                            <?= $hasAttendance ? (int) $item['total_students'] : '-' ?>
-                        </td>
+                        <td><?= $hasAttendance ? (int) $item['atestados'] : '-' ?></td>
+
+                        <td><?= $hasAttendance ? (int) $item['onibus'] : '-' ?></td>
+
+                        <td><?= $hasAttendance ? (int) $item['total_students'] : '-' ?></td>
 
                         <td>
                             <?php if ($hasAttendance): ?>

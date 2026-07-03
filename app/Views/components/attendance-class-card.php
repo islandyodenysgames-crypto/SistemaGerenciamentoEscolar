@@ -26,9 +26,13 @@ $attendanceId = $class['attendance_id'] ?? null;
         <?php if ($done): ?>
 
             <div class="attendance-class-numbers">
-                <span>Presentes: <strong><?= (int) $class['presentes'] ?></strong></span>
-                <span>Faltas: <strong><?= (int) $class['raw_absences'] ?></strong></span>
-                <span>IFE: <strong><?= number_format((float) $class['ife_score'], 2, ',', '.') ?></strong></span>
+                <span>👥 Total: <strong><?= (int) $class['total_students'] ?></strong></span>
+                <span>✅ Presentes: <strong><?= (int) $class['presentes'] ?></strong></span>
+                <span>❌ Faltas: <strong><?= (int) $class['ranking_absences'] ?></strong></span>
+                <span>🟡 Justificadas: <strong><?= (int) $class['justificadas'] ?></strong></span>
+                <span>🔵 Atestados: <strong><?= (int) $class['atestados'] ?></strong></span>
+                <span>🟣 Ônibus: <strong><?= (int) $class['onibus'] ?></strong></span>
+                <span>⭐ IFE: <strong><?= number_format((float) $class['ife_score'], 2, ',', '.') ?></strong></span>
             </div>
 
         <?php else: ?>
