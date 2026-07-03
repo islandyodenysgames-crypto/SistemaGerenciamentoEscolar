@@ -36,3 +36,8 @@ $router->post('/turmas/excluir', [SchoolClassController::class, 'delete']);
 
 // Alunos
 $router->get('/alunos', [StudentController::class, 'index']);
+$router->get('/alunos/novo', [StudentController::class, 'create']);
+$router->post('/alunos', [StudentController::class, 'store']);
+$router->get('/alunos/editar', [StudentController::class, 'edit']);
+$router->post('/alunos/editar', [StudentController::class, 'update']);
+$router->post('/alunos/excluir', [StudentController::class, 'delete']);
