@@ -110,6 +110,7 @@ class AttendanceService
         $stmt = $db->prepare("
             SELECT
                 attendance_items.id,
+                attendance_items.student_id,
                 attendance_items.status,
                 attendance_items.justification,
                 students.name AS student_name,
@@ -156,6 +157,67 @@ class AttendanceService
         ]);
 
         return (int) $db->lastInsertId();
+    }
+
+    public function update(int $id, array $data): void
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            UPDATE attendance
+            SET
+                attendance_date = :attendance_date,
+                notes = :notes,
+                updated_at = NOW()
+            WHERE id = :id
+        ");
+
+        $stmt->execute([
+            'id' => $id,
+            'attendance_date' => $data['attendance_date'],
+            'notes' => $data['notes'],
+        ]);
+    }
+
+    public function updateItemStatus(int $itemId, string $status): void
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            UPDATE attendance_items
+            SET
+                status = :status,
+                updated_at = NOW()
+            WHERE id = :id
+        ");
+
+        $stmt->execute([
+            'id' => $itemId,
+            'status' => $status,
+        ]);
+    }
+
+    public function delete(int $id): bool
+    {
+        $db = Connection::getInstance();
+
+        $items = $db->prepare("
+            DELETE FROM attendance_items
+            WHERE attendance_id = :id
+        ");
+
+        $items->execute([
+            'id' => $id,
+        ]);
+
+        $attendance = $db->prepare("
+            DELETE FROM attendance
+            WHERE id = :id
+        ");
+
+        return $attendance->execute([
+            'id' => $id,
+        ]);
     }
 
     public function existsForClassAndDate(int $classId, string $date): bool
@@ -279,6 +341,41 @@ class AttendanceService
         ]);
     }
 
+    public function dailyCentral(string $date): array
+    {
+        $classes = $this->dailyRanking($date);
+
+        $totalClasses = count($classes);
+        $doneClasses = 0;
+        $pendingClasses = 0;
+
+        foreach ($classes as $class) {
+            if ((int) ($class['has_attendance'] ?? 0) === 1) {
+                $doneClasses++;
+            } else {
+                $pendingClasses++;
+            }
+        }
+
+        $summary = $this->schoolFrequencyToday($date);
+
+        return [
+            'totalClasses' => $totalClasses,
+            'doneClasses' => $doneClasses,
+            'pendingClasses' => $pendingClasses,
+            'generalPercentage' => (float) ($summary['percentage'] ?? 0),
+            'summary' => $summary,
+            'classes' => $classes,
+        ];
+    }
+
+    public function dailyGeneralPercentage(string $date): float
+    {
+        $summary = $this->schoolFrequencyToday($date);
+
+        return (float) ($summary['percentage'] ?? 0);
+    }
+
     public function dailyRanking(string $date): array
     {
         $db = Connection::getInstance();
@@ -331,7 +428,10 @@ class AttendanceService
                     WHEN attendance.id IS NULL
                     THEN 0
                     ELSE 1
-                END AS has_attendance
+                END AS has_attendance,
+
+                attendance.id AS attendance_id,
+                attendance.created_at AS attendance_created_at
 
             FROM school_classes
 
@@ -349,7 +449,8 @@ class AttendanceService
                 school_classes.name,
                 school_classes.year,
                 school_classes.shift,
-                attendance.id
+                attendance.id,
+                attendance.created_at
 
             ORDER BY
                 has_attendance DESC,

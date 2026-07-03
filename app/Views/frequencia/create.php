@@ -13,6 +13,8 @@ $statusLabels = [
     'FO' => 'Falta de Ônibus',
 ];
 
+$existingStatuses = $existingStatuses ?? [];
+
 ?>
 
 <style>
@@ -62,13 +64,6 @@ $statusLabels = [
     background: #fff;
 }
 
-.student-header {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 16px;
-}
-
 .student-name {
     font-size: 22px;
     font-weight: 900;
@@ -83,6 +78,7 @@ $statusLabels = [
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    margin-top: 16px;
 }
 
 .status-option {
@@ -131,6 +127,24 @@ $statusLabels = [
     border-bottom: 1px solid #e5e7eb;
 }
 
+.attendance-done {
+    margin-bottom: 20px;
+    padding: 16px;
+    border-radius: 14px;
+    background: #dcfce7;
+    color: #166534;
+    font-weight: 800;
+}
+
+.attendance-pending {
+    margin-bottom: 20px;
+    padding: 16px;
+    border-radius: 14px;
+    background: #fef3c7;
+    color: #92400e;
+    font-weight: 800;
+}
+
 @media (max-width: 900px) {
     .attendance-layout {
         grid-template-columns: 1fr;
@@ -138,10 +152,6 @@ $statusLabels = [
 
     .attendance-summary {
         grid-template-columns: repeat(2, 1fr);
-    }
-
-    .student-header {
-        flex-direction: column;
     }
 
     .status-option {
@@ -178,51 +188,34 @@ $statusLabels = [
         </form>
 
         <?php if ($classInfo): ?>
-            
-            <?php if (!empty($existingAttendance)): ?>
-
-    <div
-        style="
-            margin-bottom:20px;
-            padding:16px;
-            border-radius:14px;
-            background:#dcfce7;
-            color:#166534;
-            font-weight:800;
-        "
-    >
-        ✅ Chamada de hoje já realizada
-
-        <div style="margin-top:10px;">
-            <a
-                href="<?= base_url('frequencia/ver?id=' . $existingAttendance['id']) ?>"
-                class="btn-primary"
-            >
-                Ver chamada registrada
-            </a>
-        </div>
-    </div>
-
-<?php else: ?>
-
-    <div
-        style="
-            margin-bottom:20px;
-            padding:16px;
-            border-radius:14px;
-            background:#fef3c7;
-            color:#92400e;
-            font-weight:800;
-        "
-    >
-        ⚠️ Chamada de hoje ainda não realizada
-    </div>
-
-<?php endif; ?>
 
             <hr style="margin:20px 0;">
 
+            <?php if (!empty($existingAttendance)): ?>
+
+                <div class="attendance-done">
+                    ✅ Chamada de hoje já realizada
+
+                    <div style="margin-top:12px;">
+                        <a
+                            href="<?= base_url('frequencia/ver?id=' . $existingAttendance['id']) ?>"
+                            class="btn-primary"
+                        >
+                            Ver chamada registrada
+                        </a>
+                    </div>
+                </div>
+
+            <?php else: ?>
+
+                <div class="attendance-pending">
+                    ⚠️ Chamada de hoje ainda não realizada
+                </div>
+
+            <?php endif; ?>
+
             <h3><?= htmlspecialchars($classInfo['name']) ?></h3>
+
             <p>
                 <strong>Ano:</strong> <?= $classInfo['year'] ?><br>
                 <strong>Turno:</strong> <?= htmlspecialchars($classInfo['shift']) ?>
@@ -279,17 +272,19 @@ $statusLabels = [
 
                     <div class="form-group">
                         <label>Data da chamada</label>
+
                         <input
                             class="form-control"
                             type="date"
                             name="attendance_date"
-                            value="<?= date('Y-m-d') ?>"
+                            value="<?= $today ?? date('Y-m-d') ?>"
                             required
                         >
                     </div>
 
                     <div class="form-group">
                         <label>Observações gerais</label>
+
                         <input
                             class="form-control"
                             type="text"
@@ -340,33 +335,34 @@ $statusLabels = [
 
                     <?php foreach ($students as $student): ?>
 
+                        <?php
+                            $currentStatus = $existingStatuses[$student['id']] ?? 'P';
+                        ?>
+
                         <div class="student-card">
 
-                            <div class="student-header">
+                            <div class="student-name">
+                                <?= htmlspecialchars($student['name']) ?>
+                            </div>
 
-                                <div>
-                                    <div class="student-name">
-                                        <?= htmlspecialchars($student['name']) ?>
-                                    </div>
-
-                                    <div class="student-registration">
-                                        Matrícula: <?= htmlspecialchars($student['registration']) ?>
-                                    </div>
-                                </div>
-
+                            <div class="student-registration">
+                                Matrícula: <?= htmlspecialchars($student['registration']) ?>
                             </div>
 
                             <div class="status-options">
 
                                 <?php foreach ($statusLabels as $code => $label): ?>
 
-                                    <label class="status-option status-<?= strtolower($code) ?>">
+                                    <label
+                                        class="status-option status-<?= strtolower($code) ?>"
+                                        onclick="selectStatus(this)"
+                                    >
 
                                         <input
                                             type="radio"
                                             name="status[<?= $student['id'] ?>]"
                                             value="<?= $code ?>"
-                                            <?= $code === 'P' ? 'checked' : '' ?>
+                                            <?= $currentStatus === $code ? 'checked' : '' ?>
                                         >
 
                                         <?= htmlspecialchars($label) ?>
@@ -389,9 +385,28 @@ $statusLabels = [
                         Cancelar
                     </a>
 
-                    <button type="submit" class="btn-primary" style="font-size:20px;padding:18px 32px;">
-                        Salvar chamada
-                    </button>
+                    <?php if (!empty($existingAttendance)): ?>
+
+                        <button
+                            type="button"
+                            class="btn-secondary"
+                            style="font-size:20px;padding:18px 32px;opacity:.7;cursor:not-allowed;"
+                            disabled
+                        >
+                            Chamada de hoje já realizada
+                        </button>
+
+                    <?php else: ?>
+
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                            style="font-size:20px;padding:18px 32px;"
+                        >
+                            Salvar chamada
+                        </button>
+
+                    <?php endif; ?>
 
                 </div>
 
@@ -404,6 +419,16 @@ $statusLabels = [
 </div>
 
 <script>
+function selectStatus(label) {
+    const input = label.querySelector('input[type="radio"]');
+
+    if (input) {
+        input.checked = true;
+    }
+
+    updateSelectedOptions();
+}
+
 function updateSelectedOptions() {
     document.querySelectorAll('.status-option').forEach(function (label) {
         label.classList.remove('selected');
@@ -434,10 +459,15 @@ function updateSummary() {
     const faltas = total - presentes;
     const percentage = total > 0 ? ((presentes / total) * 100).toFixed(1) : 0;
 
-    document.getElementById('totalCount').innerText = total;
-    document.getElementById('presentCount').innerText = presentes;
-    document.getElementById('absenceCount').innerText = faltas;
-    document.getElementById('percentageCount').innerText = percentage.replace('.', ',') + '%';
+    const totalCount = document.getElementById('totalCount');
+    const presentCount = document.getElementById('presentCount');
+    const absenceCount = document.getElementById('absenceCount');
+    const percentageCount = document.getElementById('percentageCount');
+
+    if (totalCount) totalCount.innerText = total;
+    if (presentCount) presentCount.innerText = presentes;
+    if (absenceCount) absenceCount.innerText = faltas;
+    if (percentageCount) percentageCount.innerText = percentage.replace('.', ',') + '%';
 }
 
 document.addEventListener('change', function (event) {

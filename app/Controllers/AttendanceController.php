@@ -31,8 +31,12 @@ class AttendanceController extends Controller
     {
         $this->guard();
 
+        $today = date('Y-m-d');
+
         $this->view('frequencia/index', [
             'title' => 'Frequência - ' . app_name(),
+            'today' => $today,
+            'central' => $this->service->dailyCentral($today),
             'attendances' => $this->service->all(),
         ]);
     }
@@ -50,12 +54,19 @@ class AttendanceController extends Controller
         $classInfo = null;
         $history = [];
         $existingAttendance = null;
+        $existingStatuses = [];
 
         if ($classId > 0) {
             $students = $this->service->classStudents($classId);
             $classInfo = $this->service->classInfo($classId);
             $history = $this->service->classAttendanceHistory($classId);
             $existingAttendance = $this->service->findByClassAndDate($classId, $today);
+
+            if ($existingAttendance) {
+                foreach ($this->service->items((int) $existingAttendance['id']) as $item) {
+                    $existingStatuses[(int) $item['student_id']] = $item['status'];
+                }
+            }
         }
 
         $this->view('frequencia/create', [
@@ -67,6 +78,7 @@ class AttendanceController extends Controller
             'history' => $history,
             'today' => $today,
             'existingAttendance' => $existingAttendance,
+            'existingStatuses' => $existingStatuses,
             'statusOptions' => AttendanceService::statusOptions(),
         ]);
     }
@@ -136,5 +148,80 @@ class AttendanceController extends Controller
             'items' => $this->service->items($id),
             'statusOptions' => AttendanceService::statusOptions(),
         ]);
+    }
+
+    public function edit(): void
+    {
+        $this->guard();
+
+        $id = (int) Request::get('id');
+
+        $attendance = $this->service->find($id);
+
+        if (!$attendance) {
+            Session::set(
+                'attendance_error',
+                'Chamada não encontrada.'
+            );
+
+            Response::redirect(base_url('frequencia'));
+            return;
+        }
+
+        $this->view('frequencia/edit', [
+            'title' => 'Editar Chamada - ' . app_name(),
+            'attendance' => $attendance,
+            'items' => $this->service->items($id),
+            'statusOptions' => AttendanceService::statusOptions(),
+        ]);
+    }
+
+    public function update(): void
+    {
+        $this->guard();
+
+        $id = (int) Request::post('id');
+
+        $this->service->update($id, [
+            'attendance_date' => trim((string) Request::post('attendance_date')),
+            'notes' => trim((string) Request::post('notes')),
+        ]);
+
+        $statuses = $_POST['status'] ?? [];
+
+        foreach ($statuses as $itemId => $status) {
+            $this->service->updateItemStatus(
+                (int) $itemId,
+                (string) $status
+            );
+        }
+
+        Session::set(
+            'attendance_success',
+            'Chamada atualizada com sucesso.'
+        );
+
+        Response::redirect(base_url('frequencia'));
+    }
+
+    public function delete(): void
+    {
+        $this->guard();
+
+        $id = (int) Request::post('id');
+
+        if ($this->service->delete($id)) {
+            Session::set(
+                'attendance_success',
+                'Chamada excluída com sucesso.'
+            );
+        } else {
+            Session::set(
+                'attendance_error',
+                'Não foi possível excluir a chamada.'
+            );
+        }
+
+        Response::redirect(base_url('frequencia'));
     }
 }
