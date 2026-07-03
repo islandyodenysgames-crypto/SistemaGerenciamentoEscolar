@@ -2,10 +2,28 @@
 
 component('page-header', [
     'title' => 'Matrículas',
-    'subtitle' => 'Vincule alunos às turmas'
+    'subtitle' => 'Gerencie as matrículas dos alunos nas turmas'
 ]);
 
+$enrollmentSuccess = \App\Core\Session::get('enrollment_success');
+$enrollmentError = \App\Core\Session::get('enrollment_error');
+
+\App\Core\Session::remove('enrollment_success');
+\App\Core\Session::remove('enrollment_error');
+
 ?>
+
+<?php if ($enrollmentSuccess): ?>
+    <div class="alert alert-success">
+        <?= htmlspecialchars($enrollmentSuccess) ?>
+    </div>
+<?php endif; ?>
+
+<?php if ($enrollmentError): ?>
+    <div class="alert alert-danger">
+        <?= htmlspecialchars($enrollmentError) ?>
+    </div>
+<?php endif; ?>
 
 <div class="card">
 
@@ -22,16 +40,19 @@ component('page-header', [
     <table class="data-table">
 
         <thead>
+
             <tr>
                 <th width="70">ID</th>
                 <th>Aluno</th>
                 <th width="150">Matrícula</th>
                 <th>Turma</th>
-                <th width="120">Ano</th>
+                <th width="100">Ano</th>
                 <th width="120">Turno</th>
-                <th width="140">Data</th>
+                <th width="130">Data</th>
                 <th width="110">Status</th>
+                <th width="140">Ações</th>
             </tr>
+
         </thead>
 
         <tbody>
@@ -39,9 +60,11 @@ component('page-header', [
         <?php if (empty($enrollments)): ?>
 
             <tr>
-                <td colspan="8" style="text-align:center;padding:40px;">
+
+                <td colspan="9" style="text-align:center;padding:40px;">
                     Nenhuma matrícula cadastrada.
                 </td>
+
             </tr>
 
         <?php else: ?>
@@ -49,29 +72,88 @@ component('page-header', [
             <?php foreach ($enrollments as $enrollment): ?>
 
                 <tr>
-                    <td><?= $enrollment['id'] ?></td>
 
-                    <td><?= htmlspecialchars($enrollment['student_name']) ?></td>
+                    <td>
+                        <?= $enrollment['id'] ?>
+                    </td>
 
-                    <td><?= htmlspecialchars($enrollment['registration']) ?></td>
+                    <td>
+                        <?= htmlspecialchars($enrollment['student_name']) ?>
+                    </td>
 
-                    <td><?= htmlspecialchars($enrollment['class_name']) ?></td>
+                    <td>
+                        <?= htmlspecialchars($enrollment['registration']) ?>
+                    </td>
 
-                    <td><?= $enrollment['year'] ?></td>
+                    <td>
+                        <?= htmlspecialchars($enrollment['class_name']) ?>
+                    </td>
 
-                    <td><?= htmlspecialchars($enrollment['shift']) ?></td>
+                    <td>
+                        <?= $enrollment['year'] ?>
+                    </td>
+
+                    <td>
+                        <?= htmlspecialchars($enrollment['shift']) ?>
+                    </td>
 
                     <td>
                         <?= date('d/m/Y', strtotime($enrollment['enrollment_date'])) ?>
                     </td>
 
                     <td>
+
                         <?php if ((int) $enrollment['active'] === 1): ?>
-                            <span class="badge badge-success">Ativa</span>
+
+                            <span class="badge badge-success">
+                                Ativa
+                            </span>
+
                         <?php else: ?>
-                            <span class="badge badge-danger">Inativa</span>
+
+                            <span class="badge badge-danger">
+                                Cancelada
+                            </span>
+
                         <?php endif; ?>
+
                     </td>
+
+                    <td>
+
+                        <?php if ((int) $enrollment['active'] === 1): ?>
+
+                            <form
+                                action="<?= base_url('matriculas/cancelar') ?>"
+                                method="POST"
+                                onsubmit="return confirm('Deseja realmente cancelar esta matrícula?');"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="id"
+                                    value="<?= $enrollment['id'] ?>"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="table-delete"
+                                >
+                                    Cancelar
+                                </button>
+
+                            </form>
+
+                        <?php else: ?>
+
+                            <span style="color:#999;">
+                                —
+                            </span>
+
+                        <?php endif; ?>
+
+                    </td>
+
                 </tr>
 
             <?php endforeach; ?>

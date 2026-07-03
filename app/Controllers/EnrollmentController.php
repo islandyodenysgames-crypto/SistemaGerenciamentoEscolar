@@ -81,4 +81,25 @@ class EnrollmentController extends Controller
 
         Response::redirect(base_url('matriculas'));
     }
+
+    public function cancel(): void
+    {
+        $this->guard();
+
+        $id = (int) Request::post('id');
+
+        if ($this->service->cancel($id)) {
+            Session::set(
+                'enrollment_success',
+                'Matrícula cancelada com sucesso.'
+            );
+        } else {
+            Session::set(
+                'enrollment_error',
+                'Não foi possível cancelar a matrícula.'
+            );
+        }
+
+        Response::redirect(base_url('matriculas'));
+    }
 }

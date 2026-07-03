@@ -47,3 +47,4 @@ $router->post('/alunos/excluir', [StudentController::class, 'delete']);
 $router->get('/matriculas', [EnrollmentController::class, 'index']);
 $router->get('/matriculas/novo', [EnrollmentController::class, 'create']);
 $router->post('/matriculas', [EnrollmentController::class, 'store']);
+$router->post('/matriculas/cancelar', [EnrollmentController::class, 'cancel']);
