@@ -25,11 +25,6 @@ class AttendanceService
         ];
     }
 
-    public static function penalizaRanking(string $status): bool
-    {
-        return $status === self::STATUS_FALTA;
-    }
-
     public function all(): array
     {
         $db = Connection::getInstance();
@@ -48,6 +43,56 @@ class AttendanceService
                 ON school_classes.id = attendance.school_class_id
             ORDER BY attendance.attendance_date DESC
         ");
+
+        return $stmt->fetchAll();
+    }
+
+    public function find(int $id): ?array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            SELECT
+                attendance.id,
+                attendance.school_class_id,
+                attendance.attendance_date,
+                attendance.notes,
+                school_classes.name AS class_name,
+                school_classes.year,
+                school_classes.shift
+            FROM attendance
+            INNER JOIN school_classes
+                ON school_classes.id = attendance.school_class_id
+            WHERE attendance.id = :id
+            LIMIT 1
+        ");
+
+        $stmt->execute(['id' => $id]);
+
+        $attendance = $stmt->fetch();
+
+        return $attendance ?: null;
+    }
+
+    public function items(int $attendanceId): array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            SELECT
+                attendance_items.id,
+                attendance_items.status,
+                attendance_items.justification,
+                students.name AS student_name,
+                students.registration
+            FROM attendance_items
+            INNER JOIN students
+                ON students.id = attendance_items.student_id
+            WHERE attendance_items.attendance_id = :attendance_id
+            ORDER BY students.name ASC
+        ");
+
+        $stmt->execute(['attendance_id' => $attendanceId]);
 
         return $stmt->fetchAll();
     }
@@ -99,9 +144,7 @@ class AttendanceService
             ORDER BY students.name
         ");
 
-        $stmt->execute([
-            'class' => $classId,
-        ]);
+        $stmt->execute(['class' => $classId]);
 
         return $stmt->fetchAll();
     }
@@ -150,42 +193,18 @@ class AttendanceService
 
                 COUNT(attendance_items.id) AS total_students,
 
-                SUM(
-                    CASE
-                        WHEN attendance_items.status = 'P'
-                        THEN 1 ELSE 0
-                    END
-                ) AS presentes,
+                SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) AS presentes,
 
-                SUM(
-                    CASE
-                        WHEN attendance_items.status = 'F'
-                        THEN 1 ELSE 0
-                    END
-                ) AS ranking_absences,
+                SUM(CASE WHEN attendance_items.status = 'F' THEN 1 ELSE 0 END) AS ranking_absences,
 
-                SUM(
-                    CASE
-                        WHEN attendance_items.status IN ('FJ', 'AM', 'FO')
-                        THEN 1 ELSE 0
-                    END
-                ) AS attenuated_absences,
+                SUM(CASE WHEN attendance_items.status IN ('FJ', 'AM', 'FO') THEN 1 ELSE 0 END) AS attenuated_absences,
 
-                SUM(
-                    CASE
-                        WHEN attendance_items.status <> 'P'
-                        THEN 1 ELSE 0
-                    END
-                ) AS raw_absences,
+                SUM(CASE WHEN attendance_items.status <> 'P' THEN 1 ELSE 0 END) AS raw_absences,
 
                 ROUND(
                     (
-                        SUM(
-                            CASE
-                                WHEN attendance_items.status = 'P'
-                                THEN 1 ELSE 0
-                            END
-                        ) / COUNT(attendance_items.id)
+                        SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END)
+                        / COUNT(attendance_items.id)
                     ) * 100,
                     1
                 ) AS attendance_percentage
@@ -210,12 +229,90 @@ class AttendanceService
                 ranking_absences ASC,
                 attendance_percentage DESC,
                 raw_absences ASC,
-                class_name ASC
+                school_classes.name ASC
         ");
 
-        $stmt->execute([
-            'date' => $date,
-        ]);
+        $stmt->execute(['date' => $date]);
+
+        return $stmt->fetchAll();
+    }
+
+    public function schoolFrequencyToday(string $date): array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->prepare("
+            SELECT
+                COUNT(attendance_items.id) AS total_students,
+
+                SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) AS presentes,
+
+                SUM(CASE WHEN attendance_items.status = 'F' THEN 1 ELSE 0 END) AS faltas,
+
+                SUM(CASE WHEN attendance_items.status = 'FJ' THEN 1 ELSE 0 END) AS justificadas,
+
+                SUM(CASE WHEN attendance_items.status = 'AM' THEN 1 ELSE 0 END) AS atestados,
+
+                SUM(CASE WHEN attendance_items.status = 'FO' THEN 1 ELSE 0 END) AS onibus,
+
+                ROUND(
+                    (
+                        SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END)
+                        / COUNT(attendance_items.id)
+                    ) * 100,
+                    1
+                ) AS percentage
+
+            FROM attendance
+
+            INNER JOIN attendance_items
+                ON attendance_items.attendance_id = attendance.id
+
+            WHERE attendance.attendance_date = :date
+        ");
+
+        $stmt->execute(['date' => $date]);
+
+        $data = $stmt->fetch();
+
+        return $data ?: [
+            'total_students' => 0,
+            'presentes' => 0,
+            'faltas' => 0,
+            'justificadas' => 0,
+            'atestados' => 0,
+            'onibus' => 0,
+            'percentage' => 0,
+        ];
+    }
+
+    public function schoolFrequencyLast30Days(): array
+    {
+        $db = Connection::getInstance();
+
+        $stmt = $db->query("
+            SELECT
+                attendance.attendance_date,
+
+                ROUND(
+                    (
+                        SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END)
+                        / COUNT(attendance_items.id)
+                    ) * 100,
+                    1
+                ) AS percentage
+
+            FROM attendance
+
+            INNER JOIN attendance_items
+                ON attendance_items.attendance_id = attendance.id
+
+            WHERE attendance.attendance_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+
+            GROUP BY attendance.attendance_date
+
+            ORDER BY attendance.attendance_date ASC
+        ");
 
         return $stmt->fetchAll();
     }

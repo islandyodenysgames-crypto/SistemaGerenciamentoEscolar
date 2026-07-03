@@ -52,10 +52,10 @@ class AttendanceController extends Controller
         }
 
         $this->view('frequencia/create', [
-            'title' => 'Nova Chamada - ' . app_name(),
-            'classes' => $classService->all(),
-            'classId' => $classId,
-            'students' => $students,
+            'title'         => 'Nova Chamada - ' . app_name(),
+            'classes'       => $classService->all(),
+            'classId'       => $classId,
+            'students'      => $students,
             'statusOptions' => AttendanceService::statusOptions(),
         ]);
     }
@@ -67,17 +67,19 @@ class AttendanceController extends Controller
         $attendanceId = $this->service->create([
             'school_class_id' => (int) Request::post('school_class_id'),
             'attendance_date' => trim((string) Request::post('attendance_date')),
-            'notes' => trim((string) Request::post('notes')),
+            'notes'           => trim((string) Request::post('notes')),
         ]);
 
         $statuses = $_POST['status'] ?? [];
 
         foreach ($statuses as $studentId => $status) {
+
             $this->service->insertAttendanceItem(
                 $attendanceId,
                 (int) $studentId,
                 (string) $status
             );
+
         }
 
         Session::set(
@@ -86,5 +88,25 @@ class AttendanceController extends Controller
         );
 
         Response::redirect(base_url('frequencia'));
+    }
+
+    public function show(): void
+    {
+        $this->guard();
+
+        $id = (int) Request::get('id');
+
+        $attendance = $this->service->find($id);
+
+        if (!$attendance) {
+            Response::redirect(base_url('frequencia'));
+        }
+
+        $this->view('frequencia/show', [
+            'title'         => 'Visualizar Chamada - ' . app_name(),
+            'attendance'    => $attendance,
+            'items'         => $this->service->items($id),
+            'statusOptions' => AttendanceService::statusOptions(),
+        ]);
     }
 }

@@ -19,10 +19,14 @@ class DashboardController extends Controller
 
         $attendanceService = new AttendanceService();
 
+        $today = date('Y-m-d');
+
         $this->view('dashboard/index', [
             'title' => 'Dashboard - ' . app_name(),
             'user' => Session::get('user'),
-            'ranking' => $attendanceService->dailyRanking(date('Y-m-d')),
+            'ranking' => $attendanceService->dailyRanking($today),
+            'schoolFrequencyToday' => $attendanceService->schoolFrequencyToday($today),
+            'frequencyLast30Days' => $attendanceService->schoolFrequencyLast30Days(),
         ]);
     }
 }

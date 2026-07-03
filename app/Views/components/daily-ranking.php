@@ -18,6 +18,7 @@
                 <tr>
                     <th>Posição</th>
                     <th>Turma</th>
+                    <th>Turno</th>
                     <th>Frequência</th>
                     <th>Faltas penalizadas</th>
                     <th>Atenuadas</th>
@@ -31,38 +32,26 @@
 
                     <tr>
                         <td>
-                            <?php if ($index === 0): ?>
-                                🥇 1º
-                            <?php elseif ($index === 1): ?>
-                                🥈 2º
-                            <?php elseif ($index === 2): ?>
-                                🥉 3º
-                            <?php else: ?>
-                                <?= $index + 1 ?>º
-                            <?php endif; ?>
+                            <?= $index === 0 ? '🥇 1º' : ($index === 1 ? '🥈 2º' : ($index === 2 ? '🥉 3º' : ($index + 1) . 'º')) ?>
                         </td>
 
                         <td>
-                            <?= htmlspecialchars($item['class_name']) ?>
-                            — <?= $item['year'] ?>
-                            — <?= htmlspecialchars($item['shift']) ?>
+                            <?= htmlspecialchars($item['class_name']) ?> — <?= $item['year'] ?>
+                        </td>
+
+                        <td>
+                            <?= htmlspecialchars($item['shift']) ?>
                         </td>
 
                         <td>
                             <strong><?= $item['attendance_percentage'] ?>%</strong>
                         </td>
 
-                        <td>
-                            <?= (int) $item['ranking_absences'] ?>
-                        </td>
+                        <td><?= (int) $item['ranking_absences'] ?></td>
 
-                        <td>
-                            <?= (int) $item['attenuated_absences'] ?>
-                        </td>
+                        <td><?= (int) $item['attenuated_absences'] ?></td>
 
-                        <td>
-                            <?= (int) $item['total_students'] ?>
-                        </td>
+                        <td><?= (int) $item['total_students'] ?></td>
                     </tr>
 
                 <?php endforeach; ?>

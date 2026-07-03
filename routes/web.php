@@ -54,3 +54,4 @@ $router->post('/matriculas/cancelar', [EnrollmentController::class, 'cancel']);
 $router->get('/frequencia', [AttendanceController::class, 'index']);
 $router->get('/frequencia/novo', [AttendanceController::class, 'create']);
 $router->post('/frequencia', [AttendanceController::class, 'store']);
+$router->get('/frequencia/ver', [AttendanceController::class, 'show']);
