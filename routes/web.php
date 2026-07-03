@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Controllers\AttendanceController;
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\EnrollmentController;
@@ -48,3 +49,8 @@ $router->get('/matriculas', [EnrollmentController::class, 'index']);
 $router->get('/matriculas/novo', [EnrollmentController::class, 'create']);
 $router->post('/matriculas', [EnrollmentController::class, 'store']);
 $router->post('/matriculas/cancelar', [EnrollmentController::class, 'cancel']);
+
+// Frequência
+$router->get('/frequencia', [AttendanceController::class, 'index']);
+$router->get('/frequencia/novo', [AttendanceController::class, 'create']);
+$router->post('/frequencia', [AttendanceController::class, 'store']);

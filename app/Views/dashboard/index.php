@@ -64,6 +64,10 @@ component('stat-card', [
 
     <?php component('quick-actions'); ?>
 
+    <?php component('daily-ranking', [
+        'ranking' => $ranking ?? []
+    ]); ?>
+
     <?php component('calendar'); ?>
 
     <?php component('recent-activities'); ?>
