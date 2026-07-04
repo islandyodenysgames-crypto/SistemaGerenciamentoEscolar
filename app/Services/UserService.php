@@ -4,175 +4,49 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Database\Connection;
+use App\Repositories\UserRepository;
 
 class UserService
 {
+    private UserRepository $repository;
+
+    public function __construct()
+    {
+        $this->repository = new UserRepository();
+    }
+
     public function all(): array
     {
-        $db = Connection::getInstance();
-
-        $stmt = $db->query("
-            SELECT
-                id,
-                name,
-                email,
-                active,
-                created_at
-            FROM users
-            ORDER BY name ASC
-        ");
-
-        return $stmt->fetchAll();
+        return $this->repository->all();
     }
 
     public function find(int $id): ?array
     {
-        $db = Connection::getInstance();
-
-        $stmt = $db->prepare("
-            SELECT
-                id,
-                name,
-                email,
-                active
-            FROM users
-            WHERE id = :id
-            LIMIT 1
-        ");
-
-        $stmt->execute([
-            'id' => $id,
-        ]);
-
-        $user = $stmt->fetch();
-
-        return $user ?: null;
+        return $this->repository->find($id);
     }
 
     public function create(array $data): void
     {
-        $db = Connection::getInstance();
-
-        $stmt = $db->prepare("
-            INSERT INTO users (
-                name,
-                email,
-                password,
-                active,
-                created_at,
-                updated_at
-            )
-            VALUES (
-                :name,
-                :email,
-                :password,
-                :active,
-                NOW(),
-                NOW()
-            )
-        ");
-
-        $stmt->execute([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
-            'password' => password_hash($data['password'], PASSWORD_DEFAULT),
-            'active'   => 1,
-        ]);
+        $this->repository->create($data);
     }
 
     public function update(int $id, array $data): void
     {
-        $db = Connection::getInstance();
-
-        if (!empty($data['password'])) {
-
-            $stmt = $db->prepare("
-                UPDATE users
-                SET
-                    name = :name,
-                    email = :email,
-                    password = :password,
-                    active = :active,
-                    updated_at = NOW()
-                WHERE id = :id
-            ");
-
-            $stmt->execute([
-                'id'       => $id,
-                'name'     => $data['name'],
-                'email'    => $data['email'],
-                'password' => password_hash($data['password'], PASSWORD_DEFAULT),
-                'active'   => $data['active'],
-            ]);
-
-            return;
-        }
-
-        $stmt = $db->prepare("
-            UPDATE users
-            SET
-                name = :name,
-                email = :email,
-                active = :active,
-                updated_at = NOW()
-            WHERE id = :id
-        ");
-
-        $stmt->execute([
-            'id'     => $id,
-            'name'   => $data['name'],
-            'email'  => $data['email'],
-            'active' => $data['active'],
-        ]);
+        $this->repository->update($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $db = Connection::getInstance();
-
-        $stmt = $db->prepare("
-            DELETE FROM users
-            WHERE id = :id
-        ");
-
-        return $stmt->execute([
-            'id' => $id,
-        ]);
+        return $this->repository->delete($id);
     }
 
-    public function emailExists(string $email, ?int $ignoreId = null): bool
-    {
-        $db = Connection::getInstance();
-
-        if ($ignoreId === null) {
-
-            $stmt = $db->prepare("
-                SELECT COUNT(*)
-                FROM users
-                WHERE email = :email
-            ");
-
-            $stmt->execute([
-                'email' => $email,
-            ]);
-
-        } else {
-
-            $stmt = $db->prepare("
-                SELECT COUNT(*)
-                FROM users
-                WHERE email = :email
-                  AND id <> :id
-            ");
-
-            $stmt->execute([
-                'email' => $email,
-                'id'    => $ignoreId,
-            ]);
-
-        }
-
-        return (int) $stmt->fetchColumn() > 0;
+    public function emailExists(
+        string $email,
+        ?int $ignoreId = null
+    ): bool {
+        return $this->repository->emailExists(
+            $email,
+            $ignoreId
+        );
     }
 }

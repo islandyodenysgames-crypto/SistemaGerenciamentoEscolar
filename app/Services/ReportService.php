@@ -6,20 +6,20 @@ namespace App\Services;
 
 class ReportService
 {
-    private AttendanceService $attendanceService;
+    private AttendanceAnalyticsService $analyticsService;
 
     public function __construct()
     {
-        $this->attendanceService = new AttendanceService();
+        $this->analyticsService = new AttendanceAnalyticsService();
     }
 
     public function daily(string $date): array
     {
         return [
-            'summary' => $this->attendanceService->schoolFrequencyToday($date),
-            'ranking' => $this->attendanceService->dailyRanking($date),
+            'summary' => $this->analyticsService->schoolFrequencyToday($date),
+            'ranking' => $this->analyticsService->dailyRanking($date),
             'classesWithoutAttendance' =>
-                $this->attendanceService->classesWithoutAttendanceToday($date),
+                $this->analyticsService->classesWithoutAttendanceToday($date),
         ];
     }
 }
