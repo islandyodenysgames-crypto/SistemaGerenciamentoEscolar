@@ -30,19 +30,19 @@
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/variables.css') ?>">
+        href="<?= asset('assets/css/variables.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/themes.css') ?>">
+        href="<?= asset('assets/css/themes.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/app.css') ?>">
+        href="<?= asset('assets/css/app.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/layout.css') ?>">
+        href="<?= asset('assets/css/layout.css') ?>">
 
     <!-- ======================================================
          COMPONENTES
@@ -50,39 +50,39 @@
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/components/badge.css') ?>">
+        href="<?= asset('assets/css/components/badge.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/components/button.css') ?>">
+        href="<?= asset('assets/css/components/button.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/components/cards.css') ?>">
+        href="<?= asset('assets/css/components/cards.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/components/content.css') ?>">
+        href="<?= asset('assets/css/components/content.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/components/form.css') ?>">
+        href="<?= asset('assets/css/components/form.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/components/header.css') ?>">
+        href="<?= asset('assets/css/components/header.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/components/stat-card.css') ?>">
+        href="<?= asset('assets/css/components/stat-card.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/components/tables.css') ?>">
+        href="<?= asset('assets/css/components/tables.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/components.css') ?>">
+        href="<?= asset('assets/css/components.css') ?>">
 
     <!-- ======================================================
          PÁGINAS
@@ -90,23 +90,23 @@
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/pages/dashboard.css') ?>">
+        href="<?= asset('assets/css/pages/dashboard.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/pages/frequencia.css') ?>">
+        href="<?= asset('assets/css/pages/frequencia.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/pages/alunos.css') ?>">
+        href="<?= asset('assets/css/pages/alunos.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/pages/turmas.css') ?>">
+        href="<?= asset('assets/css/pages/turmas.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/pages/users.css') ?>">
+        href="<?= asset('assets/css/pages/users.css') ?>">
 
     <!-- ======================================================
          UTILITÁRIOS
@@ -114,15 +114,15 @@
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/utilities.css') ?>">
+        href="<?= asset('assets/css/utilities.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/responsive.css') ?>">
+        href="<?= asset('assets/css/responsive.css') ?>">
 
     <link
         rel="stylesheet"
-        href="<?= base_url('assets/css/animations.css') ?>">
+        href="<?= asset('assets/css/animations.css') ?>">
 
 </head>
 
@@ -142,11 +142,29 @@
 
     </div>
 
-    <script src="<?= base_url('assets/js/app.js') ?>"></script>
+    <!-- ======================================================
+         JAVASCRIPT GLOBAL
+    ======================================================= -->
 
-    <script src="<?= base_url('assets/js/sidebar.js') ?>"></script>
+    <script src="<?= asset('assets/js/app.js') ?>"></script>
 
-    <script src="<?= base_url('assets/js/theme.js') ?>"></script>
+    <script src="<?= asset('assets/js/sidebar.js') ?>"></script>
+
+    <script src="<?= asset('assets/js/theme.js') ?>"></script>
+
+    <!-- ======================================================
+         JAVASCRIPT DA PÁGINA
+    ======================================================= -->
+
+    <?php if ($pageScript = page_script()): ?>
+
+        <script src="<?= asset('assets/js/' . $pageScript) ?>"></script>
+
+    <?php endif; ?>
+
+    <!-- ======================================================
+         LUCIDE ICONS
+    ======================================================= -->
 
     <script src="https://unpkg.com/lucide@latest"></script>
 

@@ -112,6 +112,54 @@ if (!function_exists('asset')) {
 
 /*
 |--------------------------------------------------------------------------
+| JavaScript por página
+|--------------------------------------------------------------------------
+*/
+
+if (!function_exists('page_script')) {
+
+    function page_script(): ?string
+    {
+        $uri = parse_url(
+            $_SERVER['REQUEST_URI'],
+            PHP_URL_PATH
+        );
+
+        $scripts = [
+
+            '/dashboard'   => 'dashboard.js',
+
+            '/frequencia'  => 'attendance.js',
+
+            '/alunos'      => 'students.js',
+
+            '/turmas'      => 'classes.js',
+
+            '/relatorios'  => 'reports.js',
+
+            '/busca'       => 'search.js',
+
+            '/usuarios'    => 'users.js',
+
+            '/matriculas'  => 'enrollments.js',
+
+        ];
+
+        foreach ($scripts as $route => $script) {
+
+            if (str_contains($uri, $route)) {
+                return $script;
+            }
+
+        }
+
+        return null;
+    }
+
+}
+
+/*
+|--------------------------------------------------------------------------
 | Formulários
 |--------------------------------------------------------------------------
 */
@@ -129,7 +177,9 @@ if (!function_exists('selected')) {
 
     function selected(mixed $value, mixed $current): string
     {
-        return $value == $current ? 'selected' : '';
+        return $value == $current
+            ? 'selected'
+            : '';
     }
 
 }
@@ -138,7 +188,9 @@ if (!function_exists('checked')) {
 
     function checked(mixed $value, mixed $current): string
     {
-        return $value == $current ? 'checked' : '';
+        return $value == $current
+            ? 'checked'
+            : '';
     }
 
 }
