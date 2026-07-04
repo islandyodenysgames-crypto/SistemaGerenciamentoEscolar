@@ -4,18 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use App\Database\Connection;
-use PDO;
-
-class StudentRepository
+class StudentRepository extends BaseRepository
 {
-    private PDO $db;
-
-    public function __construct()
-    {
-        $this->db = Connection::getInstance();
-    }
-
     public function all(): array
     {
         $stmt = $this->db->query("
@@ -49,7 +39,7 @@ class StudentRepository
                             END
                         )
                         /
-                        NULLIF(COUNT(attendance_items.id),0)
+                        NULLIF(COUNT(attendance_items.id), 0)
                     ) * 100,
                     1
                 ) AS attendance_percentage
@@ -106,13 +96,13 @@ class StudentRepository
                         (
                             SUM(
                                 CASE
-                                    WHEN attendance_items.status='P'
+                                    WHEN attendance_items.status = 'P'
                                     THEN 1
                                     ELSE 0
                                 END
                             )
                             /
-                            NULLIF(COUNT(attendance_items.id),0)
+                            NULLIF(COUNT(attendance_items.id), 0)
                         ) * 100,
                         1
                     ) AS percentage
@@ -255,7 +245,6 @@ class StudentRepository
         string $registration,
         ?int $ignoreId = null
     ): bool {
-
         if ($ignoreId === null) {
 
             $stmt = $this->db->prepare("

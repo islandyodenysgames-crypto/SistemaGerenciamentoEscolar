@@ -4,17 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use App\Database\Connection;
-use PDO;
-
-class UserRepository
+class UserRepository extends BaseRepository
 {
-    private PDO $db;
-
-    public function __construct()
-    {
-        $this->db = Connection::getInstance();
-    }
 
     public function all(): array
     {
