@@ -10,9 +10,9 @@ class UserService
 {
     private UserRepository $repository;
 
-    public function __construct()
+    public function __construct(?UserRepository $repository = null)
     {
-        $this->repository = new UserRepository();
+        $this->repository = $repository ?? new UserRepository();
     }
 
     public function all(): array

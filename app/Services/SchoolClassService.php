@@ -10,9 +10,9 @@ class SchoolClassService
 {
     private SchoolClassRepository $repository;
 
-    public function __construct()
+    public function __construct(?SchoolClassRepository $repository = null)
     {
-        $this->repository = new SchoolClassRepository();
+        $this->repository = $repository ?? new SchoolClassRepository();
     }
 
     public function all(): array

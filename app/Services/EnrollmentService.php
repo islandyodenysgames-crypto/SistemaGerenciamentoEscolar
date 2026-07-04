@@ -10,9 +10,9 @@ class EnrollmentService
 {
     private EnrollmentRepository $repository;
 
-    public function __construct()
+    public function __construct(?EnrollmentRepository $repository = null)
     {
-        $this->repository = new EnrollmentRepository();
+        $this->repository = $repository ?? new EnrollmentRepository();
     }
 
     public function all(): array

@@ -10,10 +10,10 @@ class StudentService
 {
     private StudentRepository $repository;
 
-    public function __construct()
-    {
-        $this->repository = new StudentRepository();
-    }
+    public function __construct(?StudentRepository $repository = null)
+{
+    $this->repository = $repository ?? new StudentRepository();
+}
 
     public function all(): array
     {

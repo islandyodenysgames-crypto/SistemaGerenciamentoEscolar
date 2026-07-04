@@ -16,9 +16,9 @@ class AttendanceService
 
     private AttendanceRepository $repository;
 
-    public function __construct()
+    public function __construct(?AttendanceRepository $repository = null)
     {
-        $this->repository = new AttendanceRepository();
+        $this->repository = $repository ?? new AttendanceRepository();
     }
 
     public static function statusOptions(): array
