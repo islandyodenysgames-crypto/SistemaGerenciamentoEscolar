@@ -8,16 +8,19 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
+use App\Services\AttendanceAnalyticsService;
 use App\Services\AttendanceService;
 use App\Services\SchoolClassService;
 
 class AttendanceController extends Controller
 {
     private AttendanceService $service;
+    private AttendanceAnalyticsService $analyticsService;
 
     public function __construct()
     {
         $this->service = new AttendanceService();
+        $this->analyticsService = new AttendanceAnalyticsService();
     }
 
     private function guard(): void
@@ -36,7 +39,7 @@ class AttendanceController extends Controller
         $this->view('frequencia/index', [
             'title' => 'Frequência - ' . app_name(),
             'today' => $today,
-            'central' => $this->service->dailyCentral($today),
+            'central' => $this->analyticsService->dailyCentral($today),
             'attendances' => $this->service->all(),
         ]);
     }

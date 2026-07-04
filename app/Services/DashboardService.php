@@ -6,13 +6,13 @@ namespace App\Services;
 
 class DashboardService
 {
-    private AttendanceService $attendanceService;
+    private AttendanceAnalyticsService $analyticsService;
     private StudentService $studentService;
     private SchoolClassService $schoolClassService;
 
     public function __construct()
     {
-        $this->attendanceService = new AttendanceService();
+        $this->analyticsService = new AttendanceAnalyticsService();
         $this->studentService = new StudentService();
         $this->schoolClassService = new SchoolClassService();
     }
@@ -21,31 +21,31 @@ class DashboardService
     {
         $today = date('Y-m-d');
 
-        $central = $this->attendanceService->dailyCentral($today);
+        $central = $this->analyticsService->dailyCentral($today);
 
         return [
             'totalStudents' => $this->studentService->countActive(),
             'totalClasses' => $this->schoolClassService->countActive(),
 
-            'ranking' => $this->attendanceService->dailyRanking($today),
+            'ranking' => $this->analyticsService->dailyRanking($today),
 
             'schoolFrequencyToday' =>
-                $this->attendanceService->schoolFrequencyToday($today),
+                $this->analyticsService->schoolFrequencyToday($today),
 
             'schoolFrequencyWeek' =>
-                $this->attendanceService->schoolFrequencyWeek(),
+                $this->analyticsService->schoolFrequencyWeek(),
 
             'schoolFrequencyMonth' =>
-                $this->attendanceService->schoolFrequencyMonth(),
+                $this->analyticsService->schoolFrequencyMonth(),
 
             'schoolFrequencyYear' =>
-                $this->attendanceService->schoolFrequencyYear(),
+                $this->analyticsService->schoolFrequencyYear(),
 
             'frequencyLast30Days' =>
-                $this->attendanceService->schoolFrequencyLast30Days(),
+                $this->analyticsService->schoolFrequencyLast30Days(),
 
             'classesWithoutAttendance' =>
-                $this->attendanceService->classesWithoutAttendanceToday($today),
+                $this->analyticsService->classesWithoutAttendanceToday($today),
 
             'executive' => [
                 'generalPercentage' => (float) ($central['generalPercentage'] ?? 0),
