@@ -12,11 +12,9 @@ use App\Services\UserService;
 
 class UserController extends Controller
 {
-    private UserService $service;
-
-    public function __construct()
-    {
-        $this->service = new UserService();
+    public function __construct(
+        private UserService $service
+    ) {
     }
 
     private function guard(): void
@@ -30,7 +28,7 @@ class UserController extends Controller
     {
         $this->guard();
 
-        $this->view('usuarios/index', [
+        $this->view('pages/users/index', [
             'title' => 'Usuários - ' . app_name(),
             'users' => $this->service->all(),
         ]);
@@ -40,7 +38,7 @@ class UserController extends Controller
     {
         $this->guard();
 
-        $this->view('usuarios/create', [
+        $this->view('pages/users/create', [
             'title' => 'Novo Usuário - ' . app_name(),
         ]);
     }
@@ -58,6 +56,7 @@ class UserController extends Controller
             );
 
             Response::redirect(base_url('usuarios/novo'));
+            return;
         }
 
         $this->service->create([
@@ -84,11 +83,12 @@ class UserController extends Controller
 
         if (!$user) {
             Response::redirect(base_url('usuarios'));
+            return;
         }
 
-        $this->view('usuarios/edit', [
+        $this->view('pages/users/edit', [
             'title' => 'Editar Usuário - ' . app_name(),
-            'user'  => $user,
+            'user' => $user,
         ]);
     }
 
@@ -109,6 +109,8 @@ class UserController extends Controller
             Response::redirect(
                 base_url('usuarios/editar?id=' . $id)
             );
+
+            return;
         }
 
         $this->service->update($id, [
@@ -141,6 +143,8 @@ class UserController extends Controller
             );
 
             Response::redirect(base_url('usuarios'));
+
+            return;
         }
 
         if ($this->service->delete($id)) {

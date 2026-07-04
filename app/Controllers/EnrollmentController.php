@@ -14,11 +14,11 @@ use App\Services\StudentService;
 
 class EnrollmentController extends Controller
 {
-    private EnrollmentService $service;
-
-    public function __construct()
-    {
-        $this->service = new EnrollmentService();
+    public function __construct(
+        private EnrollmentService $service,
+        private StudentService $studentService,
+        private SchoolClassService $classService
+    ) {
     }
 
     private function guard(): void
@@ -32,7 +32,7 @@ class EnrollmentController extends Controller
     {
         $this->guard();
 
-        $this->view('matriculas/index', [
+        $this->view('pages/enrollments/index', [
             'title' => 'Matrículas - ' . app_name(),
             'enrollments' => $this->service->all(),
         ]);
@@ -42,10 +42,7 @@ class EnrollmentController extends Controller
     {
         $this->guard();
 
-        $studentService = new StudentService();
-        $classService = new SchoolClassService();
-
-        $students = $studentService->availableForEnrollment();
+        $students = $this->studentService->availableForEnrollment();
 
         if (empty($students)) {
 
@@ -59,10 +56,10 @@ class EnrollmentController extends Controller
             return;
         }
 
-        $this->view('matriculas/create', [
+        $this->view('pages/enrollments/create', [
             'title' => 'Nova Matrícula - ' . app_name(),
             'students' => $students,
-            'classes' => $classService->all(),
+            'classes' => $this->classService->all(),
         ]);
     }
 

@@ -1,0 +1,32 @@
+/* ==========================================================
+   DESIGN SYSTEM - COLORS
+========================================================== */
+
+:root {
+
+    --ds-primary: #0f766e;
+    --ds-primary-light: #14b8a6;
+
+    --ds-secondary: #f97316;
+
+    --ds-success: #22c55e;
+    --ds-warning: #f59e0b;
+    --ds-danger: #ef4444;
+    --ds-info: #3b82f6;
+
+    --ds-surface: #ffffff;
+    --ds-surface-soft: #f8fafc;
+
+    --ds-green-soft: #ecfdf5;
+    --ds-yellow-soft: #fffbeb;
+    --ds-red-soft: #fef2f2;
+    --ds-blue-soft: #eff6ff;
+    --ds-orange-soft: #fff7ed;
+
+    --ds-text-dark: #0f172a;
+    --ds-text: #334155;
+    --ds-text-light: #64748b;
+
+    --ds-border: #e2e8f0;
+
+}

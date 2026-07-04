@@ -14,13 +14,11 @@ use App\Services\SchoolClassService;
 
 class AttendanceController extends Controller
 {
-    private AttendanceService $service;
-    private AttendanceAnalyticsService $analyticsService;
-
-    public function __construct()
-    {
-        $this->service = new AttendanceService();
-        $this->analyticsService = new AttendanceAnalyticsService();
+    public function __construct(
+        private AttendanceService $service,
+        private AttendanceAnalyticsService $analyticsService,
+        private SchoolClassService $classService
+    ) {
     }
 
     private function guard(): void
@@ -36,7 +34,7 @@ class AttendanceController extends Controller
 
         $today = date('Y-m-d');
 
-        $this->view('frequencia/index', [
+        $this->view('pages/attendance/index', [
             'title' => 'Frequência - ' . app_name(),
             'today' => $today,
             'central' => $this->analyticsService->dailyCentral($today),
@@ -47,8 +45,6 @@ class AttendanceController extends Controller
     public function create(): void
     {
         $this->guard();
-
-        $classService = new SchoolClassService();
 
         $classId = (int) Request::get('turma');
         $today = date('Y-m-d');
@@ -72,9 +68,9 @@ class AttendanceController extends Controller
             }
         }
 
-        $this->view('frequencia/create', [
+        $this->view('pages/attendance/create', [
             'title' => 'Nova Chamada - ' . app_name(),
-            'classes' => $classService->all(),
+            'classes' => $this->classService->all(),
             'classId' => $classId,
             'classInfo' => $classInfo,
             'students' => $students,
@@ -145,7 +141,7 @@ class AttendanceController extends Controller
             return;
         }
 
-        $this->view('frequencia/show', [
+        $this->view('pages/attendance/show', [
             'title' => 'Visualizar Chamada - ' . app_name(),
             'attendance' => $attendance,
             'items' => $this->service->items($id),
@@ -171,7 +167,7 @@ class AttendanceController extends Controller
             return;
         }
 
-        $this->view('frequencia/edit', [
+        $this->view('pages/attendance/edit', [
             'title' => 'Editar Chamada - ' . app_name(),
             'attendance' => $attendance,
             'items' => $this->service->items($id),

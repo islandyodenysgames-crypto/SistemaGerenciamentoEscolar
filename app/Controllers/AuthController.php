@@ -12,6 +12,11 @@ use App\Services\AuthService;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        private AuthService $service
+    ) {
+    }
+
     public function login(): void
     {
         if (Session::has('user')) {
@@ -22,7 +27,7 @@ class AuthController extends Controller
 
         Session::remove('login_error');
 
-        $this->view('auth/login', [
+        $this->view('pages/auth/login', [
             'title' => 'Login - ' . app_name(),
             'error' => $error,
         ], 'auth');
@@ -33,9 +38,7 @@ class AuthController extends Controller
         $email = trim((string) Request::post('email'));
         $password = (string) Request::post('password');
 
-        $service = new AuthService();
-
-        $user = $service->attempt($email, $password);
+        $user = $this->service->attempt($email, $password);
 
         if (!$user) {
             Session::set('login_error', 'E-mail ou senha inválidos.');

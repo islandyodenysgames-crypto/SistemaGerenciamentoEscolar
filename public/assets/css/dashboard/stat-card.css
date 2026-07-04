@@ -1,0 +1,40 @@
+/* ==========================================================
+   DASHBOARD - STAT CARDS
+========================================================== */
+
+.dashboard-kpis .stat-card {
+    min-height: 150px;
+    padding: 22px;
+    border-radius: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.dashboard-kpis .stat-card-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 18px;
+    background: var(--green-soft);
+    color: var(--primary);
+}
+
+.dashboard-kpis .stat-card-icon i {
+    width: 28px;
+    height: 28px;
+}
+
+.dashboard-kpis .stat-card-info span {
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.dashboard-kpis .stat-card-info h2 {
+    margin-top: 8px;
+    color: var(--text-dark);
+    font-size: 36px;
+    font-weight: 900;
+}

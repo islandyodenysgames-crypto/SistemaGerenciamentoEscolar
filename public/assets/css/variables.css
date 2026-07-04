@@ -1,40 +1,67 @@
+/* ==========================================================
+   VARIABLES
+   Compatibilidade com o Design System
+========================================================== */
+
 :root {
-    --font-family: 'Inter', sans-serif;
 
-    --primary: #16a34a;
-    --secondary: #f97316;
+    --primary: var(--ds-primary);
+    --primary-light: var(--ds-primary-light);
 
-    --success: #22c55e;
-    --warning: #d97706;
-    --danger: #dc2626;
-    --info: #2563eb;
+    --secondary: var(--ds-secondary);
 
-    --background: #f8fafc;
-    --surface: #ffffff;
-    --surface-soft: #f8fafc;
+    --success: var(--ds-success);
+    --warning: var(--ds-warning);
+    --danger: var(--ds-danger);
+    --info: var(--ds-info);
 
-    --text: #334155;
-    --text-light: #64748b;
-    --text-dark: #0f172a;
+    --surface: var(--ds-surface);
+    --surface-soft: var(--ds-surface-soft);
 
-    --border: #e5e7eb;
+    --green-soft: var(--ds-green-soft);
+    --yellow-soft: var(--ds-yellow-soft);
+    --red-soft: var(--ds-red-soft);
+    --blue-soft: var(--ds-blue-soft);
+    --orange-soft: var(--ds-orange-soft);
 
-    --green-soft: #dcfce7;
-    --yellow-soft: #fef3c7;
-    --orange-soft: #fff7ed;
-    --red-soft: #fee2e2;
-    --blue-soft: #dbeafe;
-    --purple-soft: #ede9fe;
+    --text-dark: var(--ds-text-dark);
+    --text: var(--ds-text);
+    --text-light: var(--ds-text-light);
 
-    --shadow-sm: 0 4px 16px rgba(15, 23, 42, .06);
-    --shadow-md: 0 8px 30px rgba(15, 23, 42, .08);
-    --shadow-lg: 0 12px 36px rgba(15, 23, 42, .12);
+    --border: var(--ds-border);
 
-    --radius-sm: 10px;
-    --radius-md: 14px;
-    --radius-lg: 18px;
-    --radius-xl: 22px;
-    --radius-full: 999px;
+    --font-family: var(--ds-font-family);
 
-    --transition: .2s ease;
+    --font-xs: var(--ds-font-xs);
+    --font-sm: var(--ds-font-sm);
+    --font-md: var(--ds-font-md);
+    --font-lg: var(--ds-font-lg);
+    --font-xl: var(--ds-font-xl);
+    --font-2xl: var(--ds-font-2xl);
+    --font-3xl: var(--ds-font-3xl);
+
+    --space-1: var(--ds-space-1);
+    --space-2: var(--ds-space-2);
+    --space-3: var(--ds-space-3);
+    --space-4: var(--ds-space-4);
+    --space-5: var(--ds-space-5);
+    --space-6: var(--ds-space-6);
+    --space-8: var(--ds-space-8);
+    --space-10: var(--ds-space-10);
+    --space-12: var(--ds-space-12);
+
+    --radius-sm: var(--ds-radius-sm);
+    --radius-md: var(--ds-radius-md);
+    --radius-lg: var(--ds-radius-lg);
+    --radius-xl: var(--ds-radius-xl);
+    --radius-full: var(--ds-radius-full);
+
+    --shadow-sm: var(--ds-shadow-sm);
+    --shadow-md: var(--ds-shadow-md);
+    --shadow-lg: var(--ds-shadow-lg);
+
+    --transition-fast: var(--ds-transition-fast);
+    --transition: var(--ds-transition);
+    --transition-slow: var(--ds-transition-slow);
+
 }

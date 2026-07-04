@@ -8,7 +8,8 @@ $menu = Menu::items();
 
 <aside
     class="sidebar"
-    id="sidebar">
+    id="sidebar"
+>
 
     <div>
 
@@ -17,7 +18,8 @@ $menu = Menu::items();
             <button
                 class="sidebar-toggle"
                 id="sidebarToggle"
-                type="button">
+                type="button"
+            >
 
                 <i data-lucide="panel-left-close"></i>
 
@@ -26,17 +28,12 @@ $menu = Menu::items();
             <div class="logo">
 
                 <div class="logo-icon">
-
                     <i data-lucide="graduation-cap"></i>
-
                 </div>
 
                 <div class="logo-text">
-
                     <strong>SFE</strong>
-
                     <small>Frequência Escolar</small>
-
                 </div>
 
             </div>
@@ -49,7 +46,8 @@ $menu = Menu::items();
 
                 <a
                     href="<?= $item['url'] ?>"
-                    class="<?= $item['active'] ? 'active' : '' ?>">
+                    class="<?= $item['active'] ? 'active' : '' ?>"
+                >
 
                     <i data-lucide="<?= $item['icon'] ?>"></i>
 
@@ -73,7 +71,7 @@ $menu = Menu::items();
 
         </a>
 
-        <a href="#">
+        <a href="<?= base_url('logout') ?>">
 
             <i data-lucide="log-out"></i>
 

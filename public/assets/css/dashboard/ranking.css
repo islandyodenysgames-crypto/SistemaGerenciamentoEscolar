@@ -1,0 +1,77 @@
+/* ==========================================================
+   DASHBOARD - RANKING
+========================================================== */
+
+.daily-ranking-card {
+    overflow: hidden;
+}
+
+.ranking-list {
+    display: grid;
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.ranking-item {
+    display: grid;
+    grid-template-columns: 76px 1fr 130px;
+    gap: 20px;
+    align-items: center;
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface-soft);
+    transition: all .25s ease;
+}
+
+.ranking-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.ranking-position {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.ranking-title {
+    color: var(--text-dark);
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 6px;
+}
+
+.ranking-subtitle {
+    color: var(--text-light);
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.ranking-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ranking-metrics span {
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.ranking-progress {
+    display: flex;
+    justify-content: center;
+}

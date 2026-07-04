@@ -11,11 +11,9 @@ use App\Services\DashboardService;
 
 class DashboardController extends Controller
 {
-    private DashboardService $service;
-
-    public function __construct()
-    {
-        $this->service = new DashboardService();
+    public function __construct(
+        private DashboardService $service
+    ) {
     }
 
     private function guard(): void
@@ -29,7 +27,7 @@ class DashboardController extends Controller
     {
         $this->guard();
 
-        $this->view('dashboard/index', array_merge(
+        $this->view('pages/dashboard/index', array_merge(
             [
                 'title' => 'Dashboard - ' . app_name(),
             ],

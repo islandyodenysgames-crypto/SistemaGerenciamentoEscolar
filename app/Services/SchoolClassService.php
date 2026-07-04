@@ -8,11 +8,9 @@ use App\Repositories\SchoolClassRepository;
 
 class SchoolClassService
 {
-    private SchoolClassRepository $repository;
-
-    public function __construct(?SchoolClassRepository $repository = null)
-    {
-        $this->repository = $repository ?? new SchoolClassRepository();
+    public function __construct(
+        private SchoolClassRepository $repository
+    ) {
     }
 
     public function all(): array
@@ -50,6 +48,10 @@ class SchoolClassService
         int $year,
         ?int $ignoreId = null
     ): bool {
-        return $this->repository->exists($name, $year, $ignoreId);
+        return $this->repository->exists(
+            $name,
+            $year,
+            $ignoreId
+        );
     }
 }

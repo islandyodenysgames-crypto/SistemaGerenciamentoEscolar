@@ -1,0 +1,46 @@
+/* ==========================================================
+   DESIGN SYSTEM
+   ICONS
+========================================================== */
+
+.icon{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.icon i{
+    width:20px;
+    height:20px;
+}
+
+.icon-xs i{
+    width:14px;
+    height:14px;
+}
+
+.icon-sm i{
+    width:16px;
+    height:16px;
+}
+
+.icon-md i{
+    width:20px;
+    height:20px;
+}
+
+.icon-lg i{
+    width:28px;
+    height:28px;
+}
+
+.icon-xl i{
+    width:36px;
+    height:36px;
+}
+
+.icon-2xl i{
+    width:48px;
+    height:48px;
+}

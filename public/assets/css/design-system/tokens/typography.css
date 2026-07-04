@@ -1,0 +1,17 @@
+/* ==========================================================
+   DESIGN SYSTEM - TYPOGRAPHY
+========================================================== */
+
+:root {
+
+    --ds-font-family: 'Inter', sans-serif;
+
+    --ds-font-xs: 12px;
+    --ds-font-sm: 13px;
+    --ds-font-md: 15px;
+    --ds-font-lg: 18px;
+    --ds-font-xl: 22px;
+    --ds-font-2xl: 28px;
+    --ds-font-3xl: 36px;
+
+}

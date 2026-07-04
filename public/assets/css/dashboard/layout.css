@@ -1,0 +1,33 @@
+/* ==========================================================
+   DASHBOARD - LAYOUT
+========================================================== */
+
+.dashboard-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.dashboard-main-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+    align-items: start;
+}
+
+.dashboard-bottom-grid {
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap: 30px;
+    margin-top: 30px;
+    align-items: start;
+}
+
+.dashboard-left,
+.dashboard-right {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}

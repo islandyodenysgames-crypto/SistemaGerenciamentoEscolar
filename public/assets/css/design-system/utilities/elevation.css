@@ -1,0 +1,16 @@
+/* ==========================================================
+   DESIGN SYSTEM
+   ELEVATION
+========================================================== */
+
+.elevation-1{
+    box-shadow:var(--ds-shadow-sm);
+}
+
+.elevation-2{
+    box-shadow:var(--ds-shadow-md);
+}
+
+.elevation-3{
+    box-shadow:var(--ds-shadow-lg);
+}

@@ -8,11 +8,9 @@ use App\Repositories\UserRepository;
 
 class UserService
 {
-    private UserRepository $repository;
-
-    public function __construct(?UserRepository $repository = null)
-    {
-        $this->repository = $repository ?? new UserRepository();
+    public function __construct(
+        private UserRepository $repository
+    ) {
     }
 
     public function all(): array

@@ -12,11 +12,9 @@ use App\Services\SchoolClassService;
 
 class SchoolClassController extends Controller
 {
-    private SchoolClassService $service;
-
-    public function __construct()
-    {
-        $this->service = new SchoolClassService();
+    public function __construct(
+        private SchoolClassService $service
+    ) {
     }
 
     private function guard(): void
@@ -30,7 +28,7 @@ class SchoolClassController extends Controller
     {
         $this->guard();
 
-        $this->view('turmas/index', [
+        $this->view('pages/classes/index', [
             'title' => 'Turmas - ' . app_name(),
             'classes' => $this->service->all(),
         ]);
@@ -40,7 +38,7 @@ class SchoolClassController extends Controller
     {
         $this->guard();
 
-        $this->view('turmas/create', [
+        $this->view('pages/classes/create', [
             'title' => 'Nova Turma - ' . app_name(),
         ]);
     }
@@ -87,7 +85,7 @@ class SchoolClassController extends Controller
             Response::redirect(base_url('turmas'));
         }
 
-        $this->view('turmas/edit', [
+        $this->view('pages/classes/edit', [
             'title' => 'Editar Turma - ' . app_name(),
             'class' => $class,
         ]);

@@ -8,11 +8,9 @@ use App\Repositories\EnrollmentRepository;
 
 class EnrollmentService
 {
-    private EnrollmentRepository $repository;
-
-    public function __construct(?EnrollmentRepository $repository = null)
-    {
-        $this->repository = $repository ?? new EnrollmentRepository();
+    public function __construct(
+        private EnrollmentRepository $repository
+    ) {
     }
 
     public function all(): array

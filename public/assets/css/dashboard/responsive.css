@@ -1,0 +1,61 @@
+/* ==========================================================
+   DASHBOARD - RESPONSIVO
+========================================================== */
+
+@media (max-width: 1200px) {
+    .dashboard-main-grid,
+    .dashboard-bottom-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .executive-hero-header {
+        flex-direction: column;
+    }
+
+    .executive-hero-body {
+        grid-template-columns: 1fr;
+    }
+
+    .executive-summary-grid,
+    .period-grid,
+    .pending-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ranking-item {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .ranking-position {
+        margin: 0 auto;
+    }
+
+    .ranking-progress,
+    .ranking-metrics {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 700px) {
+    .executive-hero {
+        padding: 22px;
+    }
+
+    .executive-hero h2 {
+        font-size: 24px;
+    }
+
+    .executive-summary-card,
+    .pending-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .executive-summary-icon,
+    .pending-icon {
+        margin: 0 auto;
+    }
+}

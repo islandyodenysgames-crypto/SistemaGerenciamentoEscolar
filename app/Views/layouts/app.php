@@ -25,6 +25,12 @@
         rel="stylesheet">
 
     <!-- ======================================================
+         DESIGN SYSTEM
+    ======================================================= -->
+
+    <link rel="stylesheet" href="<?= asset('assets/css/design-system/index.css') ?>">
+
+    <!-- ======================================================
          BASE
     ======================================================= -->
 
@@ -37,24 +43,22 @@
          COMPONENTES
     ======================================================= -->
 
-    <link rel="stylesheet" href="<?= asset('assets/css/components/badge.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/components/button.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/components/cards.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/components/content.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/components/form.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/components/header.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/components/stat-card.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/components/tables.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/components.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/components/index.css') ?>">
+
+    <!-- ======================================================
+         DASHBOARD
+    ======================================================= -->
+
+    <link rel="stylesheet" href="<?= asset('assets/css/dashboard/index.css') ?>">
 
     <!-- ======================================================
          PÁGINAS
     ======================================================= -->
 
-    <link rel="stylesheet" href="<?= asset('assets/css/pages/dashboard.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/pages/frequencia.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/pages/auth.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/pages/alunos.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/pages/turmas.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/pages/frequencia.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/pages/users.css') ?>">
 
     <!-- ======================================================
@@ -94,9 +98,7 @@
     ======================================================= -->
 
     <script src="<?= asset('assets/js/app.js') ?>"></script>
-
     <script src="<?= asset('assets/js/sidebar.js') ?>"></script>
-
     <script src="<?= asset('assets/js/theme.js') ?>"></script>
 
     <!-- ======================================================

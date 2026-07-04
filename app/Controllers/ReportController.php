@@ -12,6 +12,11 @@ use App\Services\ReportService;
 
 class ReportController extends Controller
 {
+    public function __construct(
+        private ReportService $service
+    ) {
+    }
+
     private function guard(): void
     {
         if (!Session::has('user')) {
@@ -23,7 +28,7 @@ class ReportController extends Controller
     {
         $this->guard();
 
-        $this->view('relatorios/index', [
+        $this->view('pages/reports/index', [
             'title' => 'Relatórios - ' . app_name(),
         ]);
     }
@@ -34,14 +39,12 @@ class ReportController extends Controller
 
         $date = (string) Request::get('data', date('Y-m-d'));
 
-        $reportService = new ReportService();
-
-        $this->view('relatorios/diario', array_merge(
+        $this->view('pages/reports/diario', array_merge(
             [
                 'title' => 'Relatório Diário - ' . app_name(),
                 'date' => $date,
             ],
-            $reportService->daily($date)
+            $this->service->daily($date)
         ));
     }
 }

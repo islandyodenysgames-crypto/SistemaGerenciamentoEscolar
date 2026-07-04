@@ -12,11 +12,9 @@ use App\Services\StudentService;
 
 class StudentController extends Controller
 {
-    private StudentService $service;
-
-    public function __construct()
-    {
-        $this->service = new StudentService();
+    public function __construct(
+        private StudentService $service
+    ) {
     }
 
     private function guard(): void
@@ -30,7 +28,7 @@ class StudentController extends Controller
     {
         $this->guard();
 
-        $this->view('alunos/index', [
+        $this->view('pages/students/index', [
             'title' => 'Alunos - ' . app_name(),
             'students' => $this->service->all(),
         ]);
@@ -40,7 +38,7 @@ class StudentController extends Controller
     {
         $this->guard();
 
-        $this->view('alunos/create', [
+        $this->view('pages/students/create', [
             'title' => 'Novo Aluno - ' . app_name(),
         ]);
     }
@@ -88,7 +86,7 @@ class StudentController extends Controller
             Response::redirect(base_url('alunos'));
         }
 
-        $this->view('alunos/edit', [
+        $this->view('pages/students/edit', [
             'title' => 'Editar Aluno - ' . app_name(),
             'student' => $student,
         ]);

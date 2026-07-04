@@ -8,12 +8,10 @@ use App\Repositories\StudentRepository;
 
 class StudentService
 {
-    private StudentRepository $repository;
-
-    public function __construct(?StudentRepository $repository = null)
-{
-    $this->repository = $repository ?? new StudentRepository();
-}
+    public function __construct(
+        private StudentRepository $repository
+    ) {
+    }
 
     public function all(): array
     {

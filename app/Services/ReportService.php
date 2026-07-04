@@ -6,11 +6,9 @@ namespace App\Services;
 
 class ReportService
 {
-    private AttendanceAnalyticsService $analyticsService;
-
-    public function __construct()
-    {
-        $this->analyticsService = new AttendanceAnalyticsService();
+    public function __construct(
+        private AttendanceAnalyticsService $analyticsService
+    ) {
     }
 
     public function daily(string $date): array

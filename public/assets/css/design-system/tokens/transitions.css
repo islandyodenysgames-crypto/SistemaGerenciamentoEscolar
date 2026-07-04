@@ -1,0 +1,11 @@
+/* ==========================================================
+   DESIGN SYSTEM - TRANSITIONS
+========================================================== */
+
+:root {
+
+    --ds-transition-fast: .15s ease;
+    --ds-transition: .25s ease;
+    --ds-transition-slow: .4s ease;
+
+}

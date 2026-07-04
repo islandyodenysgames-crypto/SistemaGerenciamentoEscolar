@@ -4,9 +4,20 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use Throwable;
+
 class Router
 {
     private array $routes = [];
+
+    private Container $container;
+
+    public function __construct(?Container $container = null)
+    {
+        $this->container = $container ?? new Container();
+
+        AppServiceProvider::register($this->container);
+    }
 
     public function get(string $uri, callable|array $action): void
     {
@@ -28,33 +39,46 @@ class Router
 
         $basePath = parse_url($baseUrl, PHP_URL_PATH) ?: '';
 
-        if ($basePath !== '' && str_starts_with($uri, $basePath)) {
+        if (
+            $basePath !== ''
+            && str_starts_with($uri, $basePath)
+        ) {
             $uri = substr($uri, strlen($basePath));
         }
 
         $uri = $this->normalize($uri);
 
         if (!isset($this->routes[$method][$uri])) {
-            http_response_code(404);
-
-            echo '<h1>404</h1>';
-            echo '<p>Página não encontrada.</p>';
-
+            $this->notFound();
             return;
         }
 
         $action = $this->routes[$method][$uri];
 
-        if (is_callable($action)) {
-            $action();
-            return;
+        try {
+
+            if (is_callable($action)) {
+                $action();
+                return;
+            }
+
+            [$controller, $controllerMethod] = $action;
+
+            $instance = $this->container->get($controller);
+
+            $instance->$controllerMethod();
+
+        } catch (Throwable $e) {
+
+            throw $e;
+
+            /*
+             * Futuramente:
+             *
+             * ErrorHandler::render($e);
+             */
+
         }
-
-        [$controller, $controllerMethod] = $action;
-
-        $instance = new $controller();
-
-        $instance->$controllerMethod();
     }
 
     private function normalize(string $uri): string
@@ -64,5 +88,13 @@ class Router
         }
 
         return '/' . trim($uri, '/');
+    }
+
+    private function notFound(): void
+    {
+        http_response_code(404);
+
+        echo '<h1>404</h1>';
+        echo '<p>Página não encontrada.</p>';
     }
 }

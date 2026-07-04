@@ -12,6 +12,11 @@ use App\Services\SearchService;
 
 class SearchController extends Controller
 {
+    public function __construct(
+        private SearchService $service
+    ) {
+    }
+
     private function guard(): void
     {
         if (!Session::has('user')) {
@@ -25,12 +30,10 @@ class SearchController extends Controller
 
         $term = trim((string) Request::get('q', ''));
 
-        $service = new SearchService();
-
-        $this->view('busca/index', [
+        $this->view('pages/search/index', [
             'title' => 'Busca - ' . app_name(),
             'term' => $term,
-            'results' => $service->search($term),
+            'results' => $this->service->search($term),
         ]);
     }
 }

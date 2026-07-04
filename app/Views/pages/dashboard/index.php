@@ -2,18 +2,25 @@
 
 component('page-header', [
     'title' => 'Dashboard',
-    'subtitle' => 'Painel executivo de monitoramento da frequência escolar'
+    'subtitle' => 'Centro de Operações da Frequência Escolar'
 ]);
 
 ?>
 
-<div class="dashboard-grid">
+<!-- HERO EXECUTIVO -->
+
+<?php component('executive-dashboard', $executive ?? []); ?>
+
+
+<!-- KPIs -->
+
+<div class="dashboard-kpis">
 
 <?php
 
 component('stat-card', [
     'icon' => 'graduation-cap',
-    'label' => 'Alunos',
+    'label' => 'Alunos Ativos',
     'value' => $totalStudents ?? 0
 ]);
 
@@ -39,19 +46,20 @@ component('stat-card', [
 
 </div>
 
-<?php component('executive-dashboard', $executive ?? []); ?>
 
-<div class="dashboard-row">
+<!-- PRIMEIRA LINHA -->
 
-    <div class="dashboard-column">
+<div class="dashboard-main-grid">
+
+    <section class="dashboard-left">
 
         <?php component('daily-ranking', [
             'ranking' => $ranking ?? []
         ]); ?>
 
-    </div>
+    </section>
 
-    <div class="dashboard-column">
+    <aside class="dashboard-right">
 
         <?php component('frequency-period-summary', [
             'today' => $schoolFrequencyToday ?? [],
@@ -60,26 +68,29 @@ component('stat-card', [
             'year' => $schoolFrequencyYear ?? [],
         ]); ?>
 
-    </div>
+    </aside>
 
 </div>
 
-<div class="dashboard-row">
 
-    <div class="dashboard-column">
+<!-- SEGUNDA LINHA -->
 
-        <?php component('classes-without-attendance', [
-            'classesWithoutAttendance' => $classesWithoutAttendance ?? []
-        ]); ?>
+<div class="dashboard-bottom-grid">
 
-    </div>
-
-    <div class="dashboard-column">
+    <section>
 
         <?php component('frequency-chart', [
             'frequencyLast30Days' => $frequencyLast30Days ?? []
         ]); ?>
 
-    </div>
+    </section>
+
+    <section>
+
+        <?php component('classes-without-attendance', [
+            'classesWithoutAttendance' => $classesWithoutAttendance ?? []
+        ]); ?>
+
+    </section>
 
 </div>

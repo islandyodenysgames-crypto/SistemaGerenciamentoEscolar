@@ -6,15 +6,11 @@ namespace App\Services;
 
 class DashboardService
 {
-    private AttendanceAnalyticsService $analyticsService;
-    private StudentService $studentService;
-    private SchoolClassService $schoolClassService;
-
-    public function __construct()
-    {
-        $this->analyticsService = new AttendanceAnalyticsService();
-        $this->studentService = new StudentService();
-        $this->schoolClassService = new SchoolClassService();
+    public function __construct(
+        private AttendanceAnalyticsService $analyticsService,
+        private StudentService $studentService,
+        private SchoolClassService $schoolClassService
+    ) {
     }
 
     public function data(): array
@@ -26,27 +22,13 @@ class DashboardService
         return [
             'totalStudents' => $this->studentService->countActive(),
             'totalClasses' => $this->schoolClassService->countActive(),
-
             'ranking' => $this->analyticsService->dailyRanking($today),
-
-            'schoolFrequencyToday' =>
-                $this->analyticsService->schoolFrequencyToday($today),
-
-            'schoolFrequencyWeek' =>
-                $this->analyticsService->schoolFrequencyWeek(),
-
-            'schoolFrequencyMonth' =>
-                $this->analyticsService->schoolFrequencyMonth(),
-
-            'schoolFrequencyYear' =>
-                $this->analyticsService->schoolFrequencyYear(),
-
-            'frequencyLast30Days' =>
-                $this->analyticsService->schoolFrequencyLast30Days(),
-
-            'classesWithoutAttendance' =>
-                $this->analyticsService->classesWithoutAttendanceToday($today),
-
+            'schoolFrequencyToday' => $this->analyticsService->schoolFrequencyToday($today),
+            'schoolFrequencyWeek' => $this->analyticsService->schoolFrequencyWeek(),
+            'schoolFrequencyMonth' => $this->analyticsService->schoolFrequencyMonth(),
+            'schoolFrequencyYear' => $this->analyticsService->schoolFrequencyYear(),
+            'frequencyLast30Days' => $this->analyticsService->schoolFrequencyLast30Days(),
+            'classesWithoutAttendance' => $this->analyticsService->classesWithoutAttendanceToday($today),
             'executive' => [
                 'generalPercentage' => (float) ($central['generalPercentage'] ?? 0),
                 'doneClasses' => (int) ($central['doneClasses'] ?? 0),
