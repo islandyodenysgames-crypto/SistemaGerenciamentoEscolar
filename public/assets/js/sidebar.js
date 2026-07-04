@@ -1,21 +1,28 @@
-const sidebar = document.getElementById('sidebar');
+'use strict';
 
-const sidebarButtons = [
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.getElementById('sidebar');
 
-    document.getElementById('sidebarToggle'),
+    const sidebarButtons = [
+        document.getElementById('sidebarToggle'),
+        document.getElementById('sidebarToggleTop')
+    ];
 
-    document.getElementById('sidebarToggleTop')
+    sidebarButtons.forEach((button) => {
+        if (!button || !sidebar) {
+            return;
+        }
 
-];
+        button.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
 
-sidebarButtons.forEach(button => {
-
-    if (!button) return;
-
-    button.addEventListener('click', () => {
-
-        sidebar.classList.toggle('collapsed');
-
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
     });
 
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
 });

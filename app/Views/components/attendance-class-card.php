@@ -11,12 +11,12 @@ $attendanceId = $class['attendance_id'] ?? null;
     <div class="attendance-class-info">
 
         <h3>
-            <?= htmlspecialchars($class['class_name']) ?>
+            <?= e($class['class_name']) ?>
             — <?= $class['year'] ?>
         </h3>
 
         <p>
-            Turno: <strong><?= htmlspecialchars($class['shift']) ?></strong>
+            Turno: <strong><?= e($class['shift']) ?></strong>
         </p>
 
         <?php component('attendance-status-badge', [

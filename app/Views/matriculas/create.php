@@ -13,7 +13,7 @@ $enrollmentError = \App\Core\Session::get('enrollment_error');
 
 <?php if ($enrollmentError): ?>
     <div class="alert alert-danger">
-        <?= htmlspecialchars($enrollmentError) ?>
+        <?= e($enrollmentError) ?>
     </div>
 <?php endif; ?>
 
@@ -29,7 +29,7 @@ $enrollmentError = \App\Core\Session::get('enrollment_error');
 
                 <?php foreach ($students as $student): ?>
                     <option value="<?= $student['id'] ?>">
-                        <?= htmlspecialchars($student['name']) ?> — <?= htmlspecialchars($student['registration']) ?>
+                        <?= e($student['name']) ?> — <?= e($student['registration']) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
@@ -43,7 +43,7 @@ $enrollmentError = \App\Core\Session::get('enrollment_error');
 
                 <?php foreach ($classes as $class): ?>
                     <option value="<?= $class['id'] ?>">
-                        <?= htmlspecialchars($class['name']) ?> — <?= $class['year'] ?> — <?= htmlspecialchars($class['shift']) ?>
+                        <?= e($class['name']) ?> — <?= $class['year'] ?> — <?= e($class['shift']) ?>
                     </option>
                 <?php endforeach; ?>
             </select>

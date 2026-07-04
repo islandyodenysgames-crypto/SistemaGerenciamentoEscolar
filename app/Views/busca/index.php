@@ -23,7 +23,7 @@ component('page-header', [
                 class="form-control"
                 type="text"
                 name="q"
-                value="<?= htmlspecialchars($term) ?>"
+                value="<?= e($term) ?>"
                 placeholder="Digite o nome do aluno, matrícula, turma, turno ou data"
             >
 
@@ -80,11 +80,11 @@ component('page-header', [
                         <tr>
 
                             <td>
-                                <?= htmlspecialchars($student['name']) ?>
+                                <?= e($student['name']) ?>
                             </td>
 
                             <td>
-                                <?= htmlspecialchars($student['registration']) ?>
+                                <?= e($student['registration']) ?>
                             </td>
 
                             <td>
@@ -162,7 +162,7 @@ component('page-header', [
                         <tr>
 
                             <td>
-                                <?= htmlspecialchars($class['name']) ?>
+                                <?= e($class['name']) ?>
                             </td>
 
                             <td>
@@ -170,7 +170,7 @@ component('page-header', [
                             </td>
 
                             <td>
-                                <?= htmlspecialchars($class['shift']) ?>
+                                <?= e($class['shift']) ?>
                             </td>
 
                             <td>

@@ -7,10 +7,21 @@
 @import url("components/sidebar.css");
 @import url("components/header.css");
 @import url("components/button.css");
-@import url("components/card.css");
+@import url("components/cards.css");
 @import url("components/page-header.css");
 @import url("components/stat-card.css");
+@import url("components/tables.css");
+@import url("components/badge.css");
+@import url("components/form.css");
+
+@import url("components.css");
 
 @import url("pages/dashboard.css");
 @import url("pages/auth.css");
 @import url("pages/users.css");
+@import url("pages/frequencia.css");
+@import url("pages/alunos.css");
+@import url("pages/turmas.css");
+
+@import url("responsive.css");
+@import url("animations.css");

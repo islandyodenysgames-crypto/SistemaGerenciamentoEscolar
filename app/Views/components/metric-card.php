@@ -18,27 +18,27 @@ $colorClass = match ($color) {
 ?>
 
 <a
-    href="<?= htmlspecialchars($url) ?>"
+    href="<?= e($url) ?>"
     class="metric-card <?= $colorClass ?>"
 >
     <div class="metric-card-header">
         <span><?= $icon ?></span>
-        <strong><?= htmlspecialchars($title) ?></strong>
+        <strong><?= e($title) ?></strong>
     </div>
 
     <div class="metric-value">
-        <?= htmlspecialchars((string) $value) ?>
+        <?= e((string) $value) ?>
     </div>
 
     <?php if ($subtitle): ?>
         <div class="metric-subtitle">
-            <?= htmlspecialchars($subtitle) ?>
+            <?= e($subtitle) ?>
         </div>
     <?php endif; ?>
 
     <?php if ($description): ?>
         <div class="metric-description">
-            <?= htmlspecialchars($description) ?>
+            <?= e($description) ?>
         </div>
     <?php endif; ?>
 </a>

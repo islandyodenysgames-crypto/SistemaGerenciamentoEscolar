@@ -37,12 +37,12 @@
                     <div class="ranking-info">
 
                         <div class="ranking-title">
-                            <?= htmlspecialchars($item['class_name']) ?>
+                            <?= e($item['class_name']) ?>
                             — <?= $item['year'] ?>
                         </div>
 
                         <div class="ranking-subtitle">
-                            Turno: <?= htmlspecialchars($item['shift']) ?>
+                            Turno: <?= e($item['shift']) ?>
                         </div>
 
                         <?php if ($hasAttendance): ?>

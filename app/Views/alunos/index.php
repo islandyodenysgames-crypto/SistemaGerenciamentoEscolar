@@ -15,13 +15,13 @@ $studentError = \App\Core\Session::get('student_error');
 
 <?php if ($studentSuccess): ?>
     <div class="alert alert-success">
-        <?= htmlspecialchars($studentSuccess) ?>
+        <?= e($studentSuccess) ?>
     </div>
 <?php endif; ?>
 
 <?php if ($studentError): ?>
     <div class="alert alert-danger">
-        <?= htmlspecialchars($studentError) ?>
+        <?= e($studentError) ?>
     </div>
 <?php endif; ?>
 
@@ -78,13 +78,13 @@ $studentError = \App\Core\Session::get('student_error');
                 <tr>
                     <td><?= $student['id'] ?></td>
 
-                    <td><?= htmlspecialchars($student['name']) ?></td>
+                    <td><?= e($student['name']) ?></td>
 
-                    <td><?= htmlspecialchars($student['registration']) ?></td>
+                    <td><?= e($student['registration']) ?></td>
 
                     <td>
                         <?php if (!empty($student['class_name'])): ?>
-                            <?= htmlspecialchars($student['class_name']) ?>
+                            <?= e($student['class_name']) ?>
                         <?php else: ?>
                             <span class="text-warning text-strong">
                                 Sem matrícula
@@ -96,7 +96,7 @@ $studentError = \App\Core\Session::get('student_error');
 
                     <td>
                         <?= !empty($student['class_shift'])
-                            ? htmlspecialchars($student['class_shift'])
+                            ? e($student['class_shift'])
                             : '-' ?>
                     </td>
 

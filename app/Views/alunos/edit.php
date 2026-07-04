@@ -13,7 +13,7 @@ $studentError = \App\Core\Session::get('student_error');
 
 <?php if ($studentError): ?>
     <div class="alert alert-danger">
-        <?= htmlspecialchars($studentError) ?>
+        <?= e($studentError) ?>
     </div>
 <?php endif; ?>
 
@@ -25,27 +25,27 @@ $studentError = \App\Core\Session::get('student_error');
 
         <div class="form-group">
             <label>Nome do aluno</label>
-            <input class="form-control" type="text" name="name" value="<?= htmlspecialchars($student['name']) ?>" required>
+            <input class="form-control" type="text" name="name" value="<?= e($student['name']) ?>" required>
         </div>
 
         <div class="form-group">
             <label>Matrícula</label>
-            <input class="form-control" type="text" name="registration" value="<?= htmlspecialchars($student['registration']) ?>" required>
+            <input class="form-control" type="text" name="registration" value="<?= e($student['registration']) ?>" required>
         </div>
 
         <div class="form-group">
             <label>Data de nascimento</label>
-            <input class="form-control" type="date" name="birth_date" value="<?= htmlspecialchars($student['birth_date'] ?? '') ?>">
+            <input class="form-control" type="date" name="birth_date" value="<?= e($student['birth_date'] ?? '') ?>">
         </div>
 
         <div class="form-group">
             <label>Nome do responsável</label>
-            <input class="form-control" type="text" name="guardian_name" value="<?= htmlspecialchars($student['guardian_name'] ?? '') ?>">
+            <input class="form-control" type="text" name="guardian_name" value="<?= e($student['guardian_name'] ?? '') ?>">
         </div>
 
         <div class="form-group">
             <label>Telefone do responsável</label>
-            <input class="form-control" type="text" name="guardian_phone" value="<?= htmlspecialchars($student['guardian_phone'] ?? '') ?>">
+            <input class="form-control" type="text" name="guardian_phone" value="<?= e($student['guardian_phone'] ?? '') ?>">
         </div>
 
         <div class="form-group">

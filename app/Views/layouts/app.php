@@ -11,7 +11,9 @@
 
     <title><?= $title ?? app_name() ?></title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com">
 
     <link
         rel="preconnect"
@@ -22,10 +24,18 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
+    <!-- ======================================================
+         BASE
+    ======================================================= -->
+
     <link rel="stylesheet" href="<?= asset('assets/css/variables.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/themes.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/app.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/layout.css') ?>">
+
+    <!-- ======================================================
+         COMPONENTES
+    ======================================================= -->
 
     <link rel="stylesheet" href="<?= asset('assets/css/components/badge.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/components/button.css') ?>">
@@ -37,11 +47,19 @@
     <link rel="stylesheet" href="<?= asset('assets/css/components/tables.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/components.css') ?>">
 
+    <!-- ======================================================
+         PÁGINAS
+    ======================================================= -->
+
     <link rel="stylesheet" href="<?= asset('assets/css/pages/dashboard.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/pages/frequencia.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/pages/alunos.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/pages/turmas.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/pages/users.css') ?>">
+
+    <!-- ======================================================
+         UTILITÁRIOS
+    ======================================================= -->
 
     <link rel="stylesheet" href="<?= asset('assets/css/utilities.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/responsive.css') ?>">
@@ -58,19 +76,37 @@
         <?php require __DIR__ . '/../partials/header.php'; ?>
 
         <main class="content">
+
             <?= $content ?>
+
         </main>
 
     </div>
 
+    <!-- ======================================================
+         LUCIDE
+    ======================================================= -->
+
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- ======================================================
+         JAVASCRIPT GLOBAL
+    ======================================================= -->
+
     <script src="<?= asset('assets/js/app.js') ?>"></script>
+
     <script src="<?= asset('assets/js/sidebar.js') ?>"></script>
+
     <script src="<?= asset('assets/js/theme.js') ?>"></script>
 
+    <!-- ======================================================
+         JAVASCRIPT DA PÁGINA
+    ======================================================= -->
+
     <?php if ($pageScript = page_script()): ?>
+
         <script src="<?= asset('assets/js/' . $pageScript) ?>"></script>
+
     <?php endif; ?>
 
 </body>

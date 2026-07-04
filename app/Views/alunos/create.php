@@ -13,7 +13,7 @@ $studentError = \App\Core\Session::get('student_error');
 
 <?php if ($studentError): ?>
     <div class="alert alert-danger">
-        <?= htmlspecialchars($studentError) ?>
+        <?= e($studentError) ?>
     </div>
 <?php endif; ?>
 

@@ -18,7 +18,7 @@ component('page-header', [
                 class="form-control"
                 type="date"
                 name="data"
-                value="<?= htmlspecialchars($date) ?>"
+                value="<?= e($date) ?>"
             >
         </div>
 

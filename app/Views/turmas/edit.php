@@ -15,7 +15,7 @@ component('page-header', [
 
         <div class="form-group">
             <label>Nome da turma</label>
-            <input class="form-control" type="text" name="name" value="<?= htmlspecialchars($class['name']) ?>" required>
+            <input class="form-control" type="text" name="name" value="<?= e($class['name']) ?>" required>
         </div>
 
         <div class="form-group">

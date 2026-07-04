@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="pending-title">
-                        <?= htmlspecialchars($class['name']) ?>
+                        <?= e($class['name']) ?>
                     </div>
 
                     <div class="pending-year">
@@ -54,7 +54,7 @@
                     </div>
 
                     <div class="pending-shift">
-                        <?= htmlspecialchars($class['shift']) ?>
+                        <?= e($class['shift']) ?>
                     </div>
 
                     <div class="pending-action">
