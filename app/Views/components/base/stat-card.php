@@ -1,17 +1,17 @@
-<div class="base/stat-card">
+<div class="stat-card">
 
     <div class="stat-card-icon">
-        <i data-lucide="<?= e($icon) ?>"></i>
+        <i data-lucide="<?= e($icon ?? 'circle') ?>"></i>
     </div>
 
     <div class="stat-card-info">
 
         <span>
-            <?= e($label) ?>
+            <?= e($label ?? '') ?>
         </span>
 
         <h2>
-            <?= e((string) $value) ?>
+            <?= e((string) ($value ?? 0)) ?>
         </h2>
 
     </div>

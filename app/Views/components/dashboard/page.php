@@ -4,13 +4,7 @@ $executive = $executive ?? [];
 
 ?>
 
-<?php component('dashboard/hero', $executive); ?>
-
-<?php component('dashboard/kpis', [
-    'totalStudents' => $totalStudents ?? 0,
-    'totalClasses' => $totalClasses ?? 0,
-    'schoolFrequencyToday' => $schoolFrequencyToday ?? [],
-]); ?>
+<?php component('dashboard/executive-panel', $executive); ?>
 
 <div class="dashboard-main-grid">
 

@@ -41,12 +41,27 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+/* ==========================================================
+   KPI PANEL - STAT CARD
+========================================================== */
+
 .dashboard-kpi-panel-grid .stat-card {
+    display: grid;
+    grid-template-columns: 68px 1fr;
+    align-items: center;
+    gap: 18px;
+
+    min-height: 120px;
+
     margin: 0;
-    border-radius: 0;
-    box-shadow: none;
+    padding: 24px;
+
     background: transparent;
+
+    border-radius: 0;
     border-right: 1px solid var(--border);
+
+    box-shadow: none;
 }
 
 .dashboard-kpi-panel-grid .stat-card:last-child {
@@ -57,6 +72,55 @@
     transform: none;
     box-shadow: none;
     background: var(--surface-soft);
+}
+
+.dashboard-kpi-panel-grid .stat-card-icon {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+}
+
+.dashboard-kpi-panel-grid .stat-card-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.dashboard-kpi-panel-grid .stat-card-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    min-width: 0;
+}
+
+.dashboard-kpi-panel-grid .stat-card-info span {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--text-light);
+
+    font-size: 13px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.dashboard-kpi-panel-grid .stat-card-info h2 {
+    margin: 0;
+
+    color: var(--text-dark);
+
+    font-size: 34px;
+    font-weight: 900;
+
+    line-height: 1;
 }
 
 /* ==========================================================
@@ -125,6 +189,11 @@
     }
 
     .dashboard-kpi-panel-grid .stat-card {
+        grid-template-columns: 58px 1fr;
+
+        min-height: 100px;
+        padding: 20px;
+
         border-right: none;
         border-bottom: 1px solid var(--border);
     }

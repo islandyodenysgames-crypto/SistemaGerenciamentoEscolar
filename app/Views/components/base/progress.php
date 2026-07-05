@@ -1,21 +1,16 @@
 <?php
 
-declare(strict_types=1);
+$percentage = max(0, min(100, (float) ($percentage ?? 0)));
+$label = $label ?? '';
+$size = (int) ($size ?? 120);
 
-$percentage = (float) ($percentage ?? 0);
-$label = $label ?? 'Frequência';
-$size = max(80, (int) ($size ?? 120));
+$value = $value ?? number_format($percentage, 1, ',', '.') . '%';
 
-$percentage = max(0, min(100, round($percentage, 1)));
-
-$color = match (true) {
-    $percentage < 75 => 'var(--danger)',
-    $percentage < 85 => 'var(--secondary)',
-    $percentage < 95 => 'var(--warning)',
-    default => 'var(--success)',
+$color = $color ?? match (true) {
+    $percentage >= 95 => 'var(--success)',
+    $percentage >= 85 => 'var(--warning)',
+    default => 'var(--danger)',
 };
-
-$fontSize = max(20, (int) ($size * 0.20));
 
 ?>
 
@@ -24,21 +19,22 @@ $fontSize = max(20, (int) ($size * 0.20));
     style="
         --circle-size: <?= $size ?>px;
         --circle-progress: <?= $percentage ?>%;
-        --circle-color: <?= $color ?>;
-        --circle-font-size: <?= $fontSize ?>px;
+        --circle-color: <?= e($color) ?>;
     "
 >
-
     <div class="progress-circle-inner">
 
         <strong>
-            <?= number_format($percentage, 1, ',', '.') ?>%
+            <?= e((string) $value) ?>
         </strong>
 
-        <small>
-            <?= e($label) ?>
-        </small>
+        <?php if (!empty($label)): ?>
+
+            <small>
+                <?= e($label) ?>
+            </small>
+
+        <?php endif; ?>
 
     </div>
-
 </div>
