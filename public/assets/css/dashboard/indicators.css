@@ -2,28 +2,28 @@
    DASHBOARD - INDICADORES
 ========================================================== */
 
-.period-grid {
+.indicator-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px;
     margin-top: 18px;
 }
 
-.period-card {
+.indicator-card {
     padding: 22px;
     border-radius: 20px;
     background: var(--surface-soft);
     border: 1px solid var(--border);
     text-align: center;
-    transition: all .25s ease;
+    transition: var(--transition);
 }
 
-.period-card:hover {
+.indicator-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
 
-.period-card-header {
+.indicator-card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -31,14 +31,14 @@
     margin-bottom: 18px;
 }
 
-.period-card-header h3 {
+.indicator-card-header h3 {
     margin: 0;
     color: var(--text-dark);
     font-size: 18px;
     font-weight: 900;
 }
 
-.period-card-icon {
+.indicator-card-icon {
     width: 42px;
     height: 42px;
     display: flex;
@@ -49,18 +49,18 @@
     color: var(--primary);
 }
 
-.period-card-icon i {
+.indicator-card-icon i {
     width: 22px;
     height: 22px;
 }
 
-.period-metrics {
+.indicator-metrics {
     display: grid;
     gap: 8px;
     margin-top: 18px;
 }
 
-.period-metrics span {
+.indicator-metrics span {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -74,6 +74,6 @@
     font-weight: 800;
 }
 
-.period-metrics strong {
+.indicator-metrics strong {
     color: var(--text-dark);
 }

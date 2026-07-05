@@ -46,7 +46,11 @@ if (!function_exists('component')) {
     {
         $basePath = dirname(__DIR__) . '/Views/components/';
 
-        $component = $basePath . str_replace('\\', '/', $name) . '.php';
+        $component = $basePath . str_replace(
+            ['\\', '.'],
+            ['/', ''],
+            $name
+        ) . '.php';
 
         if (!file_exists($component)) {
 
@@ -55,7 +59,7 @@ if (!function_exists('component')) {
             return;
         }
 
-        extract($data);
+        extract($data, EXTR_SKIP);
 
         require $component;
     }

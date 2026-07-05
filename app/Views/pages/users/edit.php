@@ -1,6 +1,6 @@
 <?php
 
-component('page-header', [
+component('base/page-header', [
     'title' => 'Editar usuário',
     'subtitle' => 'Atualize os dados do usuário'
 ]);

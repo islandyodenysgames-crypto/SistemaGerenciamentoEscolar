@@ -1,6 +1,6 @@
 <?php
 
-component('page-header', [
+component('base/page-header', [
     'title' => 'Nova matrícula',
     'subtitle' => 'Vincule um aluno a uma turma'
 ]);

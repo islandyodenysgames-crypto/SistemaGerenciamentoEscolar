@@ -1,6 +1,6 @@
 <?php
 
-component('page-header', [
+component('base/page-header', [
     'title' => 'Visualizar chamada',
     'subtitle' => 'Confira os registros de frequência da turma'
 ]);

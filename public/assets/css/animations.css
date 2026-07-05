@@ -3,7 +3,9 @@
 ========================================================== */
 
 :root {
+
     --animation-speed: .25s;
+
 }
 
 /* ==========================================================
@@ -11,7 +13,9 @@
 ========================================================== */
 
 .fade-in {
+
     animation: fadeIn var(--animation-speed) ease;
+
 }
 
 @keyframes fadeIn {
@@ -31,7 +35,9 @@
 ========================================================== */
 
 .slide-up {
+
     animation: slideUp .35s ease;
+
 }
 
 @keyframes slideUp {
@@ -53,7 +59,9 @@
 ========================================================== */
 
 .scale-in {
+
     animation: scaleIn .25s ease;
+
 }
 
 @keyframes scaleIn {
@@ -76,9 +84,9 @@
 
 .hover-lift {
 
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease;
+    transition: var(--transition);
+
+    will-change: transform;
 
 }
 
@@ -98,10 +106,7 @@
 .btn-primary,
 .btn-secondary {
 
-    transition:
-        transform .2s ease,
-        filter .2s ease,
-        box-shadow .2s ease;
+    transition: var(--transition);
 
 }
 
@@ -114,29 +119,32 @@
 }
 
 /* ==========================================================
-   CARDS
+   COMPONENTES
 ========================================================== */
 
 .card,
-.metric-card,
-.executive-card,
+.metric,
+.stat-card,
+.hero-card,
 .pending-card,
-.period-card,
-.ranking-item {
+.indicator-card,
+.ranking-item,
+.attendance-class-card {
 
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease,
-        border-color .2s ease;
+    transition: var(--transition);
+
+    will-change: transform;
 
 }
 
 .card:hover,
-.metric-card:hover,
-.executive-card:hover,
+.metric:hover,
+.stat-card:hover,
+.hero-card:hover,
 .pending-card:hover,
-.period-card:hover,
-.ranking-item:hover {
+.indicator-card:hover,
+.ranking-item:hover,
+.attendance-class-card:hover {
 
     transform: translateY(-2px);
 
@@ -163,7 +171,7 @@ a:hover {
 }
 
 /* ==========================================================
-   PROGRESS CIRCLE
+   PROGRESS
 ========================================================== */
 
 .progress-circle {

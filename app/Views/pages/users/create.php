@@ -1,6 +1,6 @@
 <?php
 
-component('page-header', [
+component('base/page-header', [
     'title' => 'Novo usuário',
     'subtitle' => 'Cadastre um novo usuário do sistema'
 ]);

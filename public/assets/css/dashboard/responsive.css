@@ -19,7 +19,7 @@
     }
 
     .executive-summary-grid,
-    .period-grid,
+    .indicator-grid,
     .pending-grid {
         grid-template-columns: 1fr;
     }

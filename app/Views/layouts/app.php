@@ -25,19 +25,23 @@
         rel="stylesheet">
 
     <!-- ======================================================
+         VARIÁVEIS (LEGADO TEMPORÁRIO)
+    ======================================================= -->
+
+    <link rel="stylesheet" href="<?= asset('assets/css/variables.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/themes.css') ?>">
+
+    <!-- ======================================================
          DESIGN SYSTEM
     ======================================================= -->
 
     <link rel="stylesheet" href="<?= asset('assets/css/design-system/index.css') ?>">
 
     <!-- ======================================================
-         BASE
+         CORE
     ======================================================= -->
 
-    <link rel="stylesheet" href="<?= asset('assets/css/variables.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/themes.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/app.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/layout.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/core/index.css') ?>">
 
     <!-- ======================================================
          COMPONENTES
@@ -55,19 +59,7 @@
          PÁGINAS
     ======================================================= -->
 
-    <link rel="stylesheet" href="<?= asset('assets/css/pages/auth.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/pages/alunos.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/pages/turmas.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/pages/frequencia.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/pages/users.css') ?>">
-
-    <!-- ======================================================
-         UTILITÁRIOS
-    ======================================================= -->
-
-    <link rel="stylesheet" href="<?= asset('assets/css/utilities.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/responsive.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/animations.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/pages/index.css') ?>">
 
 </head>
 

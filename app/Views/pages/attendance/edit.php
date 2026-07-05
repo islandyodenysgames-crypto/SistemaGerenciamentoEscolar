@@ -1,6 +1,6 @@
 <?php
 
-component('page-header', [
+component('base/page-header', [
     'title' => 'Editar chamada',
     'subtitle' => 'Corrija a frequência com visual otimizado para tablet'
 ]);

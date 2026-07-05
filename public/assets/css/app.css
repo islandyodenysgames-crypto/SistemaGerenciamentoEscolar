@@ -1,27 +1,67 @@
-@import url("variables.css");
+/* ==========================================================
+   APPLICATION
+========================================================== */
 
-@import url("layout.css");
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 
-@import url("utilities.css");
+html {
+    scroll-behavior: smooth;
+}
 
-@import url("components/sidebar.css");
-@import url("components/header.css");
-@import url("components/button.css");
-@import url("components/cards.css");
-@import url("components/page-header.css");
-@import url("components/stat-card.css");
-@import url("components/tables.css");
-@import url("components/badge.css");
-@import url("components/form.css");
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: var(--font-family);
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-x: hidden;
+}
 
-@import url("components.css");
+img,
+svg {
+    display: block;
+    max-width: 100%;
+}
 
-@import url("pages/dashboard.css");
-@import url("pages/auth.css");
-@import url("pages/users.css");
-@import url("pages/frequencia.css");
-@import url("pages/alunos.css");
-@import url("pages/turmas.css");
+a {
+    color: inherit;
+    text-decoration: none;
+}
 
-@import url("responsive.css");
-@import url("animations.css");
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+ul,
+ol {
+    margin: 0;
+    padding: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-top: 0;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}

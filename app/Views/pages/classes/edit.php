@@ -1,6 +1,6 @@
 <?php
 
-component('page-header', [
+component('base/page-header', [
     'title' => 'Editar turma',
     'subtitle' => 'Atualize os dados da turma'
 ]);

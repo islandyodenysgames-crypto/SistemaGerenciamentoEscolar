@@ -1,6 +1,6 @@
 <?php
 
-component('page-header', [
+component('base/page-header', [
     'title' => 'Relatório Diário de Frequência',
     'subtitle' => 'Resumo da frequência escolar por data'
 ]);
@@ -38,7 +38,7 @@ component('page-header', [
 
 <div class="mt-24">
 
-    <?php component('frequency-period-summary', [
+    <?php component('dashboard/indicators', [
         'today' => $summary,
         'week' => [],
         'month' => [],
@@ -49,7 +49,7 @@ component('page-header', [
 
 <div class="mt-24">
 
-    <?php component('daily-ranking', [
+    <?php component('dashboard/ranking', [
         'ranking' => $ranking
     ]); ?>
 
@@ -57,7 +57,7 @@ component('page-header', [
 
 <div class="mt-24">
 
-    <?php component('classes-without-attendance', [
+    <?php component('dashboard/pending', [
         'classesWithoutAttendance' => $classesWithoutAttendance
     ]); ?>
 

@@ -1,4 +1,4 @@
-<div class="stat-card">
+<div class="base/stat-card">
 
     <div class="stat-card-icon">
         <i data-lucide="<?= e($icon) ?>"></i>
