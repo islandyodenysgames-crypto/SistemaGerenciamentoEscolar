@@ -131,21 +131,21 @@ if (!function_exists('page_script')) {
 
         $scripts = [
 
-            '/dashboard'   => 'dashboard.js',
+            '/dashboard'   => 'pages/dashboard.js',
 
-            '/frequencia'  => 'attendance.js',
+            '/frequencia'  => 'pages/attendance.js',
 
-            '/alunos'      => 'students.js',
+            '/alunos'      => 'pages/students.js',
 
-            '/turmas'      => 'classes.js',
+            '/turmas'      => 'pages/classes.js',
 
-            '/relatorios'  => 'reports.js',
+            '/relatorios'  => 'pages/reports.js',
 
-            '/busca'       => 'search.js',
+            '/busca'       => 'pages/search.js',
 
-            '/usuarios'    => 'users.js',
+            '/usuarios'    => 'pages/users.js',
 
-            '/matriculas'  => 'enrollments.js',
+            '/matriculas'  => 'pages/enrollments.js',
 
         ];
 

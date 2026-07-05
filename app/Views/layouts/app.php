@@ -25,13 +25,6 @@
         rel="stylesheet">
 
     <!-- ======================================================
-         VARIÁVEIS (LEGADO TEMPORÁRIO)
-    ======================================================= -->
-
-    <link rel="stylesheet" href="<?= asset('assets/css/variables.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/themes.css') ?>">
-
-    <!-- ======================================================
          DESIGN SYSTEM
     ======================================================= -->
 
@@ -89,9 +82,10 @@
          JAVASCRIPT GLOBAL
     ======================================================= -->
 
-    <script src="<?= asset('assets/js/app.js') ?>"></script>
-    <script src="<?= asset('assets/js/sidebar.js') ?>"></script>
-    <script src="<?= asset('assets/js/theme.js') ?>"></script>
+    <script src="<?= asset('assets/js/core/app.js') ?>"></script>
+    <script src="<?= asset('assets/js/layout/sidebar.js') ?>"></script>
+    <script src="<?= asset('assets/js/core/theme.js') ?>"></script>
+    <script src="<?= asset('assets/js/core/notifications.js') ?>"></script>
 
     <!-- ======================================================
          JAVASCRIPT DA PÁGINA

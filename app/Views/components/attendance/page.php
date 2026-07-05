@@ -68,7 +68,7 @@
 
         <?php foreach ($classes as $class): ?>
 
-            <?php component('attendance/class-card', [
+            <?php component('attendance/class-card-v2', [
                 'class' => $class
             ]); ?>
 

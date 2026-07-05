@@ -6,37 +6,11 @@ $executive = $executive ?? [];
 
 <?php component('dashboard/hero', $executive); ?>
 
-<div class="dashboard-kpis">
-
-<?php
-
-component('base/stat-card', [
-    'icon' => 'graduation-cap',
-    'label' => 'Alunos Ativos',
-    'value' => $totalStudents ?? 0
-]);
-
-component('base/stat-card', [
-    'icon' => 'school',
-    'label' => 'Turmas',
-    'value' => $totalClasses ?? 0
-]);
-
-component('base/stat-card', [
-    'icon' => 'clipboard-check',
-    'label' => 'Presentes Hoje',
-    'value' => (int) ($schoolFrequencyToday['presentes'] ?? 0)
-]);
-
-component('base/stat-card', [
-    'icon' => 'circle-x',
-    'label' => 'Faltas Hoje',
-    'value' => (int) ($schoolFrequencyToday['faltas'] ?? 0)
-]);
-
-?>
-
-</div>
+<?php component('dashboard/kpis', [
+    'totalStudents' => $totalStudents ?? 0,
+    'totalClasses' => $totalClasses ?? 0,
+    'schoolFrequencyToday' => $schoolFrequencyToday ?? [],
+]); ?>
 
 <div class="dashboard-main-grid">
 
