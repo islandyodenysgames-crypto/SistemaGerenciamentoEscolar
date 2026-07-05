@@ -418,10 +418,8 @@
 }
 
 .manager-objective strong {
-
-    display: block;
-
-    margin-bottom: 6px;
+    display: inline;
+    margin: 0px;
 
     color: var(--text-dark);
 
@@ -431,8 +429,8 @@
 }
 
 .manager-objective p {
-
     margin: 0;
+    display: inline;
 
     color: var(--text);
 

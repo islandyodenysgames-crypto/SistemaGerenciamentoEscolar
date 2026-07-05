@@ -33,9 +33,18 @@ $executive = $executive ?? [];
 
     <section>
 
-        <?php component('dashboard/attendance-chart', [
-            'frequencyLast30Days' => $frequencyLast30Days ?? []
-        ]); ?>
+        <?php
+            
+            $schoolGoals = $schoolGoals ?? \App\Config\SchoolGoals::defaults();
+
+            component('dashboard/attendance-chart', [
+                'frequencyLast30Days' => $frequencyLast30Days ?? [],
+                'goalPercentage' => $schoolGoals['frequency_goal'] ?? 95,
+            
+        ]);
+        
+        ?>
+        
 
     </section>
 

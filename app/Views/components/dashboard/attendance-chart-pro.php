@@ -2,6 +2,8 @@
 
 $items = $frequencyLast30Days ?? [];
 
+$goalPercentage = (float) ($goalPercentage ?? 95);
+
 $values = array_map(
     fn ($item) => (float) ($item['percentage'] ?? 0),
     $items
@@ -81,7 +83,7 @@ $areaPoints = $linePoints !== ''
     ? $paddingX . ',' . ($svgHeight - $paddingY) . ' ' . $linePoints . ' ' . ($svgWidth - $paddingX) . ',' . ($svgHeight - $paddingY)
     : '';
 
-$goalY = $paddingY + ($chartHeight - ((95 / 100) * $chartHeight));
+$goalY = $paddingY + ($chartHeight - (($goalPercentage / 100) * $chartHeight));
 
 $gridValues = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
 
@@ -172,22 +174,18 @@ $gridValues = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
                     class="attendance-chart-pro-goal-label"
                     text-anchor="end"
                 >
-                    Meta 95%
+                    Meta <?= number_format($goalPercentage, 0, ',', '.') ?>%
                 </text>
 
-                <?php foreach ($points as $index => $point): ?>
+                <?php foreach ($points as $point): ?>
 
-                    <?php if (true): ?>
-
-                        <line
-                            x1="<?= $point['x'] ?>"
-                            y1="<?= $paddingY ?>"
-                            x2="<?= $point['x'] ?>"
-                            y2="<?= $svgHeight - $paddingY ?>"
-                            class="attendance-chart-vertical-guide"
-                        />
-
-                    <?php endif; ?>
+                    <line
+                        x1="<?= $point['x'] ?>"
+                        y1="<?= $paddingY ?>"
+                        x2="<?= $point['x'] ?>"
+                        y2="<?= $svgHeight - $paddingY ?>"
+                        class="attendance-chart-vertical-guide"
+                    />
 
                 <?php endforeach; ?>
 
@@ -227,20 +225,16 @@ $gridValues = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
 
                 <?php endforeach; ?>
 
-                <?php foreach ($points as $index => $point): ?>
+                <?php foreach ($points as $point): ?>
 
-                    <?php if (true): ?>
-
-                        <text
-                            x="<?= $point['x'] ?>"
-                            y="<?= $svgHeight - 8 ?>"
-                            class="attendance-chart-date"
-                            text-anchor="middle"
-                        >
-                            <?= e($point['date']) ?>
-                        </text>
-
-                    <?php endif; ?>
+                    <text
+                        x="<?= $point['x'] ?>"
+                        y="<?= $svgHeight - 8 ?>"
+                        class="attendance-chart-date"
+                        text-anchor="middle"
+                    >
+                        <?= e($point['date']) ?>
+                    </text>
 
                 <?php endforeach; ?>
 
@@ -265,7 +259,7 @@ $gridValues = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
                 <strong><?= number_format($worst, 1, ',', '.') ?>%</strong>
             </div>
 
-            <div class="attendance-chart-pro-trend attendance-chart-pro-trend-<?= $trendClass ?>">
+            <div class="attendance-chart-pro-trend attendance-chart-pro-trend-<?= e($trendClass) ?>">
                 <span>Tendência</span>
 
                 <strong>

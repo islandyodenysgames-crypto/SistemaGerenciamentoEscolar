@@ -14,6 +14,10 @@ $pendingPercentage = $totalClasses > 0
     ? round(($pendingClasses / $totalClasses) * 100, 1)
     : 0;
 
+$schoolGoals = $schoolGoals ?? \App\Config\SchoolGoals::defaults();
+
+$frequencyGoal = (float) ($schoolGoals['frequency_goal'] ?? 95);
+
 ?>
 
 <section class="manager-panel">
@@ -49,7 +53,7 @@ $pendingPercentage = $totalClasses > 0
             'status' => $generalPercentage >= 95
                 ? 'Excelente'
                 : ($generalPercentage >= 90 ? 'Atenção' : 'Crítico'),
-            'meta' => 'Meta da escola: ≥ 95%',
+            'meta' => 'Meta da escola: ≥ ' . number_format($frequencyGoal, 0, ',', '.') . '%',
             'actionIcon' => 'file-text',
             'actionLabel' => 'Ver relatório',
         ]); ?>
@@ -110,26 +114,10 @@ $pendingPercentage = $totalClasses > 0
 
     </div>
 
-    <footer class="manager-objective">
-
-        <div class="manager-objective-icon">
-            <i data-lucide="target"></i>
-        </div>
-
-        <div>
-            <strong>Objetivo da Escola</strong>
-
-            <p>
-                Manter a frequência geral acima de <strong>95%</strong>,
-                registrar todas as chamadas diariamente e reduzir o número
-                de alunos em situação de alerta.
-            </p>
-        </div>
-
-        <div class="manager-objective-trophy">
-            <i data-lucide="trophy"></i>
-        </div>
-
-    </footer>
+    <?php component('dashboard/school-objective', [
+        'title' => 'Objetivo da Escola',
+        'description' => 'Manter a frequência geral acima de 95%, registrar todas as chamadas diariamente e reduzir o número de alunos em situação de alerta.',
+        'icon' => 'trophy',
+    ]); ?>
 
 </section>
