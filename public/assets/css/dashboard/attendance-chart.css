@@ -1,0 +1,279 @@
+/* ==========================================================
+   DASHBOARD - ATTENDANCE CHART PRO
+========================================================== */
+
+.attendance-chart-pro-panel {
+    overflow: hidden;
+}
+
+.attendance-chart-pro {
+    margin-top: 10px;
+    padding: 18px;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+    border: 1px solid var(--border);
+}
+
+.attendance-chart-pro-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.attendance-chart-pro-goal {
+    stroke: var(--warning);
+    stroke-width: 2;
+    stroke-dasharray: 8 8;
+    opacity: .8;
+}
+
+.attendance-chart-pro-goal-label {
+    fill: var(--warning);
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.attendance-chart-pro-area {
+    fill: var(--green-soft);
+    opacity: .55;
+}
+
+.attendance-chart-pro-line {
+    fill: none;
+    stroke: var(--success);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.attendance-chart-pro-point circle {
+    fill: var(--surface);
+    stroke: var(--success);
+    stroke-width: 4;
+    transition: var(--transition);
+}
+
+.attendance-chart-pro-point:hover circle {
+    r: 8;
+    fill: var(--success);
+}
+
+.attendance-chart-pro-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.attendance-chart-pro-summary > div {
+    padding: 18px;
+    border-radius: var(--radius-lg);
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+}
+
+.attendance-chart-pro-summary span {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.attendance-chart-pro-summary strong {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-dark);
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.attendance-chart-pro-summary i {
+    width: 20px;
+    height: 20px;
+}
+
+.attendance-chart-pro-trend-success strong {
+    color: var(--success);
+}
+
+.attendance-chart-pro-trend-danger strong {
+    color: var(--danger);
+}
+
+.attendance-chart-pro-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 20px;
+    padding: 18px 20px;
+    border-radius: var(--radius-lg);
+    background: var(--green-soft);
+    color: var(--success);
+    font-weight: 900;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.attendance-chart-pro-action:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    color: var(--success);
+    text-decoration: none;
+}
+
+.attendance-chart-pro-action span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.attendance-chart-pro-action i {
+    width: 22px;
+    height: 22px;
+}
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+@media (max-width: 900px) {
+    .attendance-chart-pro-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .attendance-chart-pro {
+        padding: 12px;
+    }
+
+    .attendance-chart-pro-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .attendance-chart-pro-summary strong {
+        font-size: 20px;
+    }
+}
+
+/* ==========================================================
+   DASHBOARD - CHART GRID
+========================================================== */
+
+.attendance-chart-grid {
+    stroke: #e2e8f0;
+    stroke-width: 1;
+}
+
+.attendance-chart-grid-label {
+    fill: #94a3b8;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.attendance-chart-date {
+    fill: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ==========================================================
+   CHART PRO - REAL TIME BUILD
+========================================================== */
+
+.attendance-chart-grid,
+.attendance-chart-grid-label,
+.attendance-chart-date,
+.attendance-chart-pro-goal,
+.attendance-chart-pro-goal-label {
+    opacity: 0;
+    animation: chartFadeIn .45s ease forwards;
+}
+
+.attendance-chart-grid:nth-of-type(1),
+.attendance-chart-grid-label:nth-of-type(1) {
+    animation-delay: .05s;
+}
+
+.attendance-chart-pro-goal,
+.attendance-chart-pro-goal-label {
+    animation-delay: .35s;
+}
+
+.attendance-chart-pro-area {
+    opacity: 0;
+    animation: chartAreaIn .7s ease forwards;
+    animation-delay: .65s;
+}
+
+.attendance-chart-pro-line {
+    stroke-dasharray: 1800;
+    stroke-dashoffset: 1800;
+    animation: chartDrawLine 1.8s ease forwards;
+    animation-delay: .9s;
+}
+
+.attendance-chart-pro-point circle {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0);
+    animation: chartPointIn .35s ease forwards;
+    animation-delay: 2.1s;
+}
+
+@keyframes chartFadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes chartAreaIn {
+    to {
+        opacity: .55;
+    }
+}
+
+@keyframes chartDrawLine {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes chartPointIn {
+    to {
+        transform: scale(1);
+    }
+}
+
+/* ==========================================================
+   CHART PRO - AXIS AND POINT GUIDES
+========================================================== */
+
+.attendance-chart-axis {
+    stroke: #94a3b8;
+    stroke-width: 1.5;
+}
+
+.attendance-chart-vertical-guide {
+    stroke: #e2e8f0;
+    stroke-width: 1;
+    stroke-dasharray: 4 6;
+    opacity: .8;
+}
+
+.attendance-chart-date {
+    fill: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.attendance-chart-grid-label {
+    fill: #94a3b8;
+    font-size: 12px;
+    font-weight: 800;
+}

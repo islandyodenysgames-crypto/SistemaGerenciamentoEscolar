@@ -1,18 +1,16 @@
-<div class="card">
+<div class="card pending-panel">
 
-    <div class="card-header">
-
-        <h3>Turmas sem chamada hoje</h3>
-
-        <?php if (!empty($classesWithoutAttendance)): ?>
-
-            <span class="badge badge-warning">
-                <?= count($classesWithoutAttendance) ?> pendente(s)
-            </span>
-
-        <?php endif; ?>
-
-    </div>
+    <?php component('dashboard/panel-header', [
+        'icon' => 'clock-alert',
+        'title' => 'Turmas sem chamada hoje',
+        'subtitle' => 'Pendências de registro da frequência',
+        'badge' => !empty($classesWithoutAttendance)
+            ? count($classesWithoutAttendance) . ' pendente(s)'
+            : 'Tudo em dia',
+        'badgeClass' => !empty($classesWithoutAttendance)
+            ? 'badge-warning'
+            : 'badge-success',
+    ]); ?>
 
     <?php if (empty($classesWithoutAttendance)): ?>
 
@@ -52,7 +50,7 @@
                         </div>
 
                         <div class="pending-year">
-                            <?= $class['year'] ?>
+                            <?= (int) $class['year'] ?>
                         </div>
 
                         <div class="pending-shift">
