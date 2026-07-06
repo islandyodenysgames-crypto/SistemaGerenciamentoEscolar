@@ -1,0 +1,163 @@
+/* ==========================================================
+   DASHBOARD - RANKING
+========================================================== */
+
+.daily-ranking-card {
+    overflow: hidden;
+}
+
+.ranking-list {
+    display: grid;
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.ranking-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 22px;
+    align-items: center;
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-left: 6px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface-soft);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.ranking-item::after {
+    content: "";
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 0;
+    height: 5px;
+    border-radius: 999px 999px 0 0;
+    background: var(--border);
+}
+
+.ranking-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.ranking-item-success {
+    border-left-color: var(--success);
+}
+
+.ranking-item-success::after {
+    background: var(--success);
+}
+
+.ranking-item-warning,
+.ranking-item-pending {
+    border-left-color: var(--warning);
+}
+
+.ranking-item-warning::after,
+.ranking-item-pending::after {
+    background: var(--warning);
+}
+
+.ranking-item-danger {
+    border-left-color: var(--danger);
+}
+
+.ranking-item-danger::after {
+    background: var(--danger);
+}
+
+/* ==========================================================
+   POSIÇÃO
+========================================================== */
+
+.ranking-position {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 106px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+.ranking-position strong {
+    font-size: 32px;
+    line-height: 1;
+}
+
+.ranking-position span {
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+/* ==========================================================
+   CONTEÚDO
+========================================================== */
+
+.ranking-main {
+    min-width: 0;
+}
+
+.ranking-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.ranking-title {
+    color: var(--text-dark);
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.ranking-subtitle {
+    margin-top: 5px;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.ranking-status {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.ranking-performance-badge {
+    display: inline-flex;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.ranking-performance-success {
+    background: var(--green-soft);
+    color: var(--success);
+}
+
+.ranking-performance-warning,
+.ranking-performance-pending {
+    background: var(--yellow-soft);
+    color: var(--warning);
+}
+
+.ranking-performance-danger {
+    background: var(--red-soft);
+    color: var(--danger);
+}

@@ -1,0 +1,96 @@
+/* ==========================================================
+   RANKING - BRANDING INSTITUCIONAL
+========================================================== */
+
+.school-branding-ranking {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.school-branding-ranking-logo {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid var(--border);
+}
+
+.school-branding-ranking-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 6px;
+}
+
+.school-branding-ranking strong {
+    display: block;
+    color: var(--text-dark);
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.school-branding-ranking span {
+    display: block;
+    margin-top: 4px;
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+/* ==========================================================
+   RODAPÉ INSTITUCIONAL
+========================================================== */
+
+.ranking-share-footer strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--text-dark);
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.ranking-share-footer small {
+    display: block;
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ==========================================================
+   FUTURAS VARIANTES
+========================================================== */
+
+.school-branding-sm {
+    transform: scale(.90);
+    transform-origin: left center;
+}
+
+.school-branding-lg .school-branding-ranking-logo {
+    width: 72px;
+    height: 72px;
+}
+
+.school-branding-lg strong {
+    font-size: 24px;
+}
+
+.school-branding-lg span {
+    font-size: 15px;
+}
+
+.school-branding-ranking-logo-fallback {
+    background: var(--green-soft);
+    color: var(--primary);
+}
+
+.school-branding-ranking-logo-fallback i {
+    width: 28px;
+    height: 28px;
+}

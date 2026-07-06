@@ -1,0 +1,197 @@
+/* ==========================================================
+   RANKING - EXPORTAR PNG
+========================================================== */
+
+.ranking-share-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.ranking-share-header .dashboard-panel-header {
+    flex: 1;
+    margin-bottom: 22px;
+}
+
+.ranking-action {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.ranking-action:hover {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.ranking-action i {
+    width: 19px;
+    height: 19px;
+}
+
+.ranking-action:disabled {
+    opacity: .7;
+    cursor: wait;
+}
+
+/* ==========================================================
+   CARD INSTITUCIONAL PARA COMPARTILHAMENTO
+========================================================== */
+
+.ranking-share-card {
+    position: fixed;
+    left: -9999px;
+    top: 0;
+    width: 900px;
+    padding: 42px;
+    background: #ffffff;
+    border-radius: 28px;
+    color: var(--text-dark);
+}
+
+.ranking-share-brand {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 26px;
+    color: var(--text-light);
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.ranking-share-card h2 {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 38px;
+    font-weight: 900;
+    text-align: center;
+}
+
+.ranking-share-card > p {
+    margin: 8px 0 28px;
+    color: var(--text-light);
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.ranking-share-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.ranking-share-summary div {
+    min-height: 150px;
+    padding: 22px 16px;
+    border-radius: 22px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+.ranking-share-summary div:nth-child(1) {
+    background: var(--green-soft);
+    border-color: rgba(34, 197, 94, .25);
+}
+
+.ranking-share-summary div:nth-child(2) {
+    background: #eff6ff;
+    border-color: rgba(59, 130, 246, .25);
+}
+
+.ranking-share-summary div:nth-child(3) {
+    background: var(--red-soft);
+    border-color: rgba(239, 68, 68, .25);
+}
+
+.ranking-share-summary div:nth-child(4) {
+    background: var(--yellow-soft);
+    border-color: rgba(245, 158, 11, .25);
+}
+
+.ranking-share-summary span {
+    display: block;
+    font-size: 34px;
+    line-height: 1;
+}
+
+.ranking-share-summary strong {
+    display: block;
+    margin: 14px 0 8px;
+    color: var(--text-dark);
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.ranking-share-summary small {
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.ranking-share-list {
+    display: grid;
+    gap: 14px;
+}
+
+.ranking-share-row {
+    display: grid;
+    grid-template-columns: 70px 1fr 110px;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 22px;
+    border-radius: 18px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+}
+
+.ranking-share-row > span {
+    font-size: 34px;
+    text-align: center;
+}
+
+.ranking-share-row strong {
+    display: block;
+    color: var(--text-dark);
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.ranking-share-row small {
+    color: var(--text-light);
+    font-weight: 800;
+}
+
+.ranking-share-row b {
+    color: var(--success);
+    font-size: 28px;
+    font-weight: 900;
+    text-align: right;
+}
+
+.ranking-share-footer {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 800;
+    text-align: center;
+}

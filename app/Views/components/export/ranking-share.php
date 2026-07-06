@@ -1,8 +1,16 @@
 <div id="rankingShareCard" class="ranking-share-card">
 
     <div class="ranking-share-brand">
-        <strong><?= app_name() ?></strong>
-        <span><?= date('d/m/Y H:i') ?></span>
+
+        <?php component('school/branding', [
+            'variant' => 'ranking',
+        ]); ?>
+
+        <span>
+            <?= date('d/m/Y') ?><br>
+            <?= date('H:i') ?>
+        </span>
+
     </div>
 
     <h2>Ranking Diário</h2>
@@ -63,8 +71,13 @@
                 <span><?= e((string) $rankIcon) ?></span>
 
                 <div>
+
                     <strong><?= e($item['class_name']) ?></strong>
-                    <small><?= (int) $item['year'] ?> • <?= e($item['shift']) ?></small>
+
+                    <small>
+                        <?= (int) $item['year'] ?> • <?= e($item['shift']) ?>
+                    </small>
+
                 </div>
 
                 <b><?= number_format($percentage, 0, ',', '.') ?>%</b>
@@ -76,7 +89,13 @@
     </div>
 
     <div class="ranking-share-footer">
-        Gerado automaticamente pelo <?= app_name() ?>
+
+        <strong><?= e(school('name', app_name())) ?></strong>
+
+        <small>
+            Gerado automaticamente pelo Sistema de Frequência Escolar
+        </small>
+
     </div>
 
 </div>

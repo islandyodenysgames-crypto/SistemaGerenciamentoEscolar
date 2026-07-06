@@ -1,0 +1,43 @@
+/* ==========================================================
+   RANKING - RESPONSIVO
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .ranking-item {
+        grid-template-columns: 1fr;
+    }
+
+    .ranking-position {
+        align-items: center;
+        flex-direction: row;
+        justify-content: flex-start;
+        min-height: auto;
+        padding: 14px;
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .ranking-share-header {
+        flex-direction: column;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .ranking-title-row {
+        flex-direction: column;
+    }
+
+    .ranking-status {
+        justify-content: flex-start;
+    }
+
+    .ranking-metrics {
+        grid-template-columns: 1fr;
+    }
+
+}

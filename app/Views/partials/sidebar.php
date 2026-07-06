@@ -4,10 +4,6 @@ use App\Config\Menu;
 
 $menu = Menu::items();
 
-$schoolName = school('name', app_name());
-$schoolShortName = school('short_name', 'SFE');
-$schoolLogo = school('logo_path');
-
 ?>
 
 <aside
@@ -27,31 +23,9 @@ $schoolLogo = school('logo_path');
                 <i data-lucide="panel-left-close"></i>
             </button>
 
-            <div class="logo">
-
-                <?php if (!empty($schoolLogo)): ?>
-
-                    <div class="logo-image">
-                        <img
-                            src="<?= asset($schoolLogo) ?>"
-                            alt="<?= e($schoolName) ?>"
-                        >
-                    </div>
-
-                <?php else: ?>
-
-                    <div class="logo-icon">
-                        <i data-lucide="graduation-cap"></i>
-                    </div>
-
-                <?php endif; ?>
-
-                <div class="logo-text">
-                    <strong><?= e($schoolShortName) ?></strong>
-                    <small><?= e($schoolName) ?></small>
-                </div>
-
-            </div>
+            <?php component('school/branding', [
+                'variant' => 'sidebar',
+            ]); ?>
 
         </div>
 

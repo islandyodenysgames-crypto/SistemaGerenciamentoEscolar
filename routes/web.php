@@ -8,7 +8,9 @@ use App\Controllers\DashboardController;
 use App\Controllers\EnrollmentController;
 use App\Controllers\ReportController;
 use App\Controllers\SchoolClassController;
+use App\Controllers\SchoolSettingsController;
 use App\Controllers\SearchController;
+use App\Controllers\SettingsController;
 use App\Controllers\StudentController;
 use App\Controllers\UserController;
 
@@ -106,3 +108,20 @@ $router->get('/relatorios/diario', [ReportController::class, 'daily']);
 // ======================================================
 
 $router->get('/busca', [SearchController::class, 'index']);
+
+
+// ======================================================
+// Configurações
+// ======================================================
+
+$router->get('/configuracoes', [SettingsController::class, 'index']);
+
+$router->get(
+    '/configuracoes/identidade',
+    [SchoolSettingsController::class, 'identity']
+);
+
+$router->post(
+    '/configuracoes/identidade',
+    [SchoolSettingsController::class, 'update']
+);
