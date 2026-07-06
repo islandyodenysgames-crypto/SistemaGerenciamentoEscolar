@@ -1,12 +1,27 @@
-<div class="card daily-ranking-card">
+<div class="card daily-ranking-card" id="dailyRankingCard">
 
-    <?php component('dashboard/panel-header', [
-        'icon' => 'trophy',
-        'title' => 'Ranking diário',
-        'subtitle' => 'Melhores desempenhos da escola hoje',
-        'badge' => count($ranking ?? []) . ' turma(s)',
-        'badgeClass' => 'badge-success',
-    ]); ?>
+    <div class="ranking-share-header">
+
+        <?php component('dashboard/panel-header', [
+            'icon' => 'trophy',
+            'title' => 'Ranking diário',
+            'subtitle' => 'Melhores desempenhos da escola hoje',
+            'badge' => count($ranking ?? []) . ' turma(s)',
+            'badgeClass' => 'badge-success',
+        ]); ?>
+
+        <button
+            type="button"
+            class="ranking-action"
+            id="shareRankingBtn"
+            title="Exportar Ranking em PNG"
+            aria-label="Exportar Ranking em PNG"
+            data-export-hide
+        >
+            <i data-lucide="image-down"></i>
+        </button>
+
+    </div>
 
     <?php if (empty($ranking)): ?>
 
@@ -38,64 +53,114 @@
                     ? (float) ($item['attendance_percentage'] ?? 0)
                     : 0;
 
+                $rankLabel = $index + 1 . 'º';
+
+                $rankIcon = match ($index) {
+                    0 => '🥇',
+                    1 => '🥈',
+                    2 => '🥉',
+                    default => $rankLabel,
+                };
+
+                $performanceClass = match (true) {
+                    !$hasAttendance => 'pending',
+                    $percentage >= 95 => 'success',
+                    $percentage >= 90 => 'warning',
+                    default => 'danger',
+                };
+
+                $performanceLabel = match ($performanceClass) {
+                    'success' => 'Excelente',
+                    'warning' => 'Atenção',
+                    'danger' => 'Crítico',
+                    default => 'Pendente',
+                };
+
                 ?>
 
-                <div class="ranking-item">
+                <div class="ranking-item ranking-item-<?= e($performanceClass) ?>">
 
                     <div class="ranking-position">
 
-                        <?php
+                        <strong><?= e((string) $rankIcon) ?></strong>
 
-                        if ($hasAttendance) {
-
-                            if ($index === 0) {
-                                echo '🥇';
-                            } elseif ($index === 1) {
-                                echo '🥈';
-                            } elseif ($index === 2) {
-                                echo '🥉';
-                            } else {
-                                echo $index + 1;
-                            }
-
-                        } else {
-                            echo '—';
-                        }
-
-                        ?>
+                        <span>
+                            <?= $hasAttendance ? e($rankLabel) : 'Pendente' ?>
+                        </span>
 
                     </div>
 
-                    <div>
+                    <div class="ranking-main">
 
-                        <div class="ranking-title">
-                            <?= e($item['class_name']) ?>
-                        </div>
+                        <div class="ranking-title-row">
 
-                        <div class="ranking-subtitle">
-                            <?= $item['year'] ?>
-                            •
-                            <?= e($item['shift']) ?>
+                            <div>
+
+                                <div class="ranking-title">
+                                    <?= e($item['class_name']) ?>
+                                </div>
+
+                                <div class="ranking-subtitle">
+                                    <?= (int) $item['year'] ?>
+                                    •
+                                    <?= e($item['shift']) ?>
+                                </div>
+
+                            </div>
+
+                            <?php if ($hasAttendance): ?>
+
+                                <div class="ranking-status">
+
+                                    <span class="ranking-performance-badge ranking-performance-<?= e($performanceClass) ?>">
+                                        <?= e($performanceLabel) ?>
+                                    </span>
+
+                                </div>
+
+                            <?php endif; ?>
+
                         </div>
 
                         <?php if ($hasAttendance): ?>
 
                             <div class="ranking-metrics">
 
-                                <span>
-                                    Presença
-                                    <strong><?= (int) $item['presentes'] ?></strong>
-                                </span>
+                                <div class="ranking-metric">
 
-                                <span>
-                                    Faltas
-                                    <strong><?= (int) $item['ranking_absences'] ?></strong>
-                                </span>
+                                    <span>👥</span>
 
-                                <span>
-                                    IFE
-                                    <strong><?= number_format((float) $item['ife_score'], 1, ',', '.') ?></strong>
-                                </span>
+                                    <strong>
+                                        <?= (int) $item['presentes'] ?>
+                                    </strong>
+
+                                    <small>Presentes</small>
+
+                                </div>
+
+                                <div class="ranking-metric">
+
+                                    <span>❌</span>
+
+                                    <strong>
+                                        <?= (int) $item['ranking_absences'] ?>
+                                    </strong>
+
+                                    <small>Faltas</small>
+
+                                </div>
+
+                                <div class="ranking-metric">
+
+                                    <span>📈</span>
+
+                                    <strong>
+                                        <?= number_format($percentage, 0, ',', '.') ?>%
+                                    </strong>
+
+                                    <small>Frequência</small>
+
+                                </div>
 
                             </div>
 
@@ -109,16 +174,6 @@
 
                     </div>
 
-                    <div class="ranking-progress">
-
-                        <?php component('base/progress', [
-                            'percentage' => $percentage,
-                            'label' => 'Frequência',
-                            'size' => 95
-                        ]); ?>
-
-                    </div>
-
                 </div>
 
             <?php endforeach; ?>
@@ -128,3 +183,11 @@
     <?php endif; ?>
 
 </div>
+
+<?php component('export/ranking-share', [
+    'ranking' => $ranking ?? [],
+    'generalPercentage' => $generalPercentage ?? 0,
+    'presentes' => $presentes ?? 0,
+    'faltas' => $faltas ?? 0,
+    'totalClasses' => $totalClasses ?? 0,
+]); ?>

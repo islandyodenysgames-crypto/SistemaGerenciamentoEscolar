@@ -243,6 +243,34 @@ if (!function_exists('e')) {
 
 /*
 |--------------------------------------------------------------------------
+| Escola / Identidade Institucional
+|--------------------------------------------------------------------------
+*/
+
+if (!function_exists('school')) {
+
+    function school(?string $key = null, mixed $default = null): mixed
+    {
+        static $school = null;
+
+        if ($school === null) {
+            $repository = new \App\Repositories\SchoolRepository();
+            $service = new \App\Services\SchoolService($repository);
+
+            $school = $service->current();
+        }
+
+        if ($key === null) {
+            return $school;
+        }
+
+        return $school[$key] ?? $default;
+    }
+
+}
+
+/*
+|--------------------------------------------------------------------------
 | Menu Ativo
 |--------------------------------------------------------------------------
 */

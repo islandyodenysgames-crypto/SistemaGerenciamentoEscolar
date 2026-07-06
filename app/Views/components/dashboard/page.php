@@ -1,6 +1,9 @@
 <?php
 
 $executive = $executive ?? [];
+$schoolGoals = $schoolGoals ?? \App\Config\SchoolGoals::defaults();
+
+$schoolFrequencyToday = $schoolFrequencyToday ?? [];
 
 ?>
 
@@ -11,7 +14,12 @@ $executive = $executive ?? [];
     <section class="dashboard-left">
 
         <?php component('dashboard/ranking', [
-            'ranking' => $ranking ?? []
+            'ranking' => $ranking ?? [],
+            'generalPercentage' => $executive['generalPercentage'] ?? $generalPercentage ?? 0,
+            'totalStudents' => $totalStudents ?? 0,
+            'totalClasses' => $totalClasses ?? 0,
+            'presentes' => $schoolFrequencyToday['presentes'] ?? 0,
+            'faltas' => $schoolFrequencyToday['faltas'] ?? 0,
         ]); ?>
 
     </section>
@@ -19,7 +27,7 @@ $executive = $executive ?? [];
     <aside class="dashboard-right">
 
         <?php component('dashboard/indicators', [
-            'today' => $schoolFrequencyToday ?? [],
+            'today' => $schoolFrequencyToday,
             'week' => $schoolFrequencyWeek ?? [],
             'month' => $schoolFrequencyMonth ?? [],
             'year' => $schoolFrequencyYear ?? [],
@@ -33,18 +41,10 @@ $executive = $executive ?? [];
 
     <section>
 
-        <?php
-            
-            $schoolGoals = $schoolGoals ?? \App\Config\SchoolGoals::defaults();
-
-            component('dashboard/attendance-chart', [
-                'frequencyLast30Days' => $frequencyLast30Days ?? [],
-                'goalPercentage' => $schoolGoals['frequency_goal'] ?? 95,
-            
-        ]);
-        
-        ?>
-        
+        <?php component('dashboard/attendance-chart', [
+            'frequencyLast30Days' => $frequencyLast30Days ?? [],
+            'goalPercentage' => $schoolGoals['frequency_goal'] ?? 95,
+        ]); ?>
 
     </section>
 
