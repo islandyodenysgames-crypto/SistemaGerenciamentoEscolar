@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Repositories\AttendanceRepository;
 use App\Repositories\StudentRepository;
 use App\Services\Occurrence\NotificationService;
+use InvalidArgumentException;
 
 class AttendanceService
 {
@@ -19,7 +20,8 @@ class AttendanceService
     public function __construct(
         private AttendanceRepository $repository,
         private StudentRepository $studentRepository,
-        private NotificationService $notificationService
+        private NotificationService $notificationService,
+        private CurrentAcademicContextService $academicContext
     ) {
     }
 
@@ -45,9 +47,9 @@ class AttendanceService
 
     public function items(int $attendanceId): array { return $this->repository->items($attendanceId); }
 
-    public function create(array $data): int { return $this->repository->create($data); }
+    public function create(array $data): int { $this->assertAcademicDateOpen((string)($data['attendance_date']??''));return $this->repository->create($data); }
 
-    public function update(int $id, array $data): void { $this->repository->update($id, $data); }
+    public function update(int $id, array $data): void { $this->assertAcademicDateOpen((string)($data['attendance_date']??''));$this->repository->update($id, $data); }
 
     public function delete(int $id): bool { return $this->repository->delete($id); }
 
@@ -85,6 +87,12 @@ class AttendanceService
     public function history(?string $date = null, ?int $classId = null): array
     {
         return $this->repository->history($date, $classId);
+    }
+    private function assertAcademicDateOpen(string $date): void
+    {
+        if($date==='')return;$context=$this->academicContext->get($date);
+        if(!empty($context['period'])&&$context['period']['status']==='CLOSED')throw new InvalidArgumentException('Este período letivo está fechado para alterações de frequência.');
+        if(!empty($context['year'])&&in_array($context['year']['status'],['CLOSED','ARCHIVED'],true))throw new InvalidArgumentException('Este ano letivo está encerrado para alterações.');
     }
 
 }

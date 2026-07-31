@@ -96,7 +96,7 @@ $frequencyGoal = (float)($frequencyGoal ?? 95);
     </a>
 
     <a
-        href="#"
+        href="<?= base_url('configuracoes/ano-letivo') ?>"
         class="card settings-card"
     >
         <div class="settings-card-icon">
@@ -111,8 +111,8 @@ $frequencyGoal = (float)($frequencyGoal ?? 95);
                 Calendário escolar, períodos letivos e configurações anuais.
             </p>
 
-            <span class="settings-status settings-status-warning">
-                Pendente
+            <span class="settings-status settings-status-success">
+                Disponível
             </span>
 
         </div>
