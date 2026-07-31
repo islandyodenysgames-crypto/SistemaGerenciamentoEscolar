@@ -57,6 +57,7 @@ use App\Services\SchoolPeriodService;
 use App\Services\SchoolDayService;
 use App\Services\AcademicLifecycleService;
 use App\Services\CurrentAcademicContextService;
+use App\Services\SchoolDataMaintenanceService;
 use App\Services\SearchService;
 use App\Services\StudentService;
 use App\Services\UserService;
@@ -129,6 +130,7 @@ class AppServiceProvider
         $container->singleton(SchoolYearService::class);
         $container->singleton(SchoolPeriodService::class);
         $container->singleton(SchoolDayService::class);
+        $container->singleton(SchoolDataMaintenanceService::class);
         $container->singleton(AcademicLifecycleService::class);
         $container->singleton(CurrentAcademicContextService::class);
         $container->singleton(SearchService::class);
