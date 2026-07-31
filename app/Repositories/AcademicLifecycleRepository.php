@@ -8,6 +8,22 @@ use PDO;
 
 final class AcademicLifecycleRepository extends BaseRepository
 {
+    public function transaction(callable $operation): mixed
+    {
+        $this->db->beginTransaction();
+
+        try {
+            $result = $operation();
+            $this->db->commit();
+            return $result;
+        } catch (\Throwable $exception) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            throw $exception;
+        }
+    }
+
     public function period(int $id): ?array
     {
         $s=$this->db->prepare('SELECT p.*,y.name year_name FROM school_periods p JOIN school_years y ON y.id=p.school_year_id WHERE p.id=:id');
