@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const zoom = document.getElementById('dailyTipCropZoom');
   const apply = document.getElementById('dailyTipCropApply');
   const form = input?.closest('form');
+  const removeButton = document.getElementById('dailyTipBannerRemove');
+  const removeValue = document.getElementById('dailyTipBannerRemoveValue');
   if (!input || !prepare || !hidden || !preview || !status || !modal || !canvas || !zoom || !apply || !form) return;
 
   const ctx = canvas.getContext('2d');
@@ -33,6 +35,18 @@ document.addEventListener('DOMContentLoaded', () => {
     status.innerHTML = `<i data-lucide="${icon}"></i><span>${text}</span>`;
     window.lucide?.createIcons?.();
   };
+
+  removeButton?.addEventListener('click', () => {
+    if (!removeValue) return;
+    const marked = removeValue.value === '1';
+    removeValue.value = marked ? '0' : '1';
+    removeButton.classList.toggle('is-marked', !marked);
+    removeButton.querySelector('span').textContent = marked ? 'Excluir banner' : 'Cancelar exclusão';
+    preview.classList.toggle('is-pending-removal', !marked);
+    setStatus(!marked ? 'warning' : '', !marked
+      ? 'O banner atual será excluído ao salvar as configurações.'
+      : 'Exclusão cancelada. O banner atual será mantido.');
+  });
 
   const draw = () => {
     if (!image) return;
@@ -177,6 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
       previewUrl = URL.createObjectURL(blob);
       preview.style.backgroundImage = `url("${previewUrl}")`;
       preview.classList.add('has-image');
+      if (removeValue) removeValue.value = '0';
+      removeButton?.classList.remove('is-marked');
+      if (removeButton?.querySelector('span')) removeButton.querySelector('span').textContent = 'Excluir banner';
       setStatus('ready', 'Banner pronto em 1200 × 900 px. Clique em “Salvar configurações” para concluir.');
       close();
     }, 'image/jpeg', 0.86);
