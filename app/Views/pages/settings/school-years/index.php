@@ -34,6 +34,33 @@ $todayYear = (int) date('Y');
         <button class="btn btn-primary" type="submit">Salvar dia</button>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const confirmations = {
+        '/periodos/fechar': 'Fechar este período e preservar um snapshot dos indicadores atuais?',
+        '/periodos/reabrir': 'Reabrir este período? Os lançamentos voltarão a aceitar alterações.',
+        '/periodos/excluir': 'Excluir definitivamente este período letivo?',
+        '/encerrar-seguro': 'Encerrar definitivamente este ano letivo? Todos os períodos devem estar fechados e um snapshot final será criado.',
+        '/arquivar': 'Arquivar este ano letivo encerrado?',
+        '/reabrir': 'Reabrir este ano arquivado em modo de preparação?'
+    };
+
+    document.querySelectorAll('form[action]').forEach(function (form) {
+        const action = form.getAttribute('action') || '';
+        const suffix = Object.keys(confirmations).find(function (candidate) {
+            return action.endsWith(candidate);
+        });
+        if (!suffix) return;
+
+        form.addEventListener('submit', function (event) {
+            if (!window.confirm(confirmations[suffix])) {
+                event.preventDefault();
+            }
+        });
+    });
+});
+</script>
 <?php endif; ?>
 <?php if (!empty($error)): ?>
     <div class="alert alert-danger"><?= e($error) ?></div>
