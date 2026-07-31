@@ -483,3 +483,125 @@
     }
 
 }
+
+/* ==========================================================
+   DASHBOARD - ANIMAÇÃO DOS PAINÉIS
+========================================================== */
+
+.manager-panel,
+.manager-objective {
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.manager-panel:hover,
+.manager-objective:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+/* ==========================================================
+   ÍNDICE GERAL DA ESCOLA
+========================================================== */
+.school-index-card {
+    width: 100%;
+    font: inherit;
+    cursor: pointer;
+    text-align: center;
+}
+
+.school-index-card[aria-expanded="true"] {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+}
+
+.school-index-details {
+    margin-top: 26px;
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: var(--shadow-md);
+    scroll-margin-top: 110px;
+}
+
+.school-index-details__header,
+.school-index-details__header > div,
+.school-index-details__header > div > div {
+    display: flex;
+    align-items: center;
+}
+
+.school-index-details__header {
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.school-index-details__header > div { gap: 14px; }
+.school-index-details__header > div > span {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    color: var(--primary);
+    background: #eef2ff;
+}
+.school-index-details__header h3 { margin: 0 0 4px; color: var(--text-dark); font-size: 22px; }
+.school-index-details__header p { margin: 0; color: var(--text-light); }
+.school-index-details__header button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface, #fff);
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.school-index-breakdown {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+}
+.school-index-breakdown article {
+    padding: 17px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-soft, #f8fafc);
+}
+.school-index-breakdown article > div:first-child { display:flex; justify-content:space-between; gap:10px; }
+.school-index-breakdown strong { color:var(--text-dark); }
+.school-index-breakdown article > div:first-child span { font-weight:800; color:var(--primary); white-space:nowrap; }
+.school-index-breakdown p { margin:10px 0 0; color:var(--text-light); font-size:13px; line-height:1.45; }
+.school-index-bar { height:8px; margin-top:14px; overflow:hidden; border-radius:999px; background:#e2e8f0; }
+.school-index-bar span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,var(--primary),var(--info)); }
+
+.school-index-secondary-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px; }
+.school-index-secondary-grid > article { padding:20px; border:1px solid var(--border); border-radius:17px; background:#fff; }
+.school-index-secondary-grid h4 { display:flex; align-items:center; gap:8px; margin:0 0 16px; color:var(--text-dark); font-size:17px; }
+.school-index-comparison-list { display:grid; gap:10px; }
+.school-index-comparison-list > div { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:11px 12px; border-radius:11px; background:#f8fafc; }
+.school-index-comparison-list span { color:var(--text-light); font-weight:700; }
+.school-index-comparison-list strong { color:var(--text-dark); }
+.school-index-comparison-list small { margin-left:6px; color:var(--primary); }
+.school-index-sparkline { display:flex; align-items:flex-end; gap:8px; height:155px; padding-top:10px; overflow-x:auto; }
+.school-index-sparkline > div { min-width:34px; height:100%; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:6px; }
+.school-index-sparkline span { width:18px; max-height:115px; border-radius:8px 8px 3px 3px; background:linear-gradient(180deg,var(--primary),var(--info)); }
+.school-index-sparkline small { font-size:10px; color:var(--text-light); }
+.school-index-no-history { color:var(--text-light); line-height:1.6; }
+.school-index-analysis { display:flex; align-items:flex-start; gap:12px; margin-top:18px; padding:16px 18px; border-radius:15px; background:#eff6ff; color:#1e3a8a; }
+.school-index-analysis p { margin:0; line-height:1.55; }
+
+@media (max-width: 1200px) {
+    .school-index-breakdown { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 768px) {
+    .school-index-details { padding:20px; }
+    .school-index-details__header { align-items:flex-start; flex-direction:column; }
+    .school-index-breakdown, .school-index-secondary-grid { grid-template-columns:1fr; }
+}

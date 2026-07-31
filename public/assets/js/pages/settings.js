@@ -25,14 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'schoolShortNamePreview'
     );
 
-    const rankingPreview = document.getElementById(
-        'schoolNameRankingPreview'
-    );
-
-    const reportPreview = document.getElementById(
-        'schoolNameReportPreview'
-    );
-
     // =====================================================
     // PREVIEW DOS TEXTOS
     // =====================================================
@@ -49,14 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (namePreview) {
             namePreview.textContent = schoolName;
-        }
-
-        if (rankingPreview) {
-            rankingPreview.textContent = schoolName;
-        }
-
-        if (reportPreview) {
-            reportPreview.textContent = schoolName;
         }
 
         if (shortNamePreview) {

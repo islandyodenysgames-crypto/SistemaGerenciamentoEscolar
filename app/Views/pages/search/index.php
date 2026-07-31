@@ -2,7 +2,7 @@
 
 component('base/page-header', [
     'title' => 'Busca Inteligente',
-    'subtitle' => 'Pesquise alunos, turmas e datas de frequência'
+    'subtitle' => 'Pesquise alunos, turmas, ocorrências, acompanhamentos, avisos e usuários'
 ]);
 
 component('search/page', [

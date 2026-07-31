@@ -1,0 +1,800 @@
+/* ==========================================================
+   WORKSPACE DA TURMA - NAVEGAÇÃO
+========================================================== */
+
+.class-workspace-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    padding: 12px;
+    border-radius: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.class-workspace-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 16px;
+    border-radius: 16px;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 900;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.class-workspace-nav a:hover {
+    background: var(--green-soft);
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.class-workspace-nav a.active {
+    background: var(--primary);
+    color: #ffffff;
+    box-shadow: var(--shadow-md);
+}
+
+.class-workspace-nav i {
+    width: 18px;
+    height: 18px;
+}
+
+/* ==========================================================
+   WORKSPACE DA TURMA - SEÇÕES
+========================================================== */
+
+.class-workspace-section {
+    margin-bottom: 28px;
+}
+
+.class-workspace-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.class-workspace-section-header h3 {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.class-workspace-section-header p {
+    margin: 6px 0 0;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* ==========================================================
+   PAINEL DA TURMA - KPIS
+========================================================== */
+
+.students-class-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+    margin-bottom: 28px;
+}
+
+.students-class-kpi {
+    position: relative;
+    overflow: hidden;
+    padding: 24px;
+    border-radius: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.students-class-kpi:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.students-class-kpi::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: var(--primary);
+}
+
+.students-class-kpi:nth-child(2)::after {
+    background: #3b82f6;
+}
+
+.students-class-kpi:nth-child(3)::after {
+    background: #16a34a;
+}
+
+.students-class-kpi:nth-child(4)::after {
+    background: #ef4444;
+}
+
+.students-class-kpi span {
+    display: block;
+    font-size: 34px;
+    line-height: 1;
+    margin-bottom: 12px;
+}
+
+.students-class-kpi strong {
+    display: block;
+    color: var(--text-dark);
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.students-class-kpi small {
+    display: block;
+    margin-top: 8px;
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+/* ==========================================================
+   AÇÕES RÁPIDAS
+========================================================== */
+
+.class-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.class-quick-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 118px;
+    padding: 18px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 900;
+    transition: var(--transition);
+}
+
+.class-quick-action:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    background: var(--green-soft);
+    color: var(--primary);
+}
+
+.class-quick-action i {
+    width: 28px;
+    height: 28px;
+}
+
+/* ==========================================================
+   PESQUISA DE ALUNOS
+========================================================== */
+
+.student-search-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    padding: 14px 18px;
+    border-radius: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.student-search-box i {
+    width: 20px;
+    height: 20px;
+    color: var(--text-light);
+}
+
+.student-search-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-dark);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.student-search-box input::placeholder {
+    color: var(--text-light);
+}
+
+/* ==========================================================
+   CARDS DOS ALUNOS
+========================================================== */
+
+.students-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 24px;
+}
+
+.students-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+}
+
+.student-profile-card {
+    display: grid;
+    grid-template-columns: 112px 1fr 180px;
+    align-items: center;
+    gap: 28px;
+    padding: 24px;
+    border-radius: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 8px solid var(--primary);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.student-profile-card:hover {
+    transform: translateX(6px);
+    box-shadow: var(--shadow-md);
+}
+
+.student-profile-card-success {
+    border-left-color: var(--success);
+}
+
+.student-profile-card-warning {
+    border-left-color: var(--warning);
+}
+
+.student-profile-card-danger {
+    border-left-color: var(--danger);
+}
+
+.student-profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 0;
+}
+
+.student-profile-select input,
+.student-checkbox,
+.students-select-all,
+#selectAllStudents {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.student-profile-avatar {
+    width: 96px;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: var(--green-soft);
+    color: var(--primary);
+}
+
+.student-profile-avatar i {
+    width: 42px;
+    height: 42px;
+}
+
+.student-profile-body {
+    padding: 0;
+    text-align: left;
+}
+
+.student-profile-body h3 {
+    margin: 0 0 12px;
+    color: var(--text-dark);
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.student-profile-body p {
+    margin: 0 0 8px;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.student-profile-body p strong {
+    color: var(--text-dark);
+}
+
+.student-profile-metrics {
+    display: flex;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.student-profile-metrics div {
+    min-width: 130px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+.student-profile-metrics span {
+    display: block;
+    font-size: 22px;
+}
+
+.student-profile-metrics strong {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-dark);
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.student-profile-metrics small {
+    display: block;
+    margin-top: 4px;
+    color: var(--text-light);
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.student-profile-guardian {
+    margin-top: 12px !important;
+}
+
+.student-profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 180px;
+}
+
+.student-profile-actions .btn-primary,
+.student-profile-actions .btn-secondary {
+    justify-content: center;
+    text-align: center;
+}
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+@media (max-width: 1200px) {
+    .students-class-kpis {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .class-quick-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .student-profile-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .student-profile-avatar {
+        width: 82px;
+        height: 82px;
+    }
+
+    .student-profile-body {
+        text-align: center;
+    }
+
+    .student-profile-metrics {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .student-profile-actions {
+        width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+    .class-workspace-nav {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .class-workspace-nav a {
+        justify-content: center;
+    }
+
+    .students-class-kpis,
+    .class-quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .students-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* ==========================================================
+   ALUNOS EM ALERTA - PAINEL DA TURMA
+========================================================== */
+
+.students-class-kpi-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.students-class-kpi em {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 4px;
+    margin-top: 10px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(220, 38, 38, .08);
+    color: var(--primary);
+    font-size: 10px;
+    line-height: 1;
+    font-style: normal;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.students-class-kpi:nth-child(4) em {
+    color: #dc2626;
+}
+
+.students-class-kpi em svg {
+    width: 12px;
+    height: 12px;
+    flex: 0 0 auto;
+}
+
+.students-class-kpi-link {
+    width: 100%;
+    border: 0;
+    font: inherit;
+    text-align: left;
+}
+
+.students-class-kpi-link.is-expanded {
+    border-color: rgba(239, 68, 68, .32);
+    box-shadow: 0 12px 26px rgba(239, 68, 68, .12);
+}
+
+.students-class-kpi-link:focus-visible {
+    outline: 3px solid rgba(239, 68, 68, .25);
+    outline-offset: 4px;
+}
+
+.class-alert-students {
+    overflow: hidden;
+    scroll-margin-top: 24px;
+    border: 1px solid rgba(239, 68, 68, .2);
+    background: linear-gradient(135deg, rgba(254, 242, 242, .92), var(--surface));
+}
+
+.class-alert-count {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 13px;
+    border-radius: 999px;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: 12px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.class-alert-students[hidden] {
+    display: none !important;
+}
+
+.class-alert-students-grid {
+    display: grid;
+    min-width: 0;
+    gap: 12px;
+}
+
+.class-alert-student-card {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+    border: 1px solid rgba(239, 68, 68, .16);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.class-alert-student-icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.class-alert-student-icon svg {
+    width: 21px;
+    height: 21px;
+}
+
+.class-alert-student-info {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.class-alert-student-info strong,
+.class-alert-student-info span,
+.class-alert-student-frequency strong,
+.class-alert-student-frequency span {
+    display: block;
+}
+
+.class-alert-student-info strong {
+    overflow: hidden;
+    color: var(--text-dark);
+    font-size: 14px;
+    font-weight: 900;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.class-alert-student-info span,
+.class-alert-student-frequency span {
+    margin-top: 4px;
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.class-alert-student-frequency {
+    min-width: 92px;
+    text-align: right;
+}
+
+.class-alert-student-frequency strong {
+    color: #dc2626;
+    font-size: 20px;
+    font-weight: 950;
+}
+
+.class-alert-student-action {
+    display: inline-flex;
+    max-width: 100%;
+    white-space: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 38px;
+    padding: 0 13px;
+    border-radius: 11px;
+    background: #fff1f2;
+    color: #be123c;
+    font-size: 12px;
+    font-weight: 900;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.class-alert-student-action:hover {
+    transform: translateY(-1px);
+    background: #ffe4e6;
+}
+
+.class-alert-student-action svg {
+    width: 15px;
+    height: 15px;
+}
+
+@media (max-width: 760px) {
+    .class-alert-student-card {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .class-alert-student-action {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 520px) {
+    .class-alert-student-info strong {
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    .class-alert-student-card {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .class-alert-student-frequency {
+        grid-column: 2;
+        text-align: left;
+    }
+}
+
+
+/* Ajuste de contenção dos nomes no painel de alerta */
+.class-alert-students,
+.class-alert-students .class-workspace-section-header,
+.class-alert-students .class-workspace-section-header > div,
+.class-alert-students-grid,
+.class-alert-student-card,
+.class-alert-student-info {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.class-alert-students .class-workspace-section-header {
+    overflow: hidden;
+}
+
+.class-alert-students .class-workspace-section-header > div {
+    overflow: hidden;
+}
+
+.class-alert-students .class-workspace-section-header h3,
+.class-alert-students .class-workspace-section-header p {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.class-alert-student-info strong {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.class-alert-student-info span {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+@media (max-width: 760px) {
+    .class-alert-student-info strong {
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+}
+
+
+/* ==========================================================
+   CORREÇÃO FINAL — PAINEL EXPANSÍVEL DE ALUNOS EM ALERTA
+========================================================== */
+
+/* Impede a regra geral .students-class-kpi span de ampliar o rótulo. */
+.students-class-kpi em [data-alert-toggle-label] {
+    display: inline;
+    margin: 0;
+    color: inherit;
+    font-size: 13px;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.students-class-kpi em {
+    max-width: 100%;
+    font-size: 13px;
+    line-height: 1.2;
+}
+
+.class-alert-students {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.class-alert-students .class-workspace-section-header {
+    width: 100%;
+    max-width: 100%;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+.class-alert-students .class-workspace-section-header > div {
+    flex: 1 1 260px;
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.class-alert-students .class-workspace-section-header h3,
+.class-alert-students .class-workspace-section-header p {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    white-space: normal;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+.class-alert-count {
+    flex: 0 0 auto;
+    max-width: 100%;
+}
+
+@media (max-width: 520px) {
+    .class-alert-students {
+        padding: 16px;
+    }
+
+    .class-alert-count {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Sprint Painel TV Premium — foto institucional da turma */
+.class-photo-uploader{display:grid;grid-template-columns:minmax(280px,520px) 1fr;gap:1rem;align-items:center;padding:1rem;border:1px solid var(--border-color,#dbe5de);border-radius:18px;background:var(--card-bg,#fff)}
+.class-photo-preview{aspect-ratio:16/9;overflow:hidden;border-radius:14px;background:#eef4ef;border:2px dashed #b7cbbd;display:grid;place-items:center}
+.class-photo-preview img{width:100%;height:100%;display:block;object-fit:cover;object-position:center}
+.class-photo-placeholder{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.45rem;padding:1rem;color:#617267}
+.class-photo-placeholder svg{width:42px;height:42px;color:var(--primary,#087a36)}
+.class-photo-placeholder strong{color:var(--text-primary,#1b2c22)}
+.class-photo-placeholder span{max-width:360px;font-size:.9rem;line-height:1.4}
+.class-photo-actions{display:flex;flex-direction:column;align-items:flex-start;gap:.85rem}
+.class-photo-actions .btn-secondary{display:inline-flex;align-items:center;gap:.5rem;cursor:pointer}
+.class-photo-remove{display:flex;align-items:center;gap:.5rem;font-size:.92rem;color:var(--text-secondary,#5f6f65)}
+.form-help{display:block;margin-top:.55rem;color:var(--text-secondary,#66756b);line-height:1.4}
+html[data-theme=dark] .class-photo-uploader{background:#18251e;border-color:#365044}
+html[data-theme=dark] .class-photo-preview{background:#101b15;border-color:#446152}
+html[data-theme=dark] .class-photo-placeholder strong{color:#eef7f1}
+html[data-theme=dark] .class-photo-placeholder,html[data-theme=dark] .form-help,html[data-theme=dark] .class-photo-remove{color:#b8c8be}
+@media(max-width:800px){.class-photo-uploader{grid-template-columns:1fr}.class-photo-actions{align-items:stretch}}
+
+/* Sprint 17.1 — recorte 16:9 da foto da turma, seguindo o fluxo de Editar Aviso */
+.class-photo-preview{width:100%;background-position:center;background-size:cover;background-repeat:no-repeat}.class-photo-preview.has-image .class-photo-placeholder{display:none}.class-photo-buttons{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.class-photo-file-button{cursor:pointer}.class-photo-buttons button:disabled{opacity:.52;cursor:not-allowed;filter:grayscale(.3)}.class-photo-selection{display:flex;align-items:center;gap:9px;padding:11px 13px;border:1px solid #e2e8f0;border-radius:11px;background:#f8fafc;color:#64748b;font-size:.84rem;font-weight:700;max-width:520px}.class-photo-selection svg{width:17px;height:17px;flex:0 0 17px}.class-photo-selection.pending{border-color:#fde68a;background:#fffbeb;color:#a16207}.class-photo-selection.ready{border-color:#bbf7d0;background:#f0fdf4;color:#15803d}.class-photo-selection.warning{border-color:#fed7aa;background:#fff7ed;color:#c2410c}.class-photo-guidance{display:flex;align-items:flex-start;gap:10px;margin-top:12px;padding:13px 15px;border:1px solid #bfdbfe;border-radius:12px;background:#eff6ff;color:#1e3a5f}.class-photo-guidance svg{width:18px;height:18px;flex:0 0 18px;margin-top:2px}.class-photo-guidance strong,.class-photo-guidance span{display:block}.class-photo-guidance span{margin-top:3px;font-size:.82rem;line-height:1.45}.class-photo-cropper{position:fixed;inset:0;z-index:10000;display:none;place-items:center;padding:20px}.class-photo-cropper.open{display:grid}.class-photo-cropper-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.75);backdrop-filter:blur(4px)}.class-photo-cropper-dialog{position:relative;width:min(100%,1020px);max-height:calc(100vh - 30px);display:flex;flex-direction:column;background:var(--surface-primary,#fff);border-radius:20px;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,.3)}.class-photo-cropper-dialog header,.class-photo-cropper-dialog footer{display:flex;justify-content:space-between;align-items:center;padding:18px 22px}.class-photo-cropper-dialog header{border-bottom:1px solid var(--border-color,#e5e7eb)}.class-photo-cropper-dialog footer{border-top:1px solid var(--border-color,#e5e7eb);justify-content:flex-end;gap:10px}.class-photo-cropper-dialog h2{margin:0}.class-photo-cropper-dialog p{margin:4px 0 0;color:var(--text-secondary,#64748b)}.class-photo-crop-stage{min-height:0;overflow:auto;padding:22px;background:radial-gradient(circle at top,#253247,#111827);display:grid;place-items:center}.class-photo-crop-frame{position:relative;width:min(100%,800px);aspect-ratio:16/9;overflow:hidden;border:3px solid #fff;border-radius:14px;box-shadow:0 18px 45px rgba(0,0,0,.35);background:#111}.class-photo-crop-frame canvas{display:block;width:100%;height:100%;cursor:grab;touch-action:none}.class-photo-crop-frame canvas.is-dragging{cursor:grabbing}.class-photo-crop-grid{position:absolute;inset:0;pointer-events:none}.class-photo-crop-grid span{position:absolute;background:rgba(255,255,255,.48)}.class-photo-crop-grid span:nth-child(1),.class-photo-crop-grid span:nth-child(2){top:0;bottom:0;width:1px}.class-photo-crop-grid span:nth-child(1){left:33.333%}.class-photo-crop-grid span:nth-child(2){left:66.666%}.class-photo-crop-grid span:nth-child(3),.class-photo-crop-grid span:nth-child(4){left:0;right:0;height:1px}.class-photo-crop-grid span:nth-child(3){top:33.333%}.class-photo-crop-grid span:nth-child(4){top:66.666%}.class-photo-crop-label{position:absolute;left:14px;bottom:14px;padding:.42rem .68rem;border-radius:999px;background:rgba(15,23,42,.76);color:#fff;font-size:.76rem;font-weight:900;letter-spacing:.03em;pointer-events:none}.class-photo-crop-controls{padding:14px 22px;display:flex;justify-content:space-between;align-items:center;gap:1rem}.class-photo-crop-controls label{display:flex;align-items:center;gap:.7rem;font-weight:700}.class-photo-crop-controls input{width:min(360px,55vw)}body.class-photo-modal-open{overflow:hidden}html[data-theme=dark] .class-photo-selection{background:#142019;border-color:#365044;color:#c3d2c8}html[data-theme=dark] .class-photo-selection.pending{background:#30260d;border-color:#6f571b;color:#f3d77a}html[data-theme=dark] .class-photo-selection.ready{background:#102b1b;border-color:#285d3c;color:#8de0aa}html[data-theme=dark] .class-photo-selection.warning{background:#321c0e;border-color:#75431d;color:#f5b77c}html[data-theme=dark] .class-photo-guidance{background:#122536;border-color:#2d526f;color:#c6e5fb}@media(max-width:700px){.class-photo-buttons>*{width:100%;justify-content:center}.class-photo-cropper{padding:8px}.class-photo-cropper-dialog{max-height:calc(100vh - 16px);border-radius:15px}.class-photo-cropper-dialog header,.class-photo-cropper-dialog footer{padding:14px}.class-photo-crop-stage{padding:10px}.class-photo-crop-controls{align-items:flex-start;flex-direction:column}}

@@ -5,7 +5,14 @@
         <div class="settings-sidebar-logo">
 
             <div class="settings-sidebar-logo-icon">
-                <i data-lucide="graduation-cap"></i>
+                <?php if (!empty($logoPath)): ?>
+                    <img
+                        src="<?= asset($logoPath) ?>"
+                        alt="<?= e($name ?? 'Logo da escola') ?>"
+                    >
+                <?php else: ?>
+                    <i data-lucide="graduation-cap"></i>
+                <?php endif; ?>
             </div>
 
             <div>

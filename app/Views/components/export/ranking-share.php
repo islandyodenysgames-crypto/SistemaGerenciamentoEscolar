@@ -66,11 +66,13 @@
 
             ?>
 
-            <div class="ranking-share-row">
+            <div class="ranking-share-row ranking-share-row-detailed">
 
-                <span><?= e((string) $rankIcon) ?></span>
+                <span class="ranking-share-rank">
+                    <?= e((string) $rankIcon) ?>
+                </span>
 
-                <div>
+                <div class="ranking-share-class">
 
                     <strong><?= e($item['class_name']) ?></strong>
 
@@ -80,7 +82,39 @@
 
                 </div>
 
-                <b><?= number_format($percentage, 0, ',', '.') ?>%</b>
+                <div class="ranking-share-row-metrics">
+
+                    <div>
+                        <span>👥</span>
+                        <strong><?= (int) ($item['presentes'] ?? 0) ?></strong>
+                        <small>Presentes</small>
+                    </div>
+
+                    <div>
+                        <span>❌</span>
+                        <strong><?= (int) ($item['ranking_absences'] ?? 0) ?></strong>
+                        <small>Faltas</small>
+                    </div>
+
+                    <div>
+                        <span>📈</span>
+                        <strong><?= number_format($percentage, 0, ',', '.') ?>%</strong>
+                        <small>Freq.</small>
+                    </div>
+
+                    <div>
+                        <span>📋</span>
+                        <strong>
+                            <?= (int) ($item['justificadas'] ?? 0) ?>
+                            /
+                            <?= (int) ($item['atestados'] ?? 0) ?>
+                            /
+                            <?= (int) ($item['onibus'] ?? 0) ?>
+                        </strong>
+                        <small>J/A/O</small>
+                    </div>
+
+                </div>
 
             </div>
 

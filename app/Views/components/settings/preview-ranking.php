@@ -3,11 +3,26 @@
     <div class="settings-ranking-preview">
 
         <div class="settings-ranking-brand">
-            <strong id="schoolNameRankingPreview">
-                <?= e($name ?? 'Sistema de Frequência Escolar') ?>
-            </strong>
 
-            <span><?= date('d/m/Y') ?></span>
+            <div class="settings-ranking-logo">
+                <?php if (!empty($logoPath)): ?>
+                    <img
+                        src="<?= asset($logoPath) ?>"
+                        alt="<?= e($name ?? 'Logo da escola') ?>"
+                    >
+                <?php else: ?>
+                    <i data-lucide="graduation-cap"></i>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <strong id="schoolNameRankingPreview">
+                    <?= e($name ?? 'Sistema de Frequência Escolar') ?>
+                </strong>
+
+                <span><?= date('d/m/Y') ?></span>
+            </div>
+
         </div>
 
         <div class="settings-ranking-kpi">

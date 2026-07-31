@@ -1,0 +1,5 @@
+
+/* Sprint 2.7.5.0 - Central Inteligente de Notificações */
+.notifications-filters{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin:18px 0 24px;padding:16px;border:1px solid var(--border-color,#dde3e8);border-radius:14px;background:var(--surface,#fff)}
+.notifications-filters label{display:grid;gap:6px;font-size:.85rem;font-weight:700}.notifications-filters select{min-width:170px;padding:10px 12px;border:1px solid var(--border-color,#ccd5dd);border-radius:9px;background:#fff}
+.monitoring-card__recent-action-controls{display:flex;gap:8px;align-items:center}.monitoring-card__recent-action-controls button{display:inline-flex;align-items:center;justify-content:center;min-width:38px;min-height:38px;border-radius:9px;border:1px solid #d6dde3;background:#fff;cursor:pointer}.monitoring-card__recent-action-controls form button{color:#b42318;border-color:#f1c7c3}

@@ -1,0 +1,469 @@
+/* ======================================================
+   GRAVIDADE DAS OCORRÊNCIAS
+   ====================================================== */
+
+.occurrence-severity-options {
+    display: grid;
+    grid-template-columns: repeat(
+        4,
+        minmax(0, 1fr)
+    );
+    gap: 12px;
+    margin-top: 7px;
+}
+
+.occurrence-severity-option {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-height: 112px;
+    padding: 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    background: #ffffff;
+    cursor: pointer;
+    transition:
+        border-color 160ms ease,
+        background-color 160ms ease,
+        box-shadow 160ms ease,
+        transform 160ms ease;
+}
+
+.occurrence-severity-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgb(15 23 42 / 8%);
+}
+
+.occurrence-severity-option input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.occurrence-severity-option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 39px;
+    height: 39px;
+    flex-shrink: 0;
+    border-radius: 11px;
+}
+
+.occurrence-severity-option-icon svg {
+    width: 19px;
+    height: 19px;
+    stroke-width: 2.3;
+}
+
+.occurrence-severity-option-content {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.occurrence-severity-option-content strong {
+    color: #172033;
+    font-size: 13px;
+    font-weight: 850;
+}
+
+.occurrence-severity-option-content small {
+    color: #64748b;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.occurrence-severity-option-check {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    color: #ffffff;
+}
+
+.occurrence-severity-option-check svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 3;
+}
+
+.occurrence-severity-option.is-selected {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgb(15 23 42 / 10%);
+}
+
+.occurrence-severity-option.is-selected
+.occurrence-severity-option-check {
+    display: flex;
+}
+
+.occurrence-severity-help {
+    display: block;
+    margin-top: 9px;
+    color: #64748b;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* ======================================================
+   GRAVIDADE BAIXA
+   ====================================================== */
+
+.occurrence-severity-option.severity-low
+.occurrence-severity-option-icon {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.occurrence-severity-option.severity-low:hover,
+.occurrence-severity-option.severity-low.is-selected {
+    border-color: #22c55e;
+    background: #f0fdf4;
+}
+
+.occurrence-severity-option.severity-low
+.occurrence-severity-option-check {
+    background: #16a34a;
+}
+
+/* ======================================================
+   GRAVIDADE MÉDIA
+   ====================================================== */
+
+.occurrence-severity-option.severity-medium
+.occurrence-severity-option-icon {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.occurrence-severity-option.severity-medium:hover,
+.occurrence-severity-option.severity-medium.is-selected {
+    border-color: #f59e0b;
+    background: #fffbeb;
+}
+
+.occurrence-severity-option.severity-medium
+.occurrence-severity-option-check {
+    background: #d97706;
+}
+
+/* ======================================================
+   GRAVIDADE ALTA
+   ====================================================== */
+
+.occurrence-severity-option.severity-high
+.occurrence-severity-option-icon {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.occurrence-severity-option.severity-high:hover,
+.occurrence-severity-option.severity-high.is-selected {
+    border-color: #f97316;
+    background: #fff7ed;
+}
+
+.occurrence-severity-option.severity-high
+.occurrence-severity-option-check {
+    background: #ea580c;
+}
+
+/* ======================================================
+   GRAVIDADE GRAVÍSSIMA
+   ====================================================== */
+
+.occurrence-severity-option.severity-critical
+.occurrence-severity-option-icon {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.occurrence-severity-option.severity-critical:hover,
+.occurrence-severity-option.severity-critical.is-selected {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+
+.occurrence-severity-option.severity-critical
+.occurrence-severity-option-check {
+    background: #dc2626;
+}
+
+/* ======================================================
+   BADGES DE GRAVIDADE
+   ====================================================== */
+
+.occurrence-severity-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: fit-content;
+    padding: 6px 9px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 850;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.occurrence-severity-badge svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 2.4;
+}
+
+.occurrence-severity-badge.severity-low {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.occurrence-severity-badge.severity-medium {
+    border-color: #fde68a;
+    background: #fffbeb;
+    color: #b45309;
+}
+
+.occurrence-severity-badge.severity-high {
+    border-color: #fed7aa;
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.occurrence-severity-badge.severity-critical {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+/* ======================================================
+   CARD DA OCORRÊNCIA POR GRAVIDADE
+   ====================================================== */
+
+.student-occurrence-timeline-card.severity-low {
+    border-top: 3px solid #22c55e;
+}
+
+.student-occurrence-timeline-card.severity-medium {
+    border-top: 3px solid #f59e0b;
+}
+
+.student-occurrence-timeline-card.severity-high {
+    border-top: 3px solid #f97316;
+}
+
+.student-occurrence-timeline-card.severity-critical {
+    border-top: 3px solid #ef4444;
+    box-shadow: 0 8px 28px rgb(220 38 38 / 10%);
+}
+
+.student-occurrence-timeline-item.severity-critical
+.student-occurrence-icon {
+    animation: occurrence-critical-pulse 1.8s infinite;
+}
+
+@keyframes occurrence-critical-pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgb(239 68 68 / 25%);
+    }
+
+    50% {
+        box-shadow: 0 0 0 8px rgb(239 68 68 / 0%);
+    }
+}
+
+/* ======================================================
+   RESUMO DE GRAVIDADES
+   ====================================================== */
+
+.occurrence-severity-summary {
+    display: grid;
+    grid-template-columns: repeat(
+        4,
+        minmax(0, 1fr)
+    );
+    gap: 14px;
+    margin-top: 16px;
+    margin-bottom: 22px;
+}
+
+.occurrence-severity-summary-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-width: 0;
+    min-height: 88px;
+    padding: 16px 18px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 4px 14px rgb(15 23 42 / 5%);
+    transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        transform 160ms ease;
+}
+
+.occurrence-severity-summary-item:hover {
+    transform: translateY(-2px);
+    border-color: #d1d5db;
+    box-shadow: 0 8px 22px rgb(15 23 42 / 8%);
+}
+
+.occurrence-severity-summary-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    flex-shrink: 0;
+    border-radius: 12px;
+}
+
+.occurrence-severity-summary-icon svg {
+    width: 21px;
+    height: 21px;
+    stroke-width: 2.2;
+}
+
+.occurrence-severity-summary-item > div:last-child {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.occurrence-severity-summary-item span {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.occurrence-severity-summary-item strong {
+    color: #172033;
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.occurrence-severity-summary-item small {
+    display: block;
+    margin-top: 2px;
+    overflow: hidden;
+    color: #94a3b8;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+}
+
+/* ======================================================
+   ÍCONES DOS CARDS DE GRAVIDADE
+   ====================================================== */
+
+.occurrence-severity-summary-icon.severity-low {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.occurrence-severity-summary-icon.severity-medium {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.occurrence-severity-summary-icon.severity-high {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.occurrence-severity-summary-icon.severity-critical {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* ======================================================
+   DETALHE LATERAL DOS CARDS
+   ====================================================== */
+
+.occurrence-severity-summary-item::before {
+    position: absolute;
+    top: 14px;
+    bottom: 14px;
+    left: 0;
+    width: 4px;
+    border-radius: 0 999px 999px 0;
+    background: #cbd5e1;
+    content: "";
+}
+
+.occurrence-severity-summary-item.severity-low::before {
+    background: #22c55e;
+}
+
+.occurrence-severity-summary-item.severity-medium::before {
+    background: #f59e0b;
+}
+
+.occurrence-severity-summary-item.severity-high::before {
+    background: #f97316;
+}
+
+.occurrence-severity-summary-item.severity-critical::before {
+    background: #ef4444;
+}
+
+/* ======================================================
+   RESPONSIVIDADE
+   ====================================================== */
+
+@media (max-width: 1100px) {
+    .occurrence-severity-options,
+    .occurrence-severity-summary {
+        grid-template-columns: repeat(
+            2,
+            minmax(0, 1fr)
+        );
+    }
+}
+
+@media (max-width: 620px) {
+    .occurrence-severity-options,
+    .occurrence-severity-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .occurrence-severity-option {
+        min-height: auto;
+    }
+
+    .occurrence-severity-summary-item {
+        min-height: 78px;
+        padding: 14px 16px;
+    }
+
+    .occurrence-severity-summary-item strong {
+        font-size: 21px;
+    }
+
+    .occurrence-severity-summary-item small {
+        white-space: normal;
+    }
+}

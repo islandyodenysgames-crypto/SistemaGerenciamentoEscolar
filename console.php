@@ -12,6 +12,8 @@ Env::load(__DIR__ . '/.env');
 
 Config::load();
 
+date_default_timezone_set(Config::get('app.timezone', 'America/Fortaleza'));
+
 $kernel = new Kernel();
 
 $kernel->handle($argv);

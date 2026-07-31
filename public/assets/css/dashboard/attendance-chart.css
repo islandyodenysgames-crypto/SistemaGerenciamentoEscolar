@@ -277,3 +277,79 @@
     font-size: 12px;
     font-weight: 800;
 }
+.attendance-chart-pro-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.attendance-period-filter {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    margin: 1rem 1rem 0 0;
+    white-space: nowrap;
+}
+
+.attendance-period-filter label {
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--text-muted, #64748b);
+}
+
+.attendance-period-filter select {
+    min-width: 155px;
+    border: 1px solid var(--border-color, #dbe3ea);
+    border-radius: .7rem;
+    padding: .58rem .8rem;
+    background: var(--surface, #fff);
+    color: var(--text-color, #1f2937);
+    font: inherit;
+    font-size: .86rem;
+    cursor: pointer;
+}
+
+@media (max-width: 720px) {
+    .attendance-chart-pro-heading { flex-direction: column; }
+    .attendance-period-filter { margin: 0 1rem; width: calc(100% - 2rem); justify-content: space-between; }
+    .attendance-period-filter select { flex: 1; }
+}
+
+
+/* Atualização assíncrona do período */
+.attendance-chart-pro-panel {
+    position: relative;
+    transition: opacity .2s ease, transform .2s ease;
+}
+
+.attendance-chart-pro-panel.is-loading {
+    opacity: .62;
+    pointer-events: none;
+}
+
+.attendance-chart-pro-panel.is-loading::after {
+    content: "Atualizando dados…";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 5;
+    border-radius: inherit;
+    background: color-mix(in srgb, var(--surface, #fff) 72%, transparent);
+    color: var(--text-color, #1f2937);
+    font-size: .9rem;
+    font-weight: 800;
+    backdrop-filter: blur(2px);
+}
+
+.attendance-frequency-error {
+    margin: .8rem 1rem 0;
+    padding: .7rem .9rem;
+    border: 1px solid #fecaca;
+    border-radius: .75rem;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: .82rem;
+    font-weight: 700;
+}

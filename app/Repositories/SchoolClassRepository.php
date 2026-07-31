@@ -10,7 +10,7 @@ class SchoolClassRepository extends BaseRepository
     public function all(): array
     {
         $stmt = $this->db->query("
-            SELECT id, name, year, shift, active, created_at
+            SELECT id, name, year, shift, active, photo_path, photo_updated_at, created_at
             FROM school_classes
             ORDER BY year DESC, name ASC
         ");
@@ -32,7 +32,7 @@ class SchoolClassRepository extends BaseRepository
     public function find(int $id): ?array
     {
         $stmt = $this->db->prepare("
-            SELECT id, name, year, shift, active
+            SELECT id, name, year, shift, active, photo_path, photo_updated_at
             FROM school_classes
             WHERE id = :id
             LIMIT 1
@@ -49,10 +49,10 @@ class SchoolClassRepository extends BaseRepository
     {
         $stmt = $this->db->prepare("
             INSERT INTO school_classes (
-                name, year, shift, active, created_at, updated_at
+                name, year, shift, active, photo_path, photo_updated_at, created_at, updated_at
             )
             VALUES (
-                :name, :year, :shift, :active, NOW(), NOW()
+                :name, :year, :shift, :active, :photo_path, CASE WHEN :photo_path_stamp IS NULL THEN NULL ELSE NOW() END, NOW(), NOW()
             )
         ");
 
@@ -61,6 +61,8 @@ class SchoolClassRepository extends BaseRepository
             'year' => $data['year'],
             'shift' => $data['shift'],
             'active' => 1,
+            'photo_path' => $data['photo_path'] ?? null,
+            'photo_path_stamp' => !empty($data['photo_path']) ? 1 : null,
         ]);
     }
 
@@ -73,6 +75,8 @@ class SchoolClassRepository extends BaseRepository
                 year = :year,
                 shift = :shift,
                 active = :active,
+                photo_path = :photo_path,
+                photo_updated_at = CASE WHEN :photo_changed = 1 THEN NOW() ELSE photo_updated_at END,
                 updated_at = NOW()
             WHERE id = :id
         ");
@@ -83,6 +87,8 @@ class SchoolClassRepository extends BaseRepository
             'year' => $data['year'],
             'shift' => $data['shift'],
             'active' => $data['active'],
+            'photo_path' => $data['photo_path'] ?? null,
+            'photo_changed' => !empty($data['photo_changed']) ? 1 : 0,
         ]);
     }
 

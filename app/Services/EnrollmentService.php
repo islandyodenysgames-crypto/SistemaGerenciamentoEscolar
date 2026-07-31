@@ -23,19 +23,45 @@ class EnrollmentService
         return $this->repository->find($id);
     }
 
-    public function create(array $data): void
-    {
-        $this->repository->create($data);
+    public function activeByStudent(
+        int $studentId
+    ): ?array {
+        return $this->repository
+            ->activeByStudent($studentId);
     }
 
-    public function update(int $id, array $data): void
+    public function historyByStudent(
+        int $studentId
+    ): array {
+        return $this->repository
+            ->historyByStudent($studentId);
+    }
+
+    public function create(array $data): int
     {
-        $this->repository->update($id, $data);
+        return $this->repository->create($data);
+    }
+
+    public function update(
+        int $id,
+        array $data
+    ): void {
+        $this->repository->update(
+            $id,
+            $data
+        );
     }
 
     public function cancel(int $id): bool
     {
         return $this->repository->cancel($id);
+    }
+
+    public function cancelActiveByStudent(
+        int $studentId
+    ): bool {
+        return $this->repository
+            ->cancelActiveByStudent($studentId);
     }
 
     public function delete(int $id): bool
@@ -53,5 +79,12 @@ class EnrollmentService
             $schoolClassId,
             $ignoreId
         );
+    }
+
+    public function hasActiveEnrollment(
+        int $studentId
+    ): bool {
+        return $this->repository
+            ->hasActiveEnrollment($studentId);
     }
 }

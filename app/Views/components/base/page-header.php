@@ -1,10 +1,18 @@
-<div class="base/page-header">
+<div class="page-header">
 
-    <div>
+    <div class="page-header-content">
 
-        <h1><?= $title ?></h1>
+        <span class="page-header-eyebrow">
+            Sistema de Frequência Escolar
+        </span>
 
-        <p><?= $subtitle ?></p>
+        <h1 class="page-header-title">
+            <?= e($title ?? '') ?>
+        </h1>
+
+        <p class="page-header-subtitle">
+            <?= e($subtitle ?? '') ?>
+        </p>
 
     </div>
 

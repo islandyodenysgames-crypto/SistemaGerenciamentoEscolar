@@ -1,170 +1,34 @@
-<div class="card mt-24">
-
-    <div class="card-header">
-        <h3>Alunos encontrados</h3>
-    </div>
-
-    <?php if (empty($results['students'])): ?>
-
-        <div class="activity-empty">
-            Nenhum aluno encontrado.
-        </div>
-
-    <?php else: ?>
-
-        <table class="data-table">
-
-            <thead>
-                <tr>
-                    <th>Aluno</th>
-                    <th width="160">Matrícula</th>
-                    <th width="120">Status</th>
-                    <th width="100">Ações</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                <?php foreach ($results['students'] as $student): ?>
-
-                    <tr>
-                        <td><?= e($student['name']) ?></td>
-                        <td><?= e($student['registration']) ?></td>
-
-                        <td>
-                            <?php if ((int) $student['active'] === 1): ?>
-                                <span class="badge badge-success">Ativo</span>
-                            <?php else: ?>
-                                <span class="badge badge-danger">Inativo</span>
-                            <?php endif; ?>
-                        </td>
-
-                        <td>
-                            <a
-                                href="<?= base_url('alunos/editar?id=' . $student['id']) ?>"
-                                class="table-link"
-                            >
-                                Ver
-                            </a>
-                        </td>
-                    </tr>
-
+<?php
+$groups = [
+    'students' => ['Alunos','user-round'],
+    'classes' => ['Turmas','users-round'],
+    'occurrences' => ['Ocorrências','clipboard-alert'],
+    'monitoring' => ['Acompanhamentos','heart-handshake'],
+    'notices' => ['Avisos','megaphone'],
+    'users' => ['Usuários','user-cog'],
+];
+$total = array_sum(array_map('count', array_intersect_key((array)$results, $groups)));
+?>
+<div class="search-results-page mt-24">
+    <div class="card"><div class="card-header"><div><h3>Resultados encontrados</h3><p><?= $total ?> resultado(s) agrupado(s) por área do sistema.</p></div></div></div>
+    <?php foreach ($groups as $key => [$label,$icon]): ?>
+        <?php $items=(array)($results[$key]??[]); if ($items===[]) continue; ?>
+        <section class="card mt-24 search-result-group">
+            <div class="card-header"><h3><i data-lucide="<?= e($icon) ?>"></i><?= e($label) ?></h3><span class="badge"><?= count($items) ?></span></div>
+            <div class="search-result-list">
+                <?php foreach ($items as $item): ?>
+                    <div class="search-result-item-wrap">
+                        <a href="<?= base_url(ltrim((string)$item['url'],'/')) ?>" class="search-result-item">
+                            <i data-lucide="<?= e($icon) ?>"></i><span><strong><?= e((string)$item['title']) ?></strong><small><?= e((string)($item['subtitle']??'')) ?></small></span><i data-lucide="arrow-right"></i>
+                        </a>
+                        <?php if (in_array((string)($item['type']??''), ['student','class','monitoring'], true)): ?>
+                            <?php $isFavorite = !empty($item['is_favorite']); ?>
+                            <button type="button" class="favorite-toggle <?= $isFavorite ? 'is-active' : '' ?>" data-favorite-toggle data-favorite-type="<?= e((string)$item['type']) ?>" data-favorite-id="<?= (int)$item['id'] ?>" data-favorite-endpoint="<?= base_url('favoritos/alternar') ?>" data-favorite-label="Favoritar" aria-pressed="<?= $isFavorite ? 'true' : 'false' ?>" title="<?= $isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos' ?>"><i data-lucide="star"></i><span><?= $isFavorite ? 'Favorito' : 'Favoritar' ?></span></button>
+                        <?php endif; ?>
+                    </div>
                 <?php endforeach; ?>
-
-            </tbody>
-
-        </table>
-
-    <?php endif; ?>
-
-</div>
-
-<div class="card mt-24">
-
-    <div class="card-header">
-        <h3>Turmas encontradas</h3>
-    </div>
-
-    <?php if (empty($results['classes'])): ?>
-
-        <div class="activity-empty">
-            Nenhuma turma encontrada.
-        </div>
-
-    <?php else: ?>
-
-        <table class="data-table">
-
-            <thead>
-                <tr>
-                    <th>Turma</th>
-                    <th width="110">Ano</th>
-                    <th width="120">Turno</th>
-                    <th width="120">Status</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                <?php foreach ($results['classes'] as $class): ?>
-
-                    <tr>
-                        <td><?= e($class['name']) ?></td>
-                        <td><?= (int) $class['year'] ?></td>
-                        <td><?= e($class['shift']) ?></td>
-
-                        <td>
-                            <?php if ((int) $class['active'] === 1): ?>
-                                <span class="badge badge-success">Ativa</span>
-                            <?php else: ?>
-                                <span class="badge badge-danger">Inativa</span>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-
-                <?php endforeach; ?>
-
-            </tbody>
-
-        </table>
-
-    <?php endif; ?>
-
-</div>
-
-<div class="card mt-24">
-
-    <div class="card-header">
-        <h3>Datas encontradas</h3>
-    </div>
-
-    <?php if (empty($results['dates'])): ?>
-
-        <div class="activity-empty">
-            Nenhuma data encontrada.
-        </div>
-
-    <?php else: ?>
-
-        <table class="data-table">
-
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th width="180">Chamadas registradas</th>
-                    <th width="120">Ações</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                <?php foreach ($results['dates'] as $date): ?>
-
-                    <tr>
-                        <td>
-                            <?= date('d/m/Y', strtotime($date['attendance_date'])) ?>
-                        </td>
-
-                        <td>
-                            <?= (int) $date['total_attendances'] ?>
-                        </td>
-
-                        <td>
-                            <a
-                                href="<?= base_url('relatorios/diario?data=' . $date['attendance_date']) ?>"
-                                class="table-link"
-                            >
-                                Relatório
-                            </a>
-                        </td>
-                    </tr>
-
-                <?php endforeach; ?>
-
-            </tbody>
-
-        </table>
-
-    <?php endif; ?>
-
+            </div>
+        </section>
+    <?php endforeach; ?>
+    <?php if ($total===0): ?><div class="card mt-24 activity-empty">Nenhum resultado encontrado para esta pesquisa.</div><?php endif; ?>
 </div>

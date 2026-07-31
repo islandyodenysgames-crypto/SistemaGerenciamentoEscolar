@@ -5,14 +5,16 @@ $doneClasses = (int) ($doneClasses ?? 0);
 $pendingClasses = (int) ($pendingClasses ?? 0);
 $totalClasses = (int) ($totalClasses ?? 0);
 $studentsInAlert = (int) ($studentsInAlert ?? 0);
+$frequencyGoal = (float)($frequencyGoal ?? 95);
+$attentionThreshold = max(0, $frequencyGoal - 5);
 
 $statusLabel = 'Operação normal';
 $statusClass = 'success';
 
-if ($generalPercentage < 90) {
+if ($generalPercentage < $attentionThreshold) {
     $statusLabel = 'Situação crítica';
     $statusClass = 'danger';
-} elseif ($generalPercentage < 95) {
+} elseif ($generalPercentage < $frequencyGoal) {
     $statusLabel = 'Atenção necessária';
     $statusClass = 'warning';
 }
@@ -55,7 +57,7 @@ if ($generalPercentage < 90) {
             ]); ?>
 
             <div class="executive-frequency-caption">
-                Meta diária: igual ou superior a 95%
+                Meta diária: igual ou superior a <?= number_format($frequencyGoal, 1, ',', '.') ?>%
             </div>
 
         </div>
@@ -94,7 +96,7 @@ if ($generalPercentage < 90) {
                 <div>
                     <span>Alunos em alerta</span>
                     <strong><?= $studentsInAlert ?></strong>
-                    <small>abaixo de 85%</small>
+                    <small>abaixo de <?= number_format($frequencyGoal, 1, ',', '.') ?>%</small>
                 </div>
             </a>
 

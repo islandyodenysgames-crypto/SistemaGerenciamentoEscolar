@@ -1,0 +1,354 @@
+.intelligence-page{display:flex;flex-direction:column;gap:1.5rem}.panel-hover{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}.panel-hover:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--primary) 30%,var(--border))}.intelligence-hero,.intelligence-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm)}.intelligence-hero{display:flex;align-items:center;justify-content:space-between;gap:2rem;padding:1.5rem 1.75rem;background:linear-gradient(135deg,color-mix(in srgb,var(--primary) 10%,var(--surface)),var(--surface))}.intelligence-eyebrow{display:inline-flex;align-items:center;gap:.45rem;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--primary)}.intelligence-hero h2{margin:.45rem 0 .3rem;font-size:1.45rem}.intelligence-hero p,.intelligence-panel__header p{margin:0;color:var(--text-muted)}.intelligence-period{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:.15rem .7rem;min-width:220px;padding:.85rem 1rem;border-radius:var(--radius-lg);background:var(--surface);border:1px solid var(--border)}.intelligence-period i{grid-row:1/3;color:var(--primary)}.intelligence-period span{font-size:.75rem;color:var(--text-muted)}.intelligence-summary-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1rem}.intelligence-stat{display:flex;align-items:center;gap:.9rem;padding:1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm)}.intelligence-stat__icon{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary)}.intelligence-stat strong{display:block;font-size:1.55rem;line-height:1}.intelligence-stat span{display:block;margin-top:.3rem;font-size:.78rem;color:var(--text-muted)}.intelligence-stat--danger .intelligence-stat__icon{color:var(--danger);background:color-mix(in srgb,var(--danger) 12%,transparent)}.intelligence-stat--warning .intelligence-stat__icon{color:var(--warning);background:color-mix(in srgb,var(--warning) 13%,transparent)}.intelligence-grid{display:grid;gap:1.5rem}.intelligence-grid--two{grid-template-columns:repeat(2,minmax(0,1fr))}.intelligence-panel{padding:1.35rem}.intelligence-panel__header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.15rem}.intelligence-panel__header>div{display:flex;align-items:center;gap:.8rem}.intelligence-panel__header h3{margin:0 0 .18rem;font-size:1rem}.intelligence-panel__header p{font-size:.78rem}.intelligence-panel__icon{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary)}.intelligence-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}.intelligence-metrics>div{padding:.9rem;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--background)}.intelligence-metrics span{display:block;font-size:.72rem;color:var(--text-muted);margin-bottom:.35rem}.intelligence-metrics strong{font-size:1.2rem}.trend--worsening strong{color:var(--danger)}.trend--improving strong{color:var(--success)}.intelligence-note{display:flex;align-items:flex-start;gap:.45rem;margin:1rem 0 0;font-size:.76rem;color:var(--text-muted)}.intelligence-student-list,.recommendation-list,.intelligence-class-list{display:flex;flex-direction:column;gap:.75rem}.intelligence-student{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:1rem;padding:.9rem;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--background);transition:transform .2s ease,border-color .2s ease}.intelligence-student:hover{transform:translateX(3px);border-color:color-mix(in srgb,var(--primary) 35%,var(--border))}.risk-score{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;font-weight:800;background:var(--surface);border:3px solid var(--border)}.risk-score--critical{border-color:var(--danger);color:var(--danger)}.risk-score--high{border-color:var(--warning);color:var(--warning)}.risk-score--moderate{border-color:var(--secondary);color:var(--secondary)}.intelligence-student__title{display:flex;justify-content:space-between;gap:1rem}.intelligence-student__title strong,.intelligence-student__title span{display:block}.intelligence-student__title>div>span{font-size:.75rem;color:var(--text-muted);margin-top:.16rem}.risk-badge{display:inline-flex;align-items:center;padding:.25rem .55rem;border-radius:999px;font-size:.68rem;font-weight:700;background:var(--background);border:1px solid var(--border)}.risk-badge--critical{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 35%,var(--border))}.risk-badge--high{color:var(--warning)}.risk-badge--moderate{color:var(--secondary)}.risk-badge--low{color:var(--success)}.intelligence-reasons{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.55rem}.intelligence-reasons span{padding:.22rem .45rem;border-radius:6px;background:var(--surface);font-size:.68rem;color:var(--text-muted)}.intelligence-link{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;color:var(--primary);background:color-mix(in srgb,var(--primary) 10%,transparent)}.intelligence-class-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem;border-bottom:1px solid var(--border)}.intelligence-class-row:last-child{border-bottom:0}.intelligence-class-row strong,.intelligence-class-row span{display:block}.intelligence-class-row div span{margin-top:.2rem;font-size:.73rem;color:var(--text-muted)}.recommendation{display:flex;align-items:flex-start;gap:.75rem;padding:.85rem;border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:var(--radius-lg);background:var(--background)}.recommendation--critical{border-left-color:var(--danger)}.recommendation--high{border-left-color:var(--warning)}.recommendation strong{font-size:.84rem}.recommendation p{margin:.24rem 0 0;font-size:.75rem;line-height:1.45;color:var(--text-muted)}.intelligence-empty{padding:1.5rem;text-align:center;color:var(--text-muted)}@media(max-width:1100px){.intelligence-summary-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:800px){.intelligence-grid--two,.intelligence-metrics{grid-template-columns:1fr}.intelligence-summary-grid{grid-template-columns:repeat(2,1fr)}.intelligence-hero{align-items:flex-start;flex-direction:column}.intelligence-period{width:100%}}@media(max-width:520px){.intelligence-summary-grid{grid-template-columns:1fr}.intelligence-student__title{flex-direction:column}.intelligence-student{grid-template-columns:auto 1fr}.intelligence-link{display:none}}@media(prefers-reduced-motion:reduce){.panel-hover,.intelligence-student{transition:none}.panel-hover:hover,.intelligence-student:hover{transform:none}}
+
+/* Sprint 2.1.3 — painel de Inteligência de frequência */
+.intelligence-panel--attendance{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(8,145,178,.055),var(--surface) 46%)}
+.intelligence-panel--attendance:before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:linear-gradient(90deg,#dc2626,#2563eb,#059669)}
+.intelligence-panel--attendance .intelligence-panel__icon{background:rgba(8,145,178,.12);color:#0891b2}
+.intelligence-metrics--attendance{gap:.9rem}
+.intelligence-metric{position:relative;display:flex;align-items:center;gap:.75rem;min-height:92px;padding:1rem!important;overflow:hidden;background:var(--surface)!important;border-width:1px!important;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.intelligence-metric:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--metric-accent)}
+.intelligence-metric:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(15,23,42,.09);border-color:color-mix(in srgb,var(--metric-accent) 35%,var(--border))}
+.intelligence-metric__icon{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;flex:none;background:var(--metric-soft);color:var(--metric-accent)}
+.intelligence-metric__icon svg{width:20px;height:20px}
+.intelligence-metric>div>span{margin:0 0 .35rem}
+.intelligence-metric>div>strong{font-size:1.35rem;color:var(--metric-accent)}
+.intelligence-metric--absence{--metric-accent:#dc2626;--metric-soft:rgba(220,38,38,.10)}
+.intelligence-metric--students{--metric-accent:#2563eb;--metric-soft:rgba(37,99,235,.10)}
+.intelligence-metric--trend{--metric-accent:#64748b;--metric-soft:rgba(100,116,139,.11)}
+.intelligence-metric--trend.trend--worsening{--metric-accent:#dc2626;--metric-soft:rgba(220,38,38,.10)}
+.intelligence-metric--trend.trend--improving{--metric-accent:#059669;--metric-soft:rgba(5,150,105,.10)}
+.intelligence-metric--trend.trend--stable{--metric-accent:#d97706;--metric-soft:rgba(217,119,6,.11)}
+@media(max-width:800px){.intelligence-metric{min-height:82px}}
+
+/* Sprint 2.1.4 — padronização dos painéis de ocorrências e turmas */
+.intelligence-panel--attendance{background:var(--surface)}
+.intelligence-panel--attendance:before{display:none}
+.intelligence-panel__header{padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.intelligence-panel__header+.intelligence-metrics,
+.intelligence-panel__header+.intelligence-class-list,
+.intelligence-panel__header+.intelligence-student-list,
+.intelligence-panel__header+.recommendation-list{margin-top:.1rem}
+.intelligence-metrics--occurrences{gap:.9rem}
+.intelligence-metric--occurrence-total{--metric-accent:#2563eb;--metric-soft:rgba(37,99,235,.10)}
+.intelligence-metric--occurrence-serious{--metric-accent:#dc2626;--metric-soft:rgba(220,38,38,.10)}
+.intelligence-class-list{gap:.9rem}
+.intelligence-class-card{--class-accent:#2563eb;--class-soft:rgba(37,99,235,.10);position:relative;display:flex;align-items:center;gap:.85rem;min-height:92px;padding:1rem;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.intelligence-class-card:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--class-accent)}
+.intelligence-class-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(15,23,42,.09);border-color:color-mix(in srgb,var(--class-accent) 35%,var(--border))}
+.intelligence-class-card__icon{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;flex:none;background:var(--class-soft);color:var(--class-accent)}
+.intelligence-class-card__icon svg{width:21px;height:21px}
+.intelligence-class-card__content{min-width:0;flex:1}
+.intelligence-class-card__title{display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+.intelligence-class-card__title>strong{font-size:.9rem}
+.intelligence-class-card__metrics{display:flex;flex-wrap:wrap;gap:.55rem 1rem;margin-top:.55rem;color:var(--text-muted)}
+.intelligence-class-card__metrics>span{display:inline-flex;align-items:center;gap:.3rem;font-size:.73rem}
+.intelligence-class-card__metrics svg{width:14px;height:14px;color:var(--class-accent)}
+.intelligence-class-card__metrics strong{color:var(--text);font-size:.8rem}
+.intelligence-class-card--critical{--class-accent:#dc2626;--class-soft:rgba(220,38,38,.10)}
+.intelligence-class-card--high{--class-accent:#ea580c;--class-soft:rgba(234,88,12,.10)}
+.intelligence-class-card--moderate{--class-accent:#d97706;--class-soft:rgba(217,119,6,.11)}
+.intelligence-class-card--low{--class-accent:#059669;--class-soft:rgba(5,150,105,.10)}
+@media(max-width:520px){.intelligence-class-card__title{align-items:flex-start;flex-direction:column}.intelligence-class-card__metrics{flex-direction:column;gap:.4rem}}
+
+/* Sprint 2.2.2 — Central de Casos Inteligentes */
+.intelligence-stat--clickable{position:relative;color:inherit;text-decoration:none;cursor:pointer;min-width:0}
+.intelligence-stat--clickable:focus-visible{outline:3px solid color-mix(in srgb,var(--primary) 35%,transparent);outline-offset:3px}
+.intelligence-stat__content{min-width:0;flex:1}
+.intelligence-stat__content small{display:block;margin-top:.45rem;font-size:.66rem;color:var(--text-muted);line-height:1.25}
+.intelligence-stat__arrow{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;color:var(--text-muted);transition:transform .2s ease,color .2s ease,background .2s ease}
+.intelligence-stat--clickable:hover .intelligence-stat__arrow{transform:translate(2px,-2px);color:var(--primary);background:color-mix(in srgb,var(--primary) 10%,transparent)}
+.intelligence-stat--info .intelligence-stat__icon{color:#2563eb;background:rgba(37,99,235,.10)}
+.intelligence-stat--primary .intelligence-stat__icon{color:#7c3aed;background:rgba(124,58,237,.10)}
+.intelligence-cases-page{gap:1.25rem}
+.intelligence-cases-hero{background:var(--surface)}
+.intelligence-back-link{display:inline-flex;align-items:center;gap:.35rem;margin-bottom:.65rem;font-size:.75rem;font-weight:700;color:var(--text-muted);text-decoration:none}
+.intelligence-back-link:hover{color:var(--primary)}
+.intelligence-back-link svg{width:15px;height:15px}
+.intelligence-case-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.intelligence-case-summary__card{display:flex;align-items:center;gap:.8rem;padding:1rem 1.1rem;border:1px solid var(--border);border-radius:var(--radius-xl);background:var(--surface);box-shadow:var(--shadow-sm)}
+.intelligence-case-summary__card>span{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:color-mix(in srgb,var(--primary) 10%,transparent);color:var(--primary)}
+.intelligence-case-summary__card strong,.intelligence-case-summary__card small{display:block}
+.intelligence-case-summary__card strong{font-size:1.3rem}
+.intelligence-case-summary__card small{margin-top:.2rem;color:var(--text-muted);font-size:.72rem}
+.intelligence-case-filters{display:grid;grid-template-columns:minmax(230px,1.5fr) repeat(3,minmax(145px,.65fr)) auto auto;gap:.7rem;align-items:center;margin-bottom:1rem}
+.intelligence-case-filters select,.intelligence-case-search{height:42px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text)}
+.intelligence-case-filters select{padding:0 .75rem}
+.intelligence-case-search{display:flex;align-items:center;gap:.5rem;padding:0 .75rem}
+.intelligence-case-search svg{width:17px;height:17px;color:var(--text-muted)}
+.intelligence-case-search input{width:100%;border:0;outline:0;background:transparent;color:inherit}
+.intelligence-case-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-lg)}
+.intelligence-case-table{width:100%;border-collapse:collapse;min-width:760px}
+.intelligence-case-table th{padding:.8rem .9rem;text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);background:var(--background);border-bottom:1px solid var(--border)}
+.intelligence-case-table td{padding:.85rem .9rem;border-bottom:1px solid var(--border);font-size:.8rem;vertical-align:middle}
+.intelligence-case-table tbody tr:last-child td{border-bottom:0}
+.intelligence-case-table tbody tr:hover{background:color-mix(in srgb,var(--primary) 3%,var(--surface))}
+.intelligence-case-table td strong,.intelligence-case-table td small{display:block}
+.intelligence-case-table td small{margin-top:.22rem;color:var(--text-muted);font-size:.68rem}
+.intelligence-case-action{display:inline-flex;align-items:center;gap:.35rem;padding:.42rem .58rem;border-radius:8px;background:color-mix(in srgb,var(--primary) 9%,transparent);color:var(--primary);font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap}
+.intelligence-case-action svg{width:15px;height:15px}
+.intelligence-pagination{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:.4rem;margin-top:1rem}
+.intelligence-pagination a{display:grid;place-items:center;min-width:34px;height:34px;padding:0 .45rem;border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:.75rem}
+.intelligence-pagination a:hover,.intelligence-pagination a.is-active{border-color:var(--primary);background:var(--primary);color:#fff}
+@media(max-width:1200px){.intelligence-case-filters{grid-template-columns:repeat(3,1fr)}.intelligence-case-search{grid-column:span 3}}
+@media(max-width:900px){.intelligence-case-summary{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.intelligence-case-summary,.intelligence-case-filters{grid-template-columns:1fr}.intelligence-case-search{grid-column:auto}.intelligence-case-filters .btn{width:100%}}
+
+.intelligence-hero__actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}@media(max-width:760px){.intelligence-hero__actions{justify-content:flex-start}}
+
+/* Sprint 2.5.1 — Insights Automáticos */
+.intelligence-insights{--insight-accent:#7c3aed}
+.intelligence-insights .intelligence-panel__icon{background:rgba(124,58,237,.11);color:#7c3aed}
+.intelligence-insights__header{align-items:center}
+.intelligence-insights__count{display:inline-flex;align-items:center;justify-content:center;padding:.42rem .7rem;border-radius:999px;background:rgba(124,58,237,.09);color:#6d28d9;font-size:.7rem;font-weight:800;white-space:nowrap}
+.intelligence-insights__list{display:grid;gap:.8rem;margin-top:1rem}
+.intelligence-insight{--item-accent:#2563eb;--item-soft:rgba(37,99,235,.09);position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:.85rem;padding:1rem;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);overflow:hidden;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.intelligence-insight:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--item-accent)}
+.intelligence-insight:hover{transform:translateY(-1px);box-shadow:0 9px 22px rgba(15,23,42,.08);border-color:color-mix(in srgb,var(--item-accent) 30%,var(--border))}
+.intelligence-insight--critical{--item-accent:#dc2626;--item-soft:rgba(220,38,38,.09)}
+.intelligence-insight--attention{--item-accent:#d97706;--item-soft:rgba(217,119,6,.10)}
+.intelligence-insight--positive{--item-accent:#059669;--item-soft:rgba(5,150,105,.09)}
+.intelligence-insight--information{--item-accent:#2563eb;--item-soft:rgba(37,99,235,.09)}
+.intelligence-insight__icon{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--item-soft);color:var(--item-accent);flex:none}
+.intelligence-insight__icon svg{width:21px;height:21px}
+.intelligence-insight__content{min-width:0}
+.intelligence-insight__heading{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem}
+.intelligence-insight__heading strong{min-width:0;font-size:.9rem;line-height:1.35;color:var(--text);overflow-wrap:anywhere}
+.intelligence-insight__heading>span{flex:none;padding:.25rem .5rem;border-radius:999px;background:var(--item-soft);color:var(--item-accent);font-size:.63rem;font-weight:800}
+.intelligence-insight__content>p{margin:.35rem 0 0;color:var(--text-muted);font-size:.76rem;line-height:1.55;overflow-wrap:anywhere}
+.intelligence-insight__recommendation{display:flex;align-items:flex-start;gap:.4rem;margin-top:.65rem;padding:.6rem .7rem;border-radius:10px;background:color-mix(in srgb,var(--item-soft) 70%,transparent);color:var(--text-muted);font-size:.71rem;line-height:1.45}
+.intelligence-insight__recommendation svg{width:15px;height:15px;flex:none;margin-top:.08rem;color:var(--item-accent)}
+.intelligence-insight__recommendation strong{color:var(--text)}
+.intelligence-insight__action{display:inline-flex;align-items:center;gap:.35rem;align-self:center;padding:.48rem .65rem;border-radius:9px;background:var(--item-soft);color:var(--item-accent);font-size:.7rem;font-weight:800;text-decoration:none;white-space:nowrap}
+.intelligence-insight__action svg{width:15px;height:15px}
+.intelligence-insight__action:hover{background:var(--item-accent);color:#fff}
+@media(max-width:760px){.intelligence-insights__header{align-items:flex-start}.intelligence-insights__count{margin-top:.25rem}.intelligence-insight{grid-template-columns:auto minmax(0,1fr)}.intelligence-insight__action{grid-column:2;justify-self:start}.intelligence-insight__heading{flex-direction:column;gap:.4rem}}
+@media(max-width:480px){.intelligence-insight{grid-template-columns:1fr}.intelligence-insight__icon{width:38px;height:38px}.intelligence-insight__action{grid-column:1}.intelligence-insight__heading>span{align-self:flex-start}}
+
+/* Sprint 2.5.1.1 — explicações e navegação dos indicadores */
+.intelligence-insights--dashboard{margin-bottom:1.5rem}
+.intelligence-insights--dashboard .intelligence-insights__list{grid-template-columns:repeat(2,minmax(0,1fr))}
+.intelligence-insights--dashboard .intelligence-insight{min-width:0}
+.intelligence-metric--clickable{color:inherit;text-decoration:none;cursor:pointer;padding-right:2.65rem!important}
+.intelligence-metric--clickable:focus-visible{outline:3px solid color-mix(in srgb,var(--metric-accent) 30%,transparent);outline-offset:3px}
+.intelligence-metric__arrow{position:absolute;right:.85rem;top:.85rem;width:16px;height:16px;color:var(--text-muted);transition:transform .2s ease,color .2s ease}
+.intelligence-metric--clickable:hover .intelligence-metric__arrow{transform:translate(2px,-2px);color:var(--metric-accent)}
+[data-tooltip]{position:relative}
+[data-tooltip]::before{content:attr(data-tooltip);position:absolute;left:50%;bottom:calc(100% + 10px);z-index:80;width:max-content;max-width:min(320px,calc(100vw - 32px));padding:.65rem .75rem;border-radius:9px;background:#172033;color:#fff;font-size:.72rem;font-weight:500;line-height:1.45;text-align:left;box-shadow:0 10px 28px rgba(15,23,42,.22);opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,5px);transition:opacity .16s ease,transform .16s ease,visibility .16s ease;white-space:normal}
+[data-tooltip]::after{content:"";position:absolute;left:50%;bottom:calc(100% + 4px);z-index:81;border:6px solid transparent;border-top-color:#172033;opacity:0;visibility:hidden;pointer-events:none;transform:translateX(-50%);transition:opacity .16s ease,visibility .16s ease}
+[data-tooltip]:hover::before,[data-tooltip]:focus-visible::before,[data-tooltip]:hover::after,[data-tooltip]:focus-visible::after{opacity:1;visibility:visible;transform:translate(-50%,0)}
+[data-tooltip]:hover::after,[data-tooltip]:focus-visible::after{transform:translateX(-50%)}
+.intelligence-metric[data-tooltip]::after{border:6px solid transparent;border-top-color:#172033;height:auto;right:auto;top:auto;background:transparent}
+@media(max-width:900px){.intelligence-insights--dashboard .intelligence-insights__list{grid-template-columns:1fr}}
+@media(max-width:640px){[data-tooltip]::before,[data-tooltip]::after{display:none}.intelligence-insights--dashboard{margin-bottom:1rem}}
+.intelligence-page>.intelligence-timeline{margin:18px 0 22px;padding:22px;border:1px solid var(--border-color,#e2e8f0);border-radius:18px;background:var(--surface,#fff);box-shadow:0 10px 24px rgba(15,23,42,.04)}.intelligence-timeline__header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.intelligence-timeline__header>div{min-width:0}.intelligence-timeline__header span:first-child{display:inline-flex;align-items:center;gap:7px;color:#4f46e5;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em}.intelligence-timeline__header h4{margin:5px 0}.intelligence-timeline__header p{margin:0;color:#64748b}.intelligence-timeline__count{white-space:nowrap;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:.75rem;font-weight:800}.intelligence-timeline__list{display:grid;margin-top:18px}.intelligence-timeline__item{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:12px;align-items:flex-start;padding:0 0 18px}.intelligence-timeline__item:last-child{padding-bottom:0}.intelligence-timeline__rail{position:relative;display:flex;justify-content:center;height:100%}.intelligence-timeline__rail:after{content:"";position:absolute;top:34px;bottom:-2px;width:2px;background:#e2e8f0}.intelligence-timeline__item:last-child .intelligence-timeline__rail:after{display:none}.intelligence-timeline__rail span{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#e2e8f0;color:#475569;z-index:1}.intelligence-timeline__rail svg{width:16px}.intelligence-timeline__content{min-width:0}.intelligence-timeline__content small,.intelligence-timeline__content strong{display:block}.intelligence-timeline__content small{color:#64748b;font-size:.72rem;font-weight:700}.intelligence-timeline__content strong{margin-top:2px;overflow-wrap:anywhere}.intelligence-timeline__content p{margin:4px 0 0;color:#64748b;font-size:.8rem;line-height:1.45;overflow-wrap:anywhere}.intelligence-timeline__item>a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-size:.78rem;font-weight:800;color:#4f46e5}.intelligence-timeline__item>a svg{width:14px}.intelligence-timeline__item--critical .intelligence-timeline__rail span{background:#fee2e2;color:#b91c1c}.intelligence-timeline__item--attention .intelligence-timeline__rail span{background:#fef3c7;color:#b45309}.intelligence-timeline__item--positive .intelligence-timeline__rail span{background:#dcfce7;color:#15803d}.intelligence-timeline__item--information .intelligence-timeline__rail span{background:#dbeafe;color:#1d4ed8}@media(max-width:650px){.intelligence-timeline__header{flex-direction:column}.intelligence-timeline__item{grid-template-columns:34px minmax(0,1fr)}.intelligence-timeline__item>a{grid-column:2}}
+
+/* Sprint 2.6.1 — Insights Prioritários 2.0 */
+.intelligence-insights__filters{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1rem;padding-top:.9rem;border-top:1px solid var(--border)}
+.intelligence-insights__filters button{appearance:none;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--text-muted);padding:.42rem .72rem;font:inherit;font-size:.69rem;font-weight:800;cursor:pointer;transition:.18s ease}
+.intelligence-insights__filters button:hover,.intelligence-insights__filters button.is-active{border-color:#7c3aed;background:rgba(124,58,237,.1);color:#6d28d9}
+.intelligence-insight__badges{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.35rem;flex:none}
+.intelligence-insight__badges>span{padding:.25rem .5rem;border-radius:999px;background:var(--item-soft);color:var(--item-accent);font-size:.63rem;font-weight:800}
+.intelligence-insight__badges .intelligence-insight__category{background:var(--surface-muted,#f1f5f9);color:var(--text-muted)}
+.intelligence-insight__meta{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.68rem}
+.intelligence-insight__meta>div{display:grid;grid-template-columns:auto auto;align-items:center;column-gap:.45rem;row-gap:.15rem;min-width:135px;padding:.5rem .65rem;border:1px solid var(--border);border-radius:10px;background:color-mix(in srgb,var(--surface) 86%,var(--item-soft))}
+.intelligence-insight__meta small{color:var(--text-muted);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.intelligence-insight__meta strong{font-size:.72rem;color:var(--text)}
+.intelligence-insight__stars{grid-column:1/-1;display:flex;gap:.12rem;color:#cbd5e1}
+.intelligence-insight__stars svg{width:12px;height:12px}
+.intelligence-insight__stars .is-filled{color:var(--item-accent);fill:currentColor}
+.intelligence-insight__explanation{margin-top:.65rem;border-top:1px dashed var(--border);padding-top:.6rem;color:var(--text-muted);font-size:.69rem}
+.intelligence-insight__explanation summary{display:inline-flex;align-items:center;gap:.35rem;color:var(--item-accent);font-weight:800;cursor:pointer;list-style:none}
+.intelligence-insight__explanation summary::-webkit-details-marker{display:none}
+.intelligence-insight__explanation summary svg{width:14px;height:14px}
+.intelligence-insight__explanation ul{margin:.55rem 0 0;padding-left:1.1rem;line-height:1.55}
+.intelligence-insight__actions{display:flex;flex-direction:column;align-self:center;gap:.4rem;min-width:max-content}
+.intelligence-insight__action{justify-content:flex-start}
+.intelligence-insights__empty{margin:1rem 0 0;padding:1rem;border:1px dashed var(--border);border-radius:var(--radius-lg);text-align:center;color:var(--text-muted);font-size:.78rem}
+.intelligence-insight[hidden]{display:none!important}
+@media(max-width:760px){.intelligence-insight__badges{justify-content:flex-start}.intelligence-insight__actions{grid-column:2;flex-direction:row;flex-wrap:wrap;justify-self:start}.intelligence-insight__meta>div{min-width:120px}}
+@media(max-width:480px){.intelligence-insight__actions{grid-column:1}.intelligence-insight__filters{gap:.35rem}.intelligence-insights__filters button{padding:.38rem .58rem}.intelligence-insight__meta{display:grid;grid-template-columns:1fr 1fr}.intelligence-insight__meta>div{min-width:0}}
+
+/* Sprint 2.6.2 — Gestão de Ações Inteligentes */
+.intelligence-insight__tracking{margin-top:.7rem;padding-top:.65rem;border-top:1px solid var(--border)}
+.intelligence-insight__tracking-summary{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;color:var(--text-muted);font-size:.68rem}
+.intelligence-insight__tracking-summary>span{display:inline-flex;align-items:center;gap:.3rem}
+.intelligence-insight__tracking-summary svg{width:14px;height:14px}
+.tracking-status{padding:.28rem .48rem;border-radius:999px;background:var(--surface-muted,#f1f5f9);font-weight:800;color:var(--text-muted)}
+.tracking-status--in_progress{background:rgba(37,99,235,.1);color:#2563eb}
+.tracking-status--resolved{background:rgba(5,150,105,.1);color:#047857}
+.tracking-status--archived{background:rgba(100,116,139,.12);color:#475569}
+.intelligence-insight__tracking-form,.intelligence-insight__history{margin-top:.55rem;font-size:.7rem}
+.intelligence-insight__tracking-form>summary,.intelligence-insight__history>summary{display:inline-flex;align-items:center;gap:.35rem;color:var(--item-accent);font-weight:800;cursor:pointer;list-style:none}
+.intelligence-insight__tracking-form>summary::-webkit-details-marker,.intelligence-insight__history>summary::-webkit-details-marker{display:none}
+.intelligence-insight__tracking-form summary svg,.intelligence-insight__history summary svg{width:14px;height:14px}
+.intelligence-insight__tracking-form form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.55rem;margin-top:.65rem;padding:.75rem;border:1px solid var(--border);border-radius:12px;background:var(--surface-muted,#f8fafc)}
+.intelligence-insight__tracking-form label{display:grid;gap:.3rem;color:var(--text-muted);font-weight:700;min-width:0}
+.intelligence-insight__tracking-form input,.intelligence-insight__tracking-form select,.intelligence-insight__tracking-form textarea{width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);padding:.48rem .55rem;font:inherit}
+.intelligence-insight__tracking-form .tracking-notes{grid-column:1/-1}
+.intelligence-insight__tracking-form button{grid-column:1/-1;justify-self:start;display:inline-flex;align-items:center;gap:.35rem;border:0;border-radius:9px;background:var(--item-accent);color:#fff;padding:.52rem .7rem;font:inherit;font-weight:800;cursor:pointer}
+.intelligence-insight__tracking-form button svg{width:14px;height:14px}
+.intelligence-insight__history ol{display:grid;gap:.45rem;margin:.6rem 0 0;padding:0;list-style:none}
+.intelligence-insight__history li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.2rem .55rem;padding:.5rem .6rem;border-left:3px solid var(--item-accent);background:var(--surface-muted,#f8fafc);border-radius:0 8px 8px 0}
+.intelligence-insight__history time{font-weight:800;color:var(--text)}
+.intelligence-insight__history span{overflow-wrap:anywhere}
+.intelligence-insight__history small{grid-column:2;color:var(--text-muted)}
+@media(max-width:700px){.intelligence-insight__tracking-form form{grid-template-columns:1fr}.intelligence-insight__tracking-form .tracking-notes,.intelligence-insight__tracking-form button{grid-column:1}}
+
+/* Sprint 2.6.2.4 — novo período de acompanhamento */
+.student-monitoring-restart-form,
+.student-monitoring-add-participants__period {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--border-color, #dfe5e2);
+    border-radius: 14px;
+    background: var(--surface-soft, #f8faf9);
+}
+.student-monitoring-add-participants__period { margin-bottom: 1rem; }
+
+
+/* Sprint 2.7.2 - Evoluções do acompanhamento */
+.student-monitoring-evolutions{margin-top:1.4rem;padding-top:1.25rem;border-top:1px solid var(--border-color)}
+.student-monitoring-evolutions__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.student-monitoring-action-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;padding:1rem;margin-bottom:1.25rem;border:1px solid var(--border-color);border-radius:14px;background:var(--surface-soft,#f8fafc)}
+.student-monitoring-action-form[hidden]{display:none!important}.student-monitoring-action-form--edit{margin-top:1rem;margin-bottom:0}
+.student-monitoring-actions-empty{display:flex;align-items:center;justify-content:center;gap:.65rem;padding:1.4rem;border:1px dashed var(--border-color);border-radius:14px;color:var(--text-muted)}
+.student-monitoring-actions-empty p{margin:0}.student-monitoring-timeline{position:relative;margin-left:.75rem}.student-monitoring-timeline:before{content:"";position:absolute;left:15px;top:12px;bottom:12px;width:2px;background:var(--border-color)}
+.student-monitoring-timeline__item{position:relative;display:grid;grid-template-columns:32px minmax(0,1fr);gap:1rem;padding-bottom:1.25rem}.student-monitoring-timeline__marker{position:relative;z-index:1;width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:var(--primary);color:#fff}.student-monitoring-timeline__marker svg{width:16px;height:16px}
+.student-monitoring-timeline__content{padding:1rem;border:1px solid var(--border-color);border-radius:14px;background:var(--surface,#fff)}.student-monitoring-timeline__content header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.75rem}.student-monitoring-timeline__content time{font-size:.78rem;font-weight:800;color:var(--primary)}.student-monitoring-timeline__content h4{margin:.15rem 0;font-size:1rem}.student-monitoring-timeline__content small{color:var(--text-muted)}.student-monitoring-timeline__content>p{margin:.75rem 0;line-height:1.55}
+.student-monitoring-timeline__controls{display:flex;gap:.35rem}.student-monitoring-timeline__controls[hidden]{display:none!important}.student-monitoring-timeline__controls form{margin:0}.student-monitoring-timeline__controls button{display:grid;place-items:center;width:32px;height:32px;border:1px solid var(--border-color);border-radius:9px;background:transparent;cursor:pointer}.student-monitoring-timeline__controls svg{width:15px;height:15px}
+.student-monitoring-action-detail{display:grid;gap:.2rem;margin-top:.65rem;padding:.65rem .8rem;border-radius:10px;background:var(--surface-soft,#f8fafc)}.student-monitoring-action-detail span{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}.student-monitoring-action-detail strong{font-size:.9rem}
+@media(max-width:720px){.student-monitoring-action-form{grid-template-columns:1fr}.student-monitoring-evolutions__header{align-items:flex-start;flex-direction:column}.student-monitoring-timeline{margin-left:0}}
+
+/* Sprint 2.7.5.6 — Central enxuta e orientada à ação */
+.intelligence-page--action-oriented{display:grid;gap:1rem}
+.intelligence-hero--compact{padding:1.15rem 1.25rem;align-items:center}
+.intelligence-hero--compact h2{margin:.3rem 0 .25rem;font-size:1.25rem}
+.intelligence-hero--compact p{margin:0;max-width:660px}
+.intelligence-period--inline{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .65rem;border:1px solid var(--border);border-radius:10px;background:var(--surface);font-size:.72rem;font-weight:700;color:var(--text-muted)}
+.intelligence-period--inline svg{width:15px;height:15px}
+.intelligence-summary-grid--compact{grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem}
+.intelligence-summary-card{display:grid;grid-template-columns:42px minmax(0,1fr);gap:.75rem;align-items:center;padding:.9rem 1rem;border:1px solid var(--border);border-radius:14px;background:var(--surface);color:inherit;text-decoration:none;transition:.18s ease}
+.intelligence-summary-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.intelligence-summary-card>span{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--card-soft,#f1f5f9);color:var(--card-accent,#475569)}
+.intelligence-summary-card>span svg{width:20px;height:20px}
+.intelligence-summary-card small{display:block;color:var(--text-muted);font-size:.68rem;font-weight:800}
+.intelligence-summary-card strong{display:inline-block;margin-top:.12rem;font-size:1.45rem;line-height:1}
+.intelligence-summary-card p{margin:.2rem 0 0;color:var(--text-muted);font-size:.67rem}
+.intelligence-summary-card--warning{--card-soft:rgba(217,119,6,.1);--card-accent:#b45309}.intelligence-summary-card--danger{--card-soft:rgba(220,38,38,.1);--card-accent:#b91c1c}.intelligence-summary-card--info{--card-soft:rgba(37,99,235,.1);--card-accent:#1d4ed8}.intelligence-summary-card--primary{--card-soft:rgba(124,58,237,.1);--card-accent:#6d28d9}
+.intelligence-insights--action-oriented .intelligence-insight{padding:.85rem 1rem}
+.intelligence-insights--action-oriented .intelligence-insight__content>p{margin:.3rem 0 0}
+.intelligence-insights--action-oriented .intelligence-insight__recommendation{margin-top:.55rem}
+.intelligence-insights--action-oriented .intelligence-insight__badges .intelligence-insight__category{display:none}
+.intelligence-monitoring-panel{padding:1rem 1.1rem}
+.intelligence-section-link{display:inline-flex;align-items:center;gap:.35rem;color:var(--primary);font-size:.7rem;font-weight:800;text-decoration:none;white-space:nowrap}
+.intelligence-section-link svg{width:14px;height:14px}
+.intelligence-coverage{display:grid;gap:.7rem;padding:1rem;border-radius:14px;background:var(--surface-muted,#f8fafc);border:1px solid var(--border)}
+.intelligence-coverage__main{display:flex;align-items:center;gap:1rem}
+.intelligence-coverage__value{font-size:2rem;font-weight:900;color:var(--primary)}
+.intelligence-coverage__main strong{font-size:.9rem}.intelligence-coverage__main p{margin:.2rem 0 0;color:var(--text-muted);font-size:.72rem}
+.intelligence-coverage__bar{height:8px;border-radius:999px;background:var(--border);overflow:hidden}.intelligence-coverage__bar span{display:block;height:100%;border-radius:inherit;background:var(--primary)}
+.intelligence-operational-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem;margin-top:.75rem}
+.intelligence-operational-grid a{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:.55rem;align-items:center;padding:.75rem;border:1px solid var(--border);border-radius:12px;color:inherit;text-decoration:none;background:var(--surface)}
+.intelligence-operational-grid a>svg{width:18px;height:18px;color:var(--primary)}
+.intelligence-operational-grid span{font-size:.7rem;color:var(--text-muted);font-weight:700}.intelligence-operational-grid strong{font-size:1.15rem}
+.intelligence-indicator-grid{gap:.75rem}
+.intelligence-indicator-card{display:grid;grid-template-columns:44px minmax(0,1fr) 18px;gap:.8rem;align-items:center;padding:1rem 1.1rem;border:1px solid var(--border);border-radius:14px;background:var(--surface);color:inherit;text-decoration:none}
+.intelligence-indicator-card__icon{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--indicator-soft);color:var(--indicator-accent)}
+.intelligence-indicator-card__icon svg{width:21px;height:21px}.intelligence-indicator-card>svg{width:17px;height:17px;color:var(--text-muted)}
+.intelligence-indicator-card__body small{display:block;color:var(--text-muted);font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}.intelligence-indicator-card__body strong{display:block;margin-top:.15rem;font-size:.95rem}.intelligence-indicator-card__body p{margin:.25rem 0;color:var(--text-muted);font-size:.72rem}.intelligence-indicator-card__body .trend{font-size:.68rem;font-weight:800}
+.intelligence-indicator-card--attendance{--indicator-soft:rgba(37,99,235,.1);--indicator-accent:#1d4ed8}.intelligence-indicator-card--occurrences{--indicator-soft:rgba(220,38,38,.1);--indicator-accent:#b91c1c}
+.intelligence-priority-grid{align-items:start;gap:.75rem}.intelligence-priority-grid>.intelligence-panel{padding:1rem}
+.intelligence-student-list--compact,.intelligence-class-list--compact{display:grid;gap:.55rem}
+.intelligence-student--compact{padding:.7rem;border-radius:12px}.intelligence-student--compact .risk-score{width:38px;height:38px;font-size:.8rem}.intelligence-student--compact .intelligence-reasons{display:none}
+.intelligence-monitoring-status{display:inline-flex;align-items:center;gap:.3rem;margin-top:.35rem;font-size:.66rem;font-weight:800}.intelligence-monitoring-status svg{width:13px;height:13px}.intelligence-monitoring-status--success{color:#047857}.intelligence-monitoring-status--warning{color:#b45309}.intelligence-monitoring-status--danger{color:#b91c1c}
+.intelligence-class-list--compact .intelligence-class-card{grid-template-columns:36px minmax(0,1fr);padding:.75rem}
+.intelligence-class-position{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--surface-muted,#f1f5f9);font-size:.75rem;font-weight:900;color:var(--text-muted)}
+.intelligence-class-list--compact .intelligence-class-card__content p{margin:.3rem 0 0;color:var(--text-muted);font-size:.68rem}
+@media(max-width:1000px){.intelligence-summary-grid--compact{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.intelligence-hero--compact{align-items:flex-start}.intelligence-hero--compact .intelligence-hero__actions{width:100%;align-items:stretch}.intelligence-period--inline{justify-content:center}.intelligence-operational-grid{grid-template-columns:1fr}.intelligence-priority-grid,.intelligence-indicator-grid{grid-template-columns:1fr}.intelligence-panel__header{align-items:flex-start}.intelligence-section-link{margin-top:.2rem}}
+@media(max-width:520px){.intelligence-summary-grid--compact{grid-template-columns:1fr}.intelligence-coverage__main{align-items:flex-start}.intelligence-coverage__value{font-size:1.6rem}.intelligence-summary-card{padding:.8rem}}
+
+/* Sprint 2.7.5.6.2 — explicações contextuais dos cards */
+[data-intelligence-tooltip]{position:relative}
+[data-intelligence-tooltip]::before,
+[data-intelligence-tooltip]::after{position:absolute;left:50%;z-index:80;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .16s ease,transform .16s ease,visibility .16s ease}
+[data-intelligence-tooltip]::before{content:attr(data-intelligence-tooltip);bottom:calc(100% + 12px);transform:translate(-50%,6px);width:max-content;max-width:min(320px,calc(100vw - 32px));padding:.7rem .8rem;border:1px solid rgba(148,163,184,.28);border-radius:10px;background:#172033;color:#fff;box-shadow:0 12px 30px rgba(15,23,42,.2);font-size:.72rem;font-weight:500;line-height:1.45;text-align:left;white-space:normal}
+[data-intelligence-tooltip]::after{content:"";bottom:calc(100% + 6px);transform:translate(-50%,6px);border:6px solid transparent;border-top-color:#172033}
+[data-intelligence-tooltip]:hover::before,
+[data-intelligence-tooltip]:hover::after,
+[data-intelligence-tooltip]:focus-visible::before,
+[data-intelligence-tooltip]:focus-visible::after{opacity:1;visibility:visible;transform:translate(-50%,0)}
+[data-intelligence-tooltip]:focus-visible{outline:3px solid color-mix(in srgb,var(--primary) 35%,transparent);outline-offset:3px}
+.intelligence-summary-grid [data-intelligence-tooltip]:first-child::before,
+.intelligence-summary-grid [data-intelligence-tooltip]:first-child::after{left:18%;}
+.intelligence-summary-grid [data-intelligence-tooltip]:last-child::before,
+.intelligence-summary-grid [data-intelligence-tooltip]:last-child::after{left:82%;}
+@media(max-width:760px){[data-intelligence-tooltip]::before,[data-intelligence-tooltip]::after{display:none}}
+.intelligence-tooltip-host{display:block;width:100%;border-radius:var(--radius-lg)}
+
+/* Sprint 2.8.0 — tendências nos alunos prioritários */
+.intelligence-student-trends{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.intelligence-student-trends span{display:inline-flex;align-items:center;gap:5px;padding:5px 7px;border-radius:999px;color:#475569;background:#f1f5f9;font-size:.68rem;font-weight:750}.intelligence-student-trends svg{width:13px;height:13px}.intelligence-student-trends .is-improving{color:#047857;background:#ecfdf5}.intelligence-student-trends .is-worsening{color:#b91c1c;background:#fef2f2}.intelligence-student-trends .is-stable{color:#1d4ed8;background:#eff6ff}.intelligence-student-trends .is-insufficient{color:#64748b;background:#f1f5f9}
+
+/* Sprint 2.8.1 — previsão compacta nos alunos prioritários */
+.intelligence-prediction-chip{display:inline-flex;align-items:center;gap:.38rem;width:max-content;max-width:100%;padding:.35rem .55rem;border-radius:999px;font-size:.74rem;font-weight:750;background:#f1f5f9;color:#475569}.intelligence-prediction-chip svg{width:14px;height:14px}.intelligence-prediction-chip.is-improvement{background:#dcfce7;color:#166534}.intelligence-prediction-chip.is-deterioration{background:#fef3c7;color:#92400e}.intelligence-prediction-chip.is-critical_escalation{background:#fee2e2;color:#991b1b}.intelligence-prediction-chip.is-stable{background:#e0f2fe;color:#075985}
+
+/* Sprint 2.8.2 — Inteligência Preditiva por Turma */
+.intelligence-class-trends{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.45rem}.intelligence-class-trends span{display:inline-flex;align-items:center;gap:.25rem;padding:.24rem .45rem;border-radius:999px;background:var(--surface-soft,#f8fafc);font-size:.64rem;color:var(--text-muted)}.intelligence-class-trends svg{width:12px;height:12px}.intelligence-class-trends .is-improving{color:#047857;background:rgba(5,150,105,.1)}.intelligence-class-trends .is-worsening{color:#b91c1c;background:rgba(220,38,38,.1)}.intelligence-class-prediction{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.intelligence-improving-classes{margin-top:.75rem}.intelligence-improving-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}.intelligence-improving-list article{display:flex;align-items:center;gap:.7rem;padding:.85rem;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface)}.intelligence-improving-position{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:rgba(5,150,105,.1);color:#047857;font-weight:800}.intelligence-improving-list article>div{min-width:0;flex:1}.intelligence-improving-list strong{font-size:.85rem}.intelligence-improving-list p{margin:.2rem 0 0;color:var(--text-muted);font-size:.68rem;line-height:1.35}.intelligence-improving-score{display:inline-flex;align-items:center;gap:.25rem;color:#047857;font-weight:800;font-size:.75rem}.intelligence-improving-score svg{width:15px;height:15px}@media(max-width:900px){.intelligence-improving-list{grid-template-columns:1fr}}
+
+/* Sprint 2.8.2.2 - Inteligência preditiva das turmas */
+.intelligence-class-predictive-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px;margin-top:18px}.intelligence-class-predictive-card{border:1px solid var(--border-color,#e5e7eb);border-radius:16px;padding:18px;background:var(--surface,#fff);display:flex;flex-direction:column;gap:14px}.intelligence-class-predictive-card--improving{border-left:4px solid #16a34a}.intelligence-class-predictive-card--worsening{border-left:4px solid #dc2626}.intelligence-class-predictive-card--stable{border-left:4px solid #d97706}.intelligence-class-predictive-card__top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.intelligence-class-predictive-card__top div{display:flex;flex-direction:column;gap:4px}.intelligence-class-predictive-card__top strong{font-size:1.05rem}.intelligence-class-predictive-card__top div span{font-size:.78rem;color:var(--text-muted,#64748b)}.intelligence-class-predictive-status{font-size:.72rem;font-weight:700;border-radius:999px;padding:7px 10px;background:#f1f5f9;white-space:nowrap}.intelligence-class-predictive-status--improving{background:#dcfce7;color:#166534}.intelligence-class-predictive-status--worsening{background:#fee2e2;color:#991b1b}.intelligence-class-predictive-status--stable{background:#fef3c7;color:#92400e}.intelligence-class-predictive-card>p{margin:0;color:var(--text-muted,#64748b);line-height:1.5}.intelligence-class-predictive-indicators{display:grid;grid-template-columns:1fr 1fr;gap:8px}.intelligence-class-predictive-indicators span{background:var(--surface-subtle,#f8fafc);padding:9px 10px;border-radius:10px;font-size:.76rem;display:flex;flex-direction:column;gap:2px}.intelligence-class-predictive-actions{display:flex;gap:10px;margin-top:auto}.intelligence-class-predictive-actions a{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;text-decoration:none}.intelligence-class-predictive-actions svg{width:15px;height:15px}
+
+/* Sprint 2.8.2.3 — Padronização visual do painel preditivo das turmas */
+.intelligence-class-predictive{position:relative;overflow:hidden}
+.intelligence-class-predictive::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#4f46e5,#0ea5e9,#10b981)}
+.intelligence-class-predictive-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px}
+.intelligence-class-predictive-card{position:relative;overflow:hidden;padding:0;gap:0;border:1px solid var(--border,#e2e8f0);border-left-width:1px;border-radius:var(--radius-xl,18px);background:var(--surface,#fff);box-shadow:0 5px 18px rgba(15,23,42,.045);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.intelligence-class-predictive-card::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#94a3b8}
+.intelligence-class-predictive-card--improving::before{background:#10b981}.intelligence-class-predictive-card--worsening::before{background:#ef4444}.intelligence-class-predictive-card--stable::before{background:#f59e0b}
+.intelligence-class-predictive-card:hover,.intelligence-class-predictive-card:focus-visible{transform:translateY(-3px);box-shadow:0 14px 30px rgba(15,23,42,.1);border-color:color-mix(in srgb,var(--border,#e2e8f0) 55%,#4f46e5);outline:none}
+.intelligence-class-predictive-card__top{padding:17px 17px 14px 20px;align-items:center;border-bottom:1px solid var(--border,#e2e8f0);background:linear-gradient(135deg,rgba(79,70,229,.045),transparent 58%)}
+.intelligence-class-predictive-card__identity{display:flex!important;flex-direction:row!important;align-items:center;gap:10px!important;min-width:0}.intelligence-class-predictive-card__identity>div{min-width:0}.intelligence-class-predictive-card__icon{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:rgba(79,70,229,.1);color:#4f46e5;flex:none}.intelligence-class-predictive-card__icon svg{width:19px;height:19px}
+.intelligence-class-predictive-card__top strong{font-size:.94rem}.intelligence-class-predictive-card__top div span{font-size:.68rem}
+.intelligence-class-predictive-status{max-width:46%;text-align:center;line-height:1.2;border:1px solid transparent}.intelligence-class-predictive-status--insufficient{background:#f1f5f9;color:#475569;border-color:#e2e8f0}
+.intelligence-class-predictive-card>p{padding:14px 20px 0;font-size:.76rem;line-height:1.5;min-height:50px}
+.intelligence-class-predictive-indicators{padding:14px 20px;gap:7px}
+.intelligence-class-predictive-indicators span{min-width:0;padding:9px 10px;border:1px solid var(--border,#e2e8f0);background:var(--surface-soft,#f8fafc)}
+.intelligence-class-predictive-indicators small{font-size:.62rem;color:var(--text-muted,#64748b)}
+.intelligence-class-predictive-indicators strong{display:flex;align-items:center;gap:5px;margin-top:3px;font-size:.7rem;line-height:1.25}.intelligence-class-predictive-indicators strong svg{width:13px;height:13px;flex:none}
+.intelligence-class-predictive-indicator--improving strong{color:#047857}.intelligence-class-predictive-indicator--worsening strong{color:#b91c1c}.intelligence-class-predictive-indicator--stable strong{color:#b45309}.intelligence-class-predictive-indicator--insufficient strong{color:#64748b}
+.intelligence-class-predictive-actions{padding:13px 20px 16px;margin-top:auto;border-top:1px solid var(--border,#e2e8f0)}
+.intelligence-class-predictive-actions a{flex:1;justify-content:center;min-height:35px;padding:7px 10px;border:1px solid var(--border,#e2e8f0);border-radius:10px;background:var(--surface,#fff);color:var(--text,#0f172a);transition:.18s ease}.intelligence-class-predictive-actions a:first-child{background:#4f46e5;border-color:#4f46e5;color:#fff}.intelligence-class-predictive-actions a:hover{transform:translateY(-1px);box-shadow:0 5px 12px rgba(15,23,42,.08)}
+@media(max-width:540px){.intelligence-class-predictive-card__top{align-items:flex-start;flex-direction:column}.intelligence-class-predictive-status{max-width:100%;white-space:normal}.intelligence-class-predictive-indicators{grid-template-columns:1fr}.intelligence-class-predictive-actions{flex-direction:column}.intelligence-class-predictive-actions a{width:100%}}
+
+
+/* Sprint 2.8.2.4 - Cores dos indicadores preditivos das turmas */
+.intelligence-class-predictive-indicator{position:relative;overflow:hidden}
+.intelligence-class-predictive-indicator--frequency{--metric:#2563eb;--metric-soft:#eff6ff;--metric-border:#bfdbfe}
+.intelligence-class-predictive-indicator--occurrences{--metric:#e11d48;--metric-soft:#fff1f2;--metric-border:#fecdd3}
+.intelligence-class-predictive-indicator--risk{--metric:#dc2626;--metric-soft:#fef2f2;--metric-border:#fecaca}
+.intelligence-class-predictive-indicator--coverage{--metric:#059669;--metric-soft:#ecfdf5;--metric-border:#a7f3d0}
+.intelligence-class-predictive-indicators .intelligence-class-predictive-indicator{
+    background:linear-gradient(145deg,var(--metric-soft,#f8fafc),var(--surface,#fff) 82%);
+    border-color:var(--metric-border,#e2e8f0);
+    box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--metric,#94a3b8) 8%,transparent);
+}
+.intelligence-class-predictive-indicator::before{
+    content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--metric,#94a3b8)
+}
+.intelligence-class-predictive-indicator small{color:var(--metric,#64748b);font-weight:800}
+.intelligence-class-predictive-indicator strong,
+.intelligence-class-predictive-indicator strong svg{color:var(--metric,#64748b)!important}
+.intelligence-class-predictive-card__identity>div>span{font-weight:700}
+.intelligence-class-predictive-card--improving .intelligence-class-predictive-card__identity>div>span{color:#047857}
+.intelligence-class-predictive-card--stable .intelligence-class-predictive-card__identity>div>span{color:#b45309}
+.intelligence-class-predictive-card--worsening .intelligence-class-predictive-card__identity>div>span{color:#b91c1c}
+
+
+/* Dashboard: painel de insights recolhível */
+.intelligence-insights__header-actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;justify-content:flex-end}
+.intelligence-insights__toggle{display:inline-flex;align-items:center;gap:.4rem;border:1px solid color-mix(in srgb,var(--primary) 22%,transparent);background:color-mix(in srgb,var(--primary) 7%,var(--surface));color:var(--text-primary);padding:.55rem .75rem;border-radius:.75rem;font:inherit;font-size:.82rem;font-weight:700;cursor:pointer;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.intelligence-insights__toggle:hover,.intelligence-insights__toggle:focus-visible{transform:translateY(-2px);background:color-mix(in srgb,var(--primary) 12%,var(--surface));border-color:color-mix(in srgb,var(--primary) 42%,transparent);outline:none}
+.intelligence-insights__toggle svg{width:16px;height:16px}
+.intelligence-insights.is-collapsed{margin-bottom:1rem}
+.intelligence-insights.is-collapsed .intelligence-panel__header{border-bottom:0}
+@media(max-width:640px){.intelligence-insights__header-actions{width:100%;justify-content:space-between}.intelligence-insights__toggle{flex:1;justify-content:center}}

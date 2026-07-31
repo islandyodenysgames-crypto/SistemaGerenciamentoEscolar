@@ -1,0 +1,482 @@
+/* ======================================================
+   PÁGINA DE DISCIPLINAS
+   ====================================================== */
+
+.subjects-page {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+/* ======================================================
+   RESUMO
+   ====================================================== */
+
+.subjects-summary {
+    display: grid;
+    grid-template-columns: repeat(
+        5,
+        minmax(0, 1fr)
+    );
+    gap: 14px;
+}
+
+.subjects-summary-card {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-width: 0;
+    min-height: 92px;
+    padding: 17px 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 15px;
+    background: #ffffff;
+    box-shadow: 0 4px 16px rgb(15 23 42 / 5%);
+    transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        transform 160ms ease;
+}
+
+.subjects-summary-card:hover {
+    transform: translateY(-2px);
+    border-color: #d1d5db;
+    box-shadow: 0 8px 22px rgb(15 23 42 / 8%);
+}
+
+.subjects-summary-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 13px;
+    background: color-mix(
+        in srgb,
+        var(--primary) 13%,
+        #ffffff
+    );
+    color: var(--primary);
+}
+
+.subjects-summary-icon svg {
+    width: 21px;
+    height: 21px;
+    stroke-width: 2.2;
+}
+
+.subjects-summary-card > div:last-child {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.subjects-summary-card span {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.subjects-summary-card strong {
+    color: #172033;
+    font-size: 25px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.subjects-summary-card.is-active
+.subjects-summary-icon {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.subjects-summary-card.is-inactive
+.subjects-summary-icon {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+/* ======================================================
+   LISTA
+   ====================================================== */
+
+.subjects-list-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.subjects-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 21px 23px;
+    border-bottom: 1px solid #edf1f6;
+}
+
+.subjects-list-header h3 {
+    margin: 0 0 5px;
+    color: #172033;
+    font-size: 17px;
+    font-weight: 850;
+}
+
+.subjects-list-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.subjects-list-header .btn-primary {
+    flex-shrink: 0;
+}
+
+/* ======================================================
+   PESQUISA
+   ====================================================== */
+
+.subjects-search {
+    position: relative;
+    padding: 17px 23px;
+    border-bottom: 1px solid #edf1f6;
+    background: #f8fafc;
+}
+
+.subjects-search svg {
+    position: absolute;
+    top: 50%;
+    left: 38px;
+    width: 17px;
+    height: 17px;
+    color: #94a3b8;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.subjects-search input {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px 10px 42px;
+    border: 1px solid #dbe2ea;
+    border-radius: 11px;
+    outline: none;
+    background: #ffffff;
+    color: #172033;
+    font: inherit;
+    font-size: 13px;
+    transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease;
+}
+
+.subjects-search input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(
+        in srgb,
+        var(--primary) 14%,
+        transparent
+    );
+}
+
+/* ======================================================
+   TABELA
+   ====================================================== */
+
+.subjects-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.subjects-table th,
+.subjects-table td {
+    padding: 15px 18px;
+    border-bottom: 1px solid #edf1f6;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.subjects-table th {
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.subjects-table td {
+    color: #475569;
+    font-size: 12px;
+}
+
+.subjects-table tbody tr {
+    transition: background-color 150ms ease;
+}
+
+.subjects-table tbody tr:hover {
+    background: #fbfdff;
+}
+
+.subjects-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* ======================================================
+   CÉLULA DA DISCIPLINA
+   ====================================================== */
+
+.subject-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 220px;
+}
+
+.subject-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 41px;
+    height: 41px;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: color-mix(
+        in srgb,
+        var(--primary) 12%,
+        #ffffff
+    );
+    color: var(--primary);
+}
+
+.subject-icon svg {
+    width: 19px;
+    height: 19px;
+}
+
+.subject-name-cell > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.subject-name-cell strong {
+    overflow: hidden;
+    color: #172033;
+    font-size: 13px;
+    font-weight: 850;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.subject-name-cell small {
+    display: block;
+    max-width: 370px;
+    overflow: hidden;
+    color: #94a3b8;
+    font-size: 10px;
+    line-height: 1.4;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.subject-code {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 56px;
+    padding: 6px 9px;
+    border: 1px solid #dbe2ea;
+    border-radius: 8px;
+    background: #f8fafc;
+    color: #334155;
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: 0.05em;
+}
+
+/* ======================================================
+   AÇÕES
+   ====================================================== */
+
+.subjects-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.subjects-actions form {
+    margin: 0;
+}
+
+.subjects-actions .btn-primary,
+.subjects-actions .btn-secondary,
+.subjects-actions .btn-danger {
+    min-height: 34px;
+    padding: 7px 10px;
+    font-size: 10px;
+}
+
+.subjects-actions svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ======================================================
+   FORMULÁRIO
+   ====================================================== */
+
+.subject-form-card {
+    padding: 24px;
+}
+
+.subject-form {
+    display: flex;
+    flex-direction: column;
+    gap: 23px;
+}
+
+.subject-active-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 15px 16px;
+    border: 1px solid #dbe2ea;
+    border-radius: 13px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.subject-active-option > input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.subject-active-switch {
+    position: relative;
+    width: 43px;
+    height: 24px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: #cbd5e1;
+    transition: background-color 160ms ease;
+}
+
+.subject-active-switch::after {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 2px 5px rgb(15 23 42 / 18%);
+    content: "";
+    transition: transform 160ms ease;
+}
+
+.subject-active-option
+> input:checked
++ .subject-active-switch {
+    background: var(--primary);
+}
+
+.subject-active-option
+> input:checked
++ .subject-active-switch::after {
+    transform: translateX(19px);
+}
+
+.subject-active-option > span:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.subject-active-option strong {
+    color: #172033;
+    font-size: 12px;
+    font-weight: 850;
+}
+
+.subject-active-option small {
+    color: #64748b;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.subject-general-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 13px 14px;
+    border: 1px solid #bfdbfe;
+    border-radius: 11px;
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.subject-general-warning svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.subject-general-warning p {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* ======================================================
+   RESPONSIVIDADE
+   ====================================================== */
+
+@media (max-width: 1180px) {
+    .subjects-summary {
+        grid-template-columns: repeat(
+            3,
+            minmax(0, 1fr)
+        );
+    }
+}
+
+@media (max-width: 800px) {
+    .subjects-summary {
+        grid-template-columns: repeat(
+            2,
+            minmax(0, 1fr)
+        );
+    }
+
+    .subjects-list-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .subjects-list-header .btn-primary {
+        width: 100%;
+    }
+
+    .subjects-table {
+        min-width: 850px;
+    }
+}
+
+@media (max-width: 560px) {
+    .subjects-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .subject-form-card {
+        padding: 18px;
+    }
+}

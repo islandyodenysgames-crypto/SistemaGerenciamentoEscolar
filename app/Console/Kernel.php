@@ -6,6 +6,7 @@ namespace App\Console;
 
 use App\Console\Commands\MigrateCommand;
 use App\Console\Commands\SeedCommand;
+use App\Console\Commands\IntelligenceSnapshotCommand;
 
 class Kernel
 {
@@ -22,6 +23,10 @@ class Kernel
                 (new SeedCommand())->handle();
                 break;
 
+            case 'intelligence:snapshot':
+                (new IntelligenceSnapshotCommand())->handle($argv);
+                break;
+
             default:
                 echo PHP_EOL;
                 echo "Sistema de Frequência Escolar" . PHP_EOL;
@@ -29,6 +34,8 @@ class Kernel
                 echo "Comandos disponíveis:" . PHP_EOL;
                 echo "php console.php migrate" . PHP_EOL;
                 echo "php console.php seed" . PHP_EOL;
+                echo "php console.php intelligence:snapshot" . PHP_EOL;
+                echo "php console.php intelligence:snapshot --force" . PHP_EOL;
                 echo PHP_EOL;
         }
     }

@@ -37,6 +37,7 @@ component('base/page-header', [
         </a>
     </div>
 
+    <div class="table-responsive">
     <table class="data-table">
 
         <thead>
@@ -71,5 +72,6 @@ component('base/page-header', [
         </tbody>
 
     </table>
+    </div>
 
 </div>

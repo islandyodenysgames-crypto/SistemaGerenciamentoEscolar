@@ -1,0 +1,223 @@
+/* ==========================================================
+   CALENDÁRIO ESCOLAR DO ALUNO
+========================================================== */
+
+.student-calendar-card {
+    padding: 30px;
+}
+
+.student-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.student-calendar-header h3 {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.student-calendar-header p {
+    margin: 6px 0 0;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* ==========================================================
+   NAVEGAÇÃO DO CALENDÁRIO
+========================================================== */
+
+.student-calendar-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.student-calendar-nav a {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: var(--green-soft);
+    color: var(--primary);
+    font-size: 28px;
+    font-weight: 900;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.student-calendar-nav a:hover {
+    color: #ffffff;
+    background: var(--primary);
+    transform: translateY(-2px);
+}
+
+.student-calendar-nav strong {
+    min-width: 170px;
+    color: var(--text-dark);
+    font-size: 16px;
+    font-weight: 900;
+    text-align: center;
+}
+
+/* ==========================================================
+   GRADE DO CALENDÁRIO
+========================================================== */
+
+.student-calendar-weekdays,
+.student-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.student-calendar-weekdays {
+    margin-bottom: 10px;
+}
+
+.student-calendar-weekdays span {
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 900;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.student-calendar-day {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+}
+
+.student-calendar-day strong {
+    color: var(--text-dark);
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.student-calendar-day.empty {
+    background: transparent;
+    border-color: transparent;
+}
+
+.student-calendar-day.present {
+    background: #dcfce7;
+    border-color: #86efac;
+}
+
+.student-calendar-day.absence {
+    background: #fee2e2;
+    border-color: #fca5a5;
+}
+
+.student-calendar-day.justified {
+    background: #fef3c7;
+    border-color: #fcd34d;
+}
+
+.student-calendar-day.medical {
+    background: #dbeafe;
+    border-color: #93c5fd;
+}
+
+.student-calendar-day.bus {
+    background: #ede9fe;
+    border-color: #c4b5fd;
+}
+
+.student-calendar-day.none {
+    opacity: .6;
+}
+
+/* ==========================================================
+   LEGENDA
+========================================================== */
+
+.student-calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.student-calendar-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.student-calendar-legend i {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+.student-calendar-legend i.present {
+    background: #22c55e;
+}
+
+.student-calendar-legend i.absence {
+    background: #ef4444;
+}
+
+.student-calendar-legend i.justified {
+    background: #f59e0b;
+}
+
+.student-calendar-legend i.medical {
+    background: #3b82f6;
+}
+
+.student-calendar-legend i.bus {
+    background: #8b5cf6;
+}
+
+.student-calendar-legend i.none {
+    background: var(--border);
+}
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+@media (max-width: 700px) {
+    .student-calendar-card {
+        padding: 22px;
+        overflow-x: auto;
+    }
+
+    .student-calendar-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .student-calendar-nav {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .student-calendar-weekdays,
+    .student-calendar-grid {
+        min-width: 560px;
+    }
+
+    .student-calendar-day {
+        min-height: 46px;
+        border-radius: 12px;
+    }
+}

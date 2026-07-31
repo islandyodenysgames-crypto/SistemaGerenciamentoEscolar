@@ -47,14 +47,14 @@
 }
 
 /* ==========================================================
-   CARD INSTITUCIONAL PARA COMPARTILHAMENTO
+   CARD DO PNG
 ========================================================== */
 
 .ranking-share-card {
     position: fixed;
     left: -9999px;
     top: 0;
-    width: 900px;
+    width: 1120px;
     padding: 42px;
     background: #ffffff;
     border-radius: 28px;
@@ -87,6 +87,10 @@
     text-align: center;
 }
 
+/* ==========================================================
+   RESUMO SUPERIOR
+========================================================== */
+
 .ranking-share-summary {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -95,103 +99,157 @@
 }
 
 .ranking-share-summary div {
-    min-height: 150px;
-    padding: 22px 16px;
-    border-radius: 22px;
+    min-height: 145px;
+    padding: 20px 16px;
+    border-radius: 20px;
     background: var(--surface-soft);
     border: 1px solid var(--border);
     text-align: center;
 }
 
-.ranking-share-summary div:nth-child(1) {
+.ranking-share-summary div:nth-child(1){
     background: var(--green-soft);
-    border-color: rgba(34, 197, 94, .25);
 }
 
-.ranking-share-summary div:nth-child(2) {
-    background: #eff6ff;
-    border-color: rgba(59, 130, 246, .25);
+.ranking-share-summary div:nth-child(2){
+    background:#eff6ff;
 }
 
-.ranking-share-summary div:nth-child(3) {
-    background: var(--red-soft);
-    border-color: rgba(239, 68, 68, .25);
+.ranking-share-summary div:nth-child(3){
+    background:var(--red-soft);
 }
 
-.ranking-share-summary div:nth-child(4) {
-    background: var(--yellow-soft);
-    border-color: rgba(245, 158, 11, .25);
+.ranking-share-summary div:nth-child(4){
+    background:var(--yellow-soft);
 }
 
-.ranking-share-summary span {
-    display: block;
-    font-size: 34px;
-    line-height: 1;
+.ranking-share-summary span{
+    display:block;
+    font-size:34px;
 }
 
-.ranking-share-summary strong {
-    display: block;
-    margin: 14px 0 8px;
-    color: var(--text-dark);
-    font-size: 34px;
-    font-weight: 900;
-    line-height: 1;
+.ranking-share-summary strong{
+    display:block;
+    margin:12px 0 6px;
+    font-size:34px;
+    font-weight:900;
 }
 
-.ranking-share-summary small {
-    color: var(--text-light);
-    font-size: 13px;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: .05em;
+.ranking-share-summary small{
+    font-size:13px;
+    font-weight:900;
+    color:var(--text-light);
 }
 
-.ranking-share-list {
-    display: grid;
-    gap: 14px;
+/* ==========================================================
+   LISTA
+========================================================== */
+
+.ranking-share-list{
+    display:grid;
+    gap:14px;
 }
 
-.ranking-share-row {
-    display: grid;
-    grid-template-columns: 70px 1fr 110px;
-    align-items: center;
-    gap: 18px;
-    padding: 18px 22px;
-    border-radius: 18px;
-    background: var(--surface-soft);
-    border: 1px solid var(--border);
+/* ==========================================================
+   CADA TURMA
+========================================================== */
+
+.ranking-share-row{
+    display:grid;
+    grid-template-columns:60px 220px 1fr;
+    align-items:center;
+    gap:18px;
+    padding:18px;
+    border-radius:18px;
+    background:var(--surface-soft);
+    border:1px solid var(--border);
 }
 
-.ranking-share-row > span {
-    font-size: 34px;
-    text-align: center;
+.ranking-share-rank{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:54px;
+    height:54px;
+    border-radius:16px;
+    background:#ffffff;
+    font-size:28px;
 }
 
-.ranking-share-row strong {
-    display: block;
-    color: var(--text-dark);
-    font-size: 22px;
-    font-weight: 900;
+.ranking-share-class strong{
+    display:block;
+    font-size:21px;
+    font-weight:900;
+    color:var(--text-dark);
 }
 
-.ranking-share-row small {
-    color: var(--text-light);
-    font-weight: 800;
+.ranking-share-class small{
+    display:block;
+    margin-top:4px;
+    color:var(--text-light);
+    font-size:12px;
+    font-weight:800;
 }
 
-.ranking-share-row b {
-    color: var(--success);
-    font-size: 28px;
-    font-weight: 900;
-    text-align: right;
+/* ==========================================================
+   MÉTRICAS
+========================================================== */
+
+.ranking-share-row-metrics{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
 }
 
-.ranking-share-footer {
-    margin-top: 28px;
-    padding-top: 18px;
-    border-top: 1px solid var(--border);
-    color: var(--text-light);
-    font-size: 14px;
-    font-weight: 800;
-    text-align: center;
+.ranking-share-row-metrics div{
+    padding:10px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:#ffffff;
+    text-align:center;
+}
+
+.ranking-share-row-metrics span{
+    display:block;
+    font-size:18px;
+}
+
+.ranking-share-row-metrics strong{
+    display:block;
+    margin-top:6px;
+    font-size:18px;
+    font-weight:900;
+    color:var(--text-dark);
+}
+
+.ranking-share-row-metrics small{
+    display:block;
+    margin-top:4px;
+    color:var(--text-light);
+    font-size:10px;
+    font-weight:900;
+    text-transform:uppercase;
+}
+
+/* ==========================================================
+   RODAPÉ
+========================================================== */
+
+.ranking-share-footer{
+    margin-top:28px;
+    padding-top:20px;
+    border-top:1px solid var(--border);
+    text-align:center;
+}
+
+.ranking-share-footer strong{
+    display:block;
+    font-size:18px;
+    font-weight:900;
+}
+
+.ranking-share-footer small{
+    color:var(--text-light);
+    font-size:13px;
+    font-weight:800;
 }

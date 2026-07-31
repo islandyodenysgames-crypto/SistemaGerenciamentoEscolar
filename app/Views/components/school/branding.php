@@ -2,9 +2,19 @@
 
 $variant = $variant ?? 'sidebar';
 
-$name = $name ?? school('name', app_name());
-$shortName = $shortName ?? school('short_name', 'SFE');
-$logoPath = $logoPath ?? school('logo_path');
+$schoolData = school();
+
+$name = trim((string) ($name ?? ($schoolData['name'] ?? app_name())));
+$shortName = trim((string) ($shortName ?? ($schoolData['short_name'] ?? 'SFE')));
+$logoPath = $logoPath ?? ($schoolData['logo_path'] ?? null);
+
+if ($name === '') {
+    $name = app_name();
+}
+
+if ($shortName === '') {
+    $shortName = 'SFE';
+}
 
 ?>
 

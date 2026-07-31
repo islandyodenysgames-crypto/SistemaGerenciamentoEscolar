@@ -7,6 +7,7 @@ component('base/page-header', [
 
 $schoolName = $school['name'] ?? 'Sistema de Frequência Escolar';
 $schoolShortName = $school['short_name'] ?? 'SFE';
+$schoolLogo = $school['logo_path'] ?? null;
 
 ?>
 
@@ -202,8 +203,8 @@ $schoolShortName = $school['short_name'] ?? 'SFE';
                     <div class="settings-logo-preview">
 
                         <div class="settings-logo-box">
-                            <?php if (!empty($school['logo_path'])): ?>
-                                <img src="<?= asset($school['logo_path']) ?>" alt="Logo da escola">
+                            <?php if (!empty($schoolLogo)): ?>
+                                <img src="<?= asset($schoolLogo) ?>" alt="Logo da escola">
                             <?php else: ?>
                                 <i data-lucide="image"></i>
                             <?php endif; ?>
@@ -212,22 +213,20 @@ $schoolShortName = $school['short_name'] ?? 'SFE';
                         <div>
                             <strong>Logo da Escola</strong>
                             <p>PNG, JPG ou SVG. Recomendado: imagem quadrada.</p>
-                        
-                         <label class="settings-logo-upload" for="schoolLogoInput">
-                            <input
-                                type="file"
-                                name="logo"
-                                id="schoolLogoInput"
-                                accept="image/png,image/jpeg,image/svg+xml"
-                            >
-                            
-                            <span>
-                                <i data-lucide="upload-cloud"></i>
-                                Selecionar logo
-                            </span>
-                        
-                         </label>
-                        
+
+                            <label class="settings-logo-upload" for="schoolLogoInput">
+                                <input
+                                    type="file"
+                                    name="logo"
+                                    id="schoolLogoInput"
+                                    accept="image/png,image/jpeg,image/svg+xml"
+                                >
+
+                                <span>
+                                    <i data-lucide="upload-cloud"></i>
+                                    Selecionar logo
+                                </span>
+                            </label>
                         </div>
 
                     </div>
@@ -257,47 +256,10 @@ $schoolShortName = $school['short_name'] ?? 'SFE';
                     <strong>Identidade institucional</strong>
                 </div>
 
-                <div class="settings-preview-tabs">
-
-                    <button
-                        type="button"
-                        class="settings-preview-tab active"
-                        data-preview-target="sidebar"
-                    >
-                        Sidebar
-                    </button>
-
-                    <button
-                        type="button"
-                        class="settings-preview-tab"
-                        data-preview-target="ranking"
-                    >
-                        PNG
-                    </button>
-
-                    <button
-                        type="button"
-                        class="settings-preview-tab"
-                        data-preview-target="report"
-                    >
-                        Relatório
-                    </button>
-
-                </div>
-
                 <?php component('settings/preview-sidebar', [
                     'name' => $schoolName,
                     'shortName' => $schoolShortName,
-                ]); ?>
-
-                <?php component('settings/preview-ranking', [
-                    'name' => $schoolName,
-                    'shortName' => $schoolShortName,
-                ]); ?>
-
-                <?php component('settings/preview-report', [
-                    'name' => $schoolName,
-                    'shortName' => $schoolShortName,
+                    'logoPath' => $schoolLogo,
                 ]); ?>
 
             </div>

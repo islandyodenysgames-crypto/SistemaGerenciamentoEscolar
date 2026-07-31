@@ -16,11 +16,24 @@
 
 <div class="card">
 
-    <?php component('base/table-header', [
-        'title' => 'Turmas cadastradas',
-        'actionLabel' => '+ Nova turma',
-        'actionUrl' => base_url('turmas/novo'),
-    ]); ?>
+    <div class="table-header">
+
+        <div>
+            <h3>Turmas cadastradas</h3>
+            <p>Esta área foi integrada ao menu Turmas.</p>
+        </div>
+
+        <div class="table-actions">
+            <a href="<?= base_url('alunos') ?>" class="btn-secondary">
+                Voltar para Turmas
+            </a>
+
+            <a href="<?= base_url('turmas/novo') ?>" class="btn-primary">
+                + Nova turma
+            </a>
+        </div>
+
+    </div>
 
     <?php component('classes/table', [
         'classes' => $classes ?? []

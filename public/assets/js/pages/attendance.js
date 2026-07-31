@@ -1,3 +1,5 @@
+'use strict';
+
 function selectStatus(label) {
     const input = label.querySelector('input[type="radio"]');
 
@@ -51,14 +53,21 @@ function updateSummary() {
     const percentageElement = document.getElementById('percentageCount');
 
     if (percentageElement) {
-        const percentual = total > 0 ? ((presentes / total) * 100).toFixed(1) : 0;
-        percentageElement.innerText = String(percentual).replace('.', ',') + '%';
+        const percentual = total > 0
+            ? ((presentes / total) * 100).toFixed(1)
+            : 0;
+
+        percentageElement.innerText =
+            String(percentual).replace('.', ',') + '%';
     }
 
     const progressElement = document.getElementById('attendanceProgress');
 
     if (progressElement) {
-        const progress = total > 0 ? (presentes / total) * 100 : 0;
+        const progress = total > 0
+            ? (presentes / total) * 100
+            : 0;
+
         progressElement.style.width = progress + '%';
     }
 }
@@ -87,10 +96,29 @@ function setText(id, value) {
     }
 }
 
+function setupAttendanceHistorySelection() {
+    const selectAll = document.getElementById('selectAllAttendances');
+
+    if (!selectAll) {
+        return;
+    }
+
+    selectAll.addEventListener('change', function () {
+        document
+            .querySelectorAll('.attendance-checkbox')
+            .forEach(function (checkbox) {
+                checkbox.checked = selectAll.checked;
+            });
+    });
+}
+
 document.addEventListener('change', function (event) {
     if (event.target.matches('input[type="radio"]')) {
         updateSelectedOptions();
     }
 });
 
-document.addEventListener('DOMContentLoaded', updateSelectedOptions);
+document.addEventListener('DOMContentLoaded', function () {
+    updateSelectedOptions();
+    setupAttendanceHistorySelection();
+});

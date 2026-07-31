@@ -6,7 +6,16 @@ if (!function_exists('asset')) {
 
     function asset(string $path): string
     {
-        return base_url($path);
+        $url = base_url($path);
+        $cleanPath = ltrim((string) parse_url($path, PHP_URL_PATH), '/');
+        $publicFile = dirname(__DIR__, 2) . '/public/' . $cleanPath;
+
+        if (is_file($publicFile)) {
+            $separator = str_contains($url, '?') ? '&' : '?';
+            $url .= $separator . 'v=' . (string) filemtime($publicFile);
+        }
+
+        return $url;
     }
 
 }

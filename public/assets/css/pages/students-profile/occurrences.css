@@ -1,0 +1,783 @@
+/* ==========================================================
+   OCORRÊNCIAS DO ALUNO
+========================================================== */
+
+.student-occurrences-card {
+    padding: 30px;
+}
+
+.student-occurrences-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.student-occurrences-header h3 {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.student-occurrences-header p {
+    margin: 6px 0 0;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.student-occurrences-header .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.student-occurrences-header .btn-primary i,
+.student-occurrences-header .btn-primary svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ==========================================================
+   INDICADORES GERAIS
+========================================================== */
+
+.student-occurrences-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.student-occurrences-stats > div {
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface-soft);
+}
+
+.student-occurrences-stats span {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.student-occurrences-stats strong {
+    display: block;
+    color: var(--text-dark);
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.student-occurrences-stats .open {
+    background: #fffbeb;
+    border-color: #fde68a;
+}
+
+.student-occurrences-stats .resolved {
+    background: #ecfdf5;
+    border-color: #bbf7d0;
+}
+
+/* ==========================================================
+   ESTATÍSTICAS POR TIPO
+========================================================== */
+
+.student-occurrences-type-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.student-occurrences-type-stats > div {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+
+    min-width: 0;
+    min-height: 82px;
+
+    padding: 16px 18px;
+
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    background: var(--surface-soft);
+
+    overflow: hidden;
+
+    transition: var(--transition);
+}
+
+.student-occurrences-type-stats > div:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.student-occurrences-type-stats i,
+.student-occurrences-type-stats svg {
+    width: 24px;
+    height: 24px;
+
+    flex-shrink: 0;
+}
+
+.student-occurrences-type-stats .info {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+
+    min-width: 0;
+    width: 100%;
+}
+
+.student-occurrences-type-stats .info span {
+    min-width: 0;
+
+    color: var(--text-light);
+
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.35;
+
+    overflow-wrap: anywhere;
+}
+
+.student-occurrences-type-stats .info strong {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 38px;
+    height: 38px;
+
+    padding: 0 8px;
+
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, .75);
+
+    color: var(--text-dark);
+
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1;
+
+    flex-shrink: 0;
+}
+
+/* CORES */
+
+.student-occurrences-type-stats .observation {
+    color: #64748b;
+}
+
+.student-occurrences-type-stats .warning {
+    color: #d97706;
+    background: #fffbeb;
+    border-color: #fde68a;
+}
+
+.student-occurrences-type-stats .suspension {
+    color: #dc2626;
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+
+.student-occurrences-type-stats .referral {
+    color: #2563eb;
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+.student-occurrences-type-stats .praise {
+    color: #16a34a;
+    background: #ecfdf5;
+    border-color: #bbf7d0;
+}
+
+.student-occurrences-type-stats .other {
+    color: #7c3aed;
+    background: #f5f3ff;
+    border-color: #ddd6fe;
+}
+
+@media (max-width: 1100px) {
+    .student-occurrences-type-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .student-occurrences-type-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================
+   TIMELINE
+========================================================== */
+
+.student-occurrences-timeline {
+    display: grid;
+    gap: 34px;
+}
+
+.student-occurrences-year {
+    display: grid;
+    grid-template-columns: 90px minmax(0, 1fr);
+    gap: 24px;
+}
+
+.student-occurrences-year-label {
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-soft);
+    color: var(--text-dark);
+    font-size: 16px;
+    font-weight: 900;
+    text-align: center;
+}
+
+.student-occurrences-year-items {
+    position: relative;
+    display: grid;
+    gap: 24px;
+    min-width: 0;
+}
+
+.student-occurrences-year-items::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 85px;
+    width: 3px;
+    border-radius: 999px;
+    background: var(--border);
+}
+
+.student-occurrence-timeline-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 58px 56px minmax(0, 1fr);
+    gap: 18px;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+/* ==========================================================
+   DATA
+========================================================== */
+
+.student-occurrence-timeline-date {
+    padding-top: 8px;
+    text-align: right;
+}
+
+.student-occurrence-timeline-date strong {
+    display: block;
+    color: var(--text-dark);
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.student-occurrence-timeline-date span {
+    display: block;
+    margin-top: 5px;
+    color: var(--text-light);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .06em;
+}
+
+/* ==========================================================
+   MARCADOR
+========================================================== */
+
+.student-occurrence-timeline-marker {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+}
+
+.student-occurrence-icon {
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 54px;
+    border: 5px solid var(--surface);
+    border-radius: 50%;
+    background: var(--surface-soft);
+    color: var(--text-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.student-occurrence-icon i,
+.student-occurrence-icon svg {
+    width: 23px;
+    height: 23px;
+}
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+.student-occurrence-timeline-card {
+    position: relative;
+    min-width: 0;
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-left: 6px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.student-occurrence-timeline-card::before {
+    content: "";
+    position: absolute;
+    top: 22px;
+    left: -10px;
+    width: 18px;
+    height: 18px;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transform: rotate(45deg);
+}
+
+.student-occurrence-timeline-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.student-occurrence-timeline-item.is-resolved {
+    opacity: .9;
+}
+
+/* ==========================================================
+   CORES POR TIPO
+========================================================== */
+
+.student-occurrence-observation
+.student-occurrence-timeline-card {
+    border-left-color: #64748b;
+}
+
+.student-occurrence-warning
+.student-occurrence-timeline-card {
+    border-left-color: #f59e0b;
+}
+
+.student-occurrence-suspension
+.student-occurrence-timeline-card {
+    border-left-color: #ef4444;
+}
+
+.student-occurrence-referral
+.student-occurrence-timeline-card {
+    border-left-color: #3b82f6;
+}
+
+.student-occurrence-praise
+.student-occurrence-timeline-card {
+    border-left-color: #22c55e;
+}
+
+.student-occurrence-other
+.student-occurrence-timeline-card {
+    border-left-color: #8b5cf6;
+}
+
+.student-occurrence-observation .student-occurrence-icon {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.student-occurrence-warning .student-occurrence-icon {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.student-occurrence-suspension .student-occurrence-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.student-occurrence-referral .student-occurrence-icon {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.student-occurrence-praise .student-occurrence-icon {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.student-occurrence-other .student-occurrence-icon {
+    background: #ede9fe;
+    color: #7c3aed;
+}
+
+/* ==========================================================
+   CONTEÚDO
+========================================================== */
+
+.student-occurrence-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 14px;
+}
+
+.student-occurrence-title-row > div {
+    min-width: 0;
+}
+
+.student-occurrence-type {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-light);
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.student-occurrence-title-row h4 {
+    margin: 0;
+    overflow-wrap: anywhere;
+    color: var(--text-dark);
+    font-size: 19px;
+    font-weight: 900;
+    line-height: 1.3;
+}
+
+.student-occurrence-description {
+    overflow-wrap: anywhere;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.65;
+}
+
+.student-occurrence-subject {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-top: .75rem;
+    margin-bottom: .75rem;
+    font-size: .92rem;
+    color: var(--text-secondary);
+}
+
+.student-occurrence-subject i {
+    width: 16px;
+    height: 16px;
+    color: var(--primary);
+}
+
+.student-occurrence-subject strong {
+    color: var(--text-primary);
+}
+
+.student-occurrence-actions-taken {
+    margin-top: 16px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    background: var(--surface-soft);
+}
+
+.student-occurrence-actions-taken strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-dark);
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.student-occurrence-actions-taken p {
+    margin: 0;
+    overflow-wrap: anywhere;
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+/* ==========================================================
+   AÇÕES
+========================================================== */
+
+.student-occurrence-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+}
+
+.student-occurrence-actions form {
+    margin: 0;
+}
+
+.student-occurrence-actions a,
+.student-occurrence-actions button {
+    min-width: 100px;
+    justify-content: center;
+    text-align: center;
+}
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+@media (max-width: 1100px) {
+    .student-occurrences-type-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .student-occurrences-year {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .student-occurrences-year-label {
+        position: static;
+        width: fit-content;
+    }
+}
+
+@media (max-width: 700px) {
+    .student-occurrences-card {
+        padding: 22px;
+    }
+
+    .student-occurrences-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .student-occurrences-header .btn-primary {
+        width: 100%;
+    }
+
+    .student-occurrences-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .student-occurrences-type-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .student-occurrences-type-stats > div {
+        min-height: 74px;
+    }
+
+    .student-occurrences-year-items::before {
+        left: 23px;
+    }
+
+    .student-occurrence-timeline-item {
+        grid-template-columns: 46px minmax(0, 1fr);
+        gap: 14px;
+    }
+
+    .student-occurrence-timeline-date {
+        grid-column: 2;
+        grid-row: 1;
+        padding: 0;
+        text-align: left;
+    }
+
+    .student-occurrence-timeline-date strong,
+    .student-occurrence-timeline-date span {
+        display: inline;
+        font-size: 12px;
+    }
+
+    .student-occurrence-timeline-date span {
+        margin-left: 4px;
+    }
+
+    .student-occurrence-timeline-marker {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+    }
+
+    .student-occurrence-icon {
+        width: 46px;
+        height: 46px;
+        flex-basis: 46px;
+    }
+
+    .student-occurrence-timeline-card {
+        grid-column: 2;
+        grid-row: 2;
+        padding: 18px;
+    }
+
+    .student-occurrence-timeline-card::before {
+        top: 16px;
+    }
+
+    .student-occurrence-title-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .student-occurrence-actions {
+        flex-direction: column;
+    }
+
+    .student-occurrence-actions form,
+    .student-occurrence-actions a,
+    .student-occurrence-actions button {
+        width: 100%;
+    }
+
+    .student-occurrence-author{
+        margin-top:12px;
+        padding-top:12px;
+        
+        border-top:1px solid #ececec;
+        
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:20px;
+        
+        font-size:.85rem;
+        
+        color:#666;
+    }
+    
+    .student-occurrence-author div{
+        display:flex;
+        align-items:center;
+        gap:6px;
+    }
+    
+    .student-occurrence-author strong{
+        color:#333;
+    }
+    
+    .student-occurrence-author small{
+        color:#888;
+    }
+}
+/* Sprint 3.0.1 — arquivos vinculados à ocorrência */
+.student-occurrence-attachments {
+    margin-top: 1rem;
+    padding: .85rem;
+    border: 1px solid #e4ebe6;
+    border-radius: 12px;
+    background: #fafcfb;
+}
+.student-occurrence-attachments-heading {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    margin-bottom: .65rem;
+    color: #344054;
+}
+.student-occurrence-attachments-heading svg { width: 17px; height: 17px; color: #168443; }
+.student-occurrence-attachments-heading span {
+    min-width: 22px;
+    padding: .1rem .4rem;
+    border-radius: 999px;
+    background: #e8f5ec;
+    color: #14743b;
+    font-size: .75rem;
+    text-align: center;
+}
+.student-occurrence-attachments-list { display: grid; gap: .45rem; }
+.student-occurrence-attachment {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    padding: .55rem .65rem;
+    border-radius: 9px;
+    background: #fff;
+    color: inherit;
+    text-decoration: none;
+    border: 1px solid #edf1ee;
+}
+.student-occurrence-attachment:hover { border-color: #b9d9c2; background: #f5fbf7; }
+.student-occurrence-attachment > svg:first-child { width: 19px; height: 19px; color: #168443; flex: 0 0 auto; }
+.student-occurrence-attachment > svg:last-child { width: 15px; height: 15px; color: #98a2b3; margin-left: auto; }
+.student-occurrence-attachment span { display: grid; min-width: 0; }
+.student-occurrence-attachment strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.student-occurrence-attachment small { color: #667085; }
+
+/* Sprint 3.0.1.2 — gerenciamento de anexos no perfil do aluno */
+.student-occurrence-attachment-row {
+    display: flex;
+    align-items: stretch;
+    gap: .45rem;
+    min-width: 0;
+}
+
+.student-occurrence-attachment-row .student-occurrence-attachment {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.student-occurrence-attachment-remove-form {
+    display: flex;
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+.student-occurrence-attachment-remove {
+    width: 38px;
+    min-width: 38px;
+    border: 1px solid #f2c4c4;
+    border-radius: 10px;
+    background: #fff7f7;
+    color: #b42318;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.student-occurrence-attachment-remove:hover {
+    background: #fee4e2;
+    border-color: #f0a6a0;
+    transform: translateY(-1px);
+}
+
+.student-occurrence-attachment-remove svg {
+    width: 17px;
+    height: 17px;
+}

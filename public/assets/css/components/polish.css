@@ -1,0 +1,108 @@
+/* ==========================================================
+   SPRINT 2.9.3.2 — POLIMENTO SEGURO
+   Regras conservadoras: não oculta, não reposiciona e não
+   altera estruturalmente componentes específicos das páginas.
+========================================================== */
+
+:root {
+    --control-height: 42px;
+    --tap-target: 42px;
+}
+
+.content {
+    padding-bottom: 40px;
+}
+
+.content h1,
+.content h2,
+.content h3 {
+    text-wrap: balance;
+}
+
+.page-header p,
+.card-header p,
+.panel-header p {
+    max-width: 72ch;
+    line-height: 1.6;
+}
+
+/* Feedback de processamento sem remover o conteúdo do botão. */
+button[aria-busy="true"],
+.is-submitting {
+    cursor: progress !important;
+    pointer-events: none;
+}
+
+button[aria-busy="true"]::after,
+.is-submitting::after {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-left: 8px;
+    content: "";
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    vertical-align: -2px;
+    animation: polish-spin .65s linear infinite;
+}
+
+@keyframes polish-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Ícones locais: dimensões explícitas para impedir colapso. */
+svg[data-icon-fallback],
+svg.lucide {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    min-width: 1em;
+    min-height: 1em;
+    overflow: visible;
+    vertical-align: -0.125em;
+    flex-shrink: 0;
+}
+
+[data-lucide] {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    min-width: 1em;
+    min-height: 1em;
+}
+
+/* Foco acessível sem interferir no layout. */
+:where(a, button, input, select, textarea, summary):focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--primary) 36%, transparent);
+    outline-offset: 2px;
+}
+
+/* Rodapé discreto, sem afetar outros componentes. */
+.footer {
+    display: flex;
+    justify-content: center;
+    padding: 22px 24px 30px;
+    color: var(--text-light);
+    font-size: .82rem;
+    text-align: center;
+}
+
+@media (max-width: 760px) {
+    .content {
+        padding-inline: 16px;
+    }
+}
+
+@media (max-width: 520px) {
+    .content {
+        padding-inline: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    button[aria-busy="true"]::after,
+    .is-submitting::after {
+        animation-duration: 1.4s;
+    }
+}

@@ -1,0 +1,376 @@
+/* ==========================================================
+   SPRINT 2.9.1 — CAMADA GLOBAL DE PADRONIZAÇÃO VISUAL
+   Compatibilidade para páginas e componentes legados.
+========================================================== */
+
+/* Ritmo e largura das páginas */
+.content > * {
+    min-width: 0;
+}
+
+.content > .page-header,
+.content > .breadcrumb,
+.content > .alert,
+.content > .card,
+.content > .panel,
+.content > section {
+    width: 100%;
+}
+
+.content section + section,
+.content .card + .card,
+.content .panel + .panel {
+    margin-top: 24px;
+}
+
+/* Cabeçalho responsivo e ações previsíveis */
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.page-header-actions,
+.page-actions,
+.header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Cartões e painéis */
+.card,
+.panel,
+.settings-card,
+.occurrences-dashboard-widget,
+.intelligence-panel {
+    border-color: var(--border);
+}
+
+.card:focus-within,
+.panel:focus-within {
+    border-color: color-mix(in srgb, var(--primary) 34%, var(--border));
+}
+
+.card-header,
+.panel-header,
+.table-header {
+    min-width: 0;
+}
+
+.card-header > div,
+.panel-header > div,
+.table-header > div {
+    min-width: 0;
+}
+
+/* Tabelas atuais e legadas */
+.table-responsive,
+.table-container,
+.data-table-wrapper,
+.attendance-table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.content table.table,
+.content table.data-table,
+.content table.subjects-table,
+.content table.intelligence-case-table,
+.content table.comparison-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--surface);
+}
+
+.content table.table th,
+.content table.table td,
+.content table.data-table th,
+.content table.data-table td,
+.content table.subjects-table th,
+.content table.subjects-table td,
+.content table.intelligence-case-table th,
+.content table.intelligence-case-table td,
+.content table.comparison-table th,
+.content table.comparison-table td {
+    padding: 14px 16px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.content table.table th:last-child,
+.content table.table td:last-child,
+.content table.data-table th:last-child,
+.content table.data-table td:last-child,
+.content table.subjects-table th:last-child,
+.content table.subjects-table td:last-child,
+.content table.intelligence-case-table th:last-child,
+.content table.intelligence-case-table td:last-child,
+.content table.comparison-table th:last-child,
+.content table.comparison-table td:last-child {
+    border-right: 0;
+}
+
+.content table.table tbody tr:last-child td,
+.content table.data-table tbody tr:last-child td,
+.content table.subjects-table tbody tr:last-child td,
+.content table.intelligence-case-table tbody tr:last-child td,
+.content table.comparison-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.content table.table thead th,
+.content table.data-table thead th,
+.content table.subjects-table thead th,
+.content table.intelligence-case-table thead th,
+.content table.comparison-table thead th {
+    background: var(--surface-soft);
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: .045em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.content table.table tbody tr,
+.content table.data-table tbody tr,
+.content table.subjects-table tbody tr,
+.content table.intelligence-case-table tbody tr,
+.content table.comparison-table tbody tr {
+    transition: background var(--transition);
+}
+
+.content table.table tbody tr:nth-child(even),
+.content table.data-table tbody tr:nth-child(even),
+.content table.subjects-table tbody tr:nth-child(even),
+.content table.intelligence-case-table tbody tr:nth-child(even),
+.content table.comparison-table tbody tr:nth-child(even) {
+    background: color-mix(in srgb, var(--surface-soft) 48%, transparent);
+}
+
+.content table.table tbody tr:hover,
+.content table.data-table tbody tr:hover,
+.content table.subjects-table tbody tr:hover,
+.content table.intelligence-case-table tbody tr:hover,
+.content table.comparison-table tbody tr:hover {
+    background: color-mix(in srgb, var(--primary) 7%, var(--surface));
+}
+
+/* Colunas de ações */
+.content table th:last-child:not(:first-child),
+.content table td:last-child:not(:first-child) {
+    text-align: right;
+}
+
+.content table td:last-child .table-actions,
+.content table td:last-child .actions {
+    justify-content: flex-end;
+}
+
+.table-actions,
+.actions,
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Filtros */
+.filters,
+.filter-bar,
+.filters-bar,
+.report-filters,
+.occurrences-filters,
+.notifications-filters {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.filters > *,
+.filter-bar > *,
+.filters-bar > *,
+.report-filters > *,
+.occurrences-filters > *,
+.notifications-filters > * {
+    min-width: 150px;
+}
+
+/* Botões e links de ação */
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger,
+.btn-warning {
+    line-height: 1.15;
+}
+
+.btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-success:focus-visible,
+.btn-danger:focus-visible,
+.btn-warning:focus-visible,
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--primary) 30%, transparent);
+    outline-offset: 2px;
+}
+
+.table-link,
+.card-link,
+.quick-button,
+.class-quick-action {
+    text-underline-offset: 3px;
+}
+
+/* Alertas e estados vazios */
+.alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.table-empty,
+.activity-empty,
+.intelligence-empty,
+.empty-state,
+.no-results {
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 32px 24px;
+    color: var(--text-light);
+    text-align: center;
+    line-height: 1.55;
+}
+
+/* Badges */
+.badge,
+.risk-badge,
+.status-badge,
+.settings-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 28px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* Reduz inconsistências de ícones */
+.btn i,
+.btn svg,
+.btn-primary i,
+.btn-primary svg,
+.btn-secondary i,
+.btn-secondary svg,
+.table-actions i,
+.table-actions svg {
+    flex: 0 0 auto;
+}
+
+/* Responsividade global */
+@media (max-width: 900px) {
+    .page-header {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .page-header-actions,
+    .page-actions,
+    .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .content table.table,
+    .content table.data-table,
+    .content table.subjects-table,
+    .content table.intelligence-case-table,
+    .content table.comparison-table {
+        min-width: 760px;
+    }
+}
+
+@media (max-width: 640px) {
+    .content section + section,
+    .content .card + .card,
+    .content .panel + .panel {
+        margin-top: 18px;
+    }
+
+    .card,
+    .panel {
+        padding: 18px;
+        border-radius: var(--radius-lg);
+    }
+
+    .filters,
+    .filter-bar,
+    .filters-bar,
+    .report-filters,
+    .occurrences-filters,
+    .notifications-filters {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 16px;
+    }
+
+    .filters > *,
+    .filter-bar > *,
+    .filters-bar > *,
+    .report-filters > *,
+    .occurrences-filters > *,
+    .notifications-filters > * {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .page-header-title {
+        font-size: clamp(26px, 8vw, 32px) !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}

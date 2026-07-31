@@ -42,6 +42,19 @@ $existingStatuses = $existingStatuses ?? [];
                 </select>
             </div>
 
+            <div class="form-group">
+                <label>Data</label>
+
+                <input
+                    class="form-control"
+                    type="date"
+                    name="data"
+                    value="<?= e($today ?? date('Y-m-d')) ?>"
+                    onchange="this.form.submit()"
+                    required
+                >
+            </div>
+
         </form>
 
         <?php if ($classInfo): ?>
@@ -51,7 +64,7 @@ $existingStatuses = $existingStatuses ?? [];
             <?php if (!empty($existingAttendance)): ?>
 
                 <div class="attendance-done">
-                    ✅ Chamada de hoje já realizada
+                    ✅ Chamada desta data já realizada
 
                     <div class="mt-12">
                         <a href="<?= base_url('frequencia/ver?id=' . $existingAttendance['id']) ?>" class="btn-primary">
@@ -63,7 +76,7 @@ $existingStatuses = $existingStatuses ?? [];
             <?php else: ?>
 
                 <div class="attendance-pending">
-                    ⚠️ Chamada de hoje ainda não realizada
+                    ⚠️ Chamada desta data ainda não realizada
                 </div>
 
             <?php endif; ?>
@@ -72,7 +85,8 @@ $existingStatuses = $existingStatuses ?? [];
 
             <p>
                 <strong>Ano:</strong> <?= $classInfo['year'] ?><br>
-                <strong>Turno:</strong> <?= e($classInfo['shift']) ?>
+                <strong>Turno:</strong> <?= e($classInfo['shift']) ?><br>
+                <strong>Data:</strong> <?= date('d/m/Y', strtotime($today ?? date('Y-m-d'))) ?>
             </p>
 
             <div class="divider"></div>
@@ -125,25 +139,12 @@ $existingStatuses = $existingStatuses ?? [];
                 <div class="user-form">
 
                     <div class="form-group">
-                        <label>Data da chamada</label>
-
-                        <input
-                            class="form-control"
-                            type="date"
-                            name="attendance_date"
-                            value="<?= $today ?? date('Y-m-d') ?>"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
                         <label>Observações gerais</label>
 
                         <input
-                            class="form-control"
-                            type="text"
-                            name="notes"
-                            placeholder="Opcional"
+                            type="hidden"
+                            name="attendance_date"
+                            value="<?= e($today ?? date('Y-m-d')) ?>"
                         >
                     </div>
 
@@ -210,14 +211,33 @@ $existingStatuses = $existingStatuses ?? [];
 
                         <?php $currentStatus = $existingStatuses[$student['id']] ?? 'P'; ?>
 
-                        <div class="student-card">
+                        <div
+                            class="student-card"
+                            data-student-name="<?= e(mb_strtolower($student['name'])) ?>"
+                        >
 
-                            <div class="student-name">
-                                <?= e($student['name']) ?>
-                            </div>
+                            <div class="attendance-student-identity">
+                                <div class="attendance-student-photo">
+                                    <?php if (!empty($student['photo_path'])): ?>
+                                        <img
+                                            class="entity-avatar-photo"
+                                            src="<?= e(base_url((string) $student['photo_path'])) ?>"
+                                            alt="Foto de <?= e((string) $student['name']) ?>"
+                                        >
+                                    <?php else: ?>
+                                        <i data-lucide="user"></i>
+                                    <?php endif; ?>
+                                </div>
 
-                            <div class="student-registration">
-                                Matrícula: <?= e($student['registration']) ?>
+                                <div class="attendance-student-details">
+                                    <div class="student-name">
+                                        <?= e($student['name']) ?>
+                                    </div>
+
+                                    <div class="student-registration">
+                                        Matrícula: <?= e($student['registration']) ?>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="status-options">
@@ -257,7 +277,7 @@ $existingStatuses = $existingStatuses ?? [];
                     <?php if (!empty($existingAttendance)): ?>
 
                         <button type="button" class="btn-secondary btn-large btn-disabled" disabled>
-                            Chamada de hoje já realizada
+                            Chamada desta data já realizada
                         </button>
 
                     <?php else: ?>

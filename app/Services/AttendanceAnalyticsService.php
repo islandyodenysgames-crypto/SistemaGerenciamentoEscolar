@@ -53,6 +53,8 @@ class AttendanceAnalyticsService
                 school_classes.name AS class_name,
                 school_classes.year,
                 school_classes.shift,
+                school_classes.photo_path AS class_photo_path,
+                school_classes.photo_updated_at AS class_photo_updated_at,
                 COUNT(attendance_items.id) AS total_students,
                 SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) AS presentes,
                 SUM(CASE WHEN attendance_items.status = 'F' THEN 1 ELSE 0 END) AS ranking_absences,
@@ -114,6 +116,8 @@ class AttendanceAnalyticsService
                 school_classes.name,
                 school_classes.year,
                 school_classes.shift,
+                school_classes.photo_path,
+                school_classes.photo_updated_at,
                 attendance.id,
                 attendance.created_at
 
@@ -157,6 +161,118 @@ class AttendanceAnalyticsService
         return $this->frequencyBySqlCondition("
             YEAR(attendance.attendance_date) = YEAR(CURDATE())
         ");
+    }
+
+    public function schoolFrequencyByPreset(string $preset): array
+    {
+        $preset = strtolower(trim($preset));
+        $ranges = [
+            '7d' => 7,
+            '15d' => 15,
+            '30d' => 30,
+            '60d' => 60,
+            '90d' => 90,
+        ];
+
+        if (isset($ranges[$preset])) {
+            return $this->schoolFrequencyByRange(
+                date('Y-m-d', strtotime('-' . ($ranges[$preset] - 1) . ' days')),
+                date('Y-m-d')
+            );
+        }
+
+        return match ($preset) {
+            'month' => $this->schoolFrequencyByRange(date('Y-m-01'), date('Y-m-d')),
+            'previous_month' => $this->schoolFrequencyByRange(
+                date('Y-m-01', strtotime('first day of previous month')),
+                date('Y-m-t', strtotime('last day of previous month'))
+            ),
+            'semester' => $this->schoolFrequencyByRange(
+                date('Y') . (date('n') <= 6 ? '-01-01' : '-07-01'),
+                date('Y-m-d')
+            ),
+            'year' => $this->schoolFrequencyByRange(date('Y-01-01'), date('Y-m-d')),
+            default => $this->schoolFrequencyByRange(date('Y-m-d', strtotime('-29 days')), date('Y-m-d')),
+        };
+    }
+
+    public function schoolFrequencyByRange(string $startDate, string $endDate): array
+    {
+        $db = Connection::getInstance();
+        $stmt = $db->prepare("
+            SELECT attendance.attendance_date,
+                   ROUND((SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) / COUNT(attendance_items.id)) * 100, 1) AS percentage
+            FROM attendance
+            INNER JOIN attendance_items ON attendance_items.attendance_id = attendance.id
+            WHERE attendance.attendance_date BETWEEN :start_date AND :end_date
+            GROUP BY attendance.attendance_date
+            ORDER BY attendance.attendance_date ASC
+        ");
+        $stmt->execute(['start_date' => $startDate, 'end_date' => $endDate]);
+        return $stmt->fetchAll();
+    }
+
+    public function schoolFrequencyHeatmapByPreset(string $preset = 'month'): array
+    {
+        $preset = strtolower(trim($preset));
+        $days = match ($preset) {
+            'week' => 7,
+            'month' => 30,
+            'bimester' => 60,
+            'semester' => 180,
+            default => 30,
+        };
+
+        $data = $this->schoolFrequencyHeatmap($days);
+        $labels = [
+            'week' => 'Última semana',
+            'month' => 'Último mês',
+            'bimester' => 'Último bimestre',
+            'semester' => 'Último semestre',
+        ];
+        $data['period'] = array_key_exists($preset, $labels) ? $preset : 'month';
+        $data['period_label'] = $labels[$data['period']];
+        return $data;
+    }
+
+    public function schoolFrequencyHeatmap(int $days = 84): array
+    {
+        $days = max(28, min(366, $days));
+        $startDate = date('Y-m-d', strtotime('-' . ($days - 1) . ' days'));
+        $endDate = date('Y-m-d');
+        $db = Connection::getInstance();
+        $stmt = $db->prepare("
+            SELECT attendance.attendance_date,
+                   COUNT(attendance_items.id) AS total_records,
+                   SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) AS presents,
+                   ROUND((SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) / NULLIF(COUNT(attendance_items.id), 0)) * 100, 1) AS percentage
+            FROM attendance
+            INNER JOIN attendance_items ON attendance_items.attendance_id = attendance.id
+            WHERE attendance.attendance_date BETWEEN :start_date AND :end_date
+            GROUP BY attendance.attendance_date
+            ORDER BY attendance.attendance_date ASC
+        ");
+        $stmt->execute(['start_date' => $startDate, 'end_date' => $endDate]);
+        $indexed = [];
+        foreach ($stmt->fetchAll() ?: [] as $row) {
+            $indexed[(string) $row['attendance_date']] = $row;
+        }
+        $items = [];
+        $cursor = new \DateTimeImmutable($startDate);
+        $end = new \DateTimeImmutable($endDate);
+        while ($cursor <= $end) {
+            $date = $cursor->format('Y-m-d');
+            $row = $indexed[$date] ?? [];
+            $items[] = [
+                'date' => $date,
+                'weekday' => (int) $cursor->format('N'),
+                'percentage' => isset($row['percentage']) ? (float) $row['percentage'] : null,
+                'total_records' => (int) ($row['total_records'] ?? 0),
+                'presents' => (int) ($row['presents'] ?? 0),
+            ];
+            $cursor = $cursor->modify('+1 day');
+        }
+        return ['days' => $days, 'start_date' => $startDate, 'end_date' => $endDate, 'items' => $items];
     }
 
     public function schoolFrequencyLast30Days(): array

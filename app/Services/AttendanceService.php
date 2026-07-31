@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Repositories\AttendanceRepository;
+use App\Repositories\StudentRepository;
+use App\Services\Occurrence\NotificationService;
 
 class AttendanceService
 {
@@ -15,7 +17,9 @@ class AttendanceService
     public const STATUS_FALTA_ONIBUS = 'FO';
 
     public function __construct(
-        private AttendanceRepository $repository
+        private AttendanceRepository $repository,
+        private StudentRepository $studentRepository,
+        private NotificationService $notificationService
     ) {
     }
 
@@ -64,10 +68,23 @@ class AttendanceService
     public function insertAttendanceItem(int $attendanceId, int $studentId, string $status): void
     {
         $this->repository->insertAttendanceItem($attendanceId, $studentId, $status);
+        $student = $this->studentRepository->find($studentId);
+        if ($student) $this->notificationService->notifyAttendanceStatusFollowers($studentId, (string)$student['name'], $status);
     }
 
     public function updateItemStatus(int $itemId, string $status): void
     {
+        $studentId = $this->repository->studentIdForItem($itemId);
         $this->repository->updateItemStatus($itemId, $status);
+        if ($studentId) {
+            $student = $this->studentRepository->find($studentId);
+            if ($student) $this->notificationService->notifyAttendanceStatusFollowers($studentId, (string)$student['name'], $status);
+        }
     }
+
+    public function history(?string $date = null, ?int $classId = null): array
+    {
+        return $this->repository->history($date, $classId);
+    }
+
 }

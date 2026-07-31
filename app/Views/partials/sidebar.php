@@ -33,12 +33,27 @@ $menu = Menu::items();
 
             <?php foreach ($menu as $item): ?>
 
+                <?php if (($item['type'] ?? 'item') === 'section'): ?>
+
+                    <div class="sidebar-section">
+                        
+                         <?= e($item['title']) ?>
+                    
+                    </div>
+
+                    <?php continue; ?>
+
+                <?php endif; ?>
+
                 <a
                     href="<?= $item['url'] ?>"
                     class="<?= $item['active'] ? 'active' : '' ?>"
                 >
+                    
                     <i data-lucide="<?= $item['icon'] ?>"></i>
+                    
                     <span><?= $item['title'] ?></span>
+                
                 </a>
 
             <?php endforeach; ?>

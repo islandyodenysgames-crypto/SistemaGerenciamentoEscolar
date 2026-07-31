@@ -1,12 +1,27 @@
+<?php
+
+use App\Auth\Permissions;
+use App\Core\Authorization;
+
+$canManageAttendance = Authorization::can(
+    Permissions::ATTENDANCE_MANAGE
+);
+
+?>
+
 <div class="card pending-panel">
 
     <?php component('dashboard/panel-header', [
         'icon' => 'clock-alert',
+
         'title' => 'Turmas sem chamada hoje',
+
         'subtitle' => 'Pendências de registro da frequência',
+
         'badge' => !empty($classesWithoutAttendance)
             ? count($classesWithoutAttendance) . ' pendente(s)'
             : 'Tudo em dia',
+
         'badgeClass' => !empty($classesWithoutAttendance)
             ? 'badge-warning'
             : 'badge-success',
@@ -20,7 +35,9 @@
                 <i data-lucide="circle-check-big"></i>
             </div>
 
-            <h3>Todas as turmas registraram frequência</h3>
+            <h3>
+                Todas as turmas registraram frequência
+            </h3>
 
             <p>
                 Excelente! Nenhuma turma está pendente hoje.
@@ -34,36 +51,65 @@
 
             <?php foreach ($classesWithoutAttendance as $class): ?>
 
-                <a
-                    href="<?= base_url('frequencia/novo?turma=' . $class['id']) ?>"
-                    class="pending-card"
-                >
+                <?php if ($canManageAttendance): ?>
 
-                    <div class="pending-icon">
-                        <i data-lucide="school"></i>
+                    <a
+                        href="<?= base_url(
+                            'frequencia/novo?turma='
+                            . (int) $class['id']
+                        ) ?>"
+                        class="pending-card"
+                    >
+
+                <?php else: ?>
+
+                    <div class="pending-card pending-card-disabled">
+
+                <?php endif; ?>
+
+                        <div class="pending-icon">
+                            <i data-lucide="school"></i>
+                        </div>
+
+                        <div>
+
+                            <div class="pending-title">
+                                <?= e($class['name']) ?>
+                            </div>
+
+                            <div class="pending-year">
+                                <?= (int) $class['year'] ?>º Ano
+                            </div>
+
+                            <div class="pending-shift">
+                                <?= e($class['shift']) ?>
+                            </div>
+
+                            <div class="pending-action">
+
+                                <?php if ($canManageAttendance): ?>
+
+                                    Registrar frequência →
+
+                                <?php else: ?>
+
+                                    Apenas visualização
+
+                                <?php endif; ?>
+
+                            </div>
+
+                        </div>
+
+                <?php if ($canManageAttendance): ?>
+
+                    </a>
+
+                <?php else: ?>
+
                     </div>
 
-                    <div>
-
-                        <div class="pending-title">
-                            <?= e($class['name']) ?>
-                        </div>
-
-                        <div class="pending-year">
-                            <?= (int) $class['year'] ?>
-                        </div>
-
-                        <div class="pending-shift">
-                            <?= e($class['shift']) ?>
-                        </div>
-
-                        <div class="pending-action">
-                            Registrar frequência →
-                        </div>
-
-                    </div>
-
-                </a>
+                <?php endif; ?>
 
             <?php endforeach; ?>
 

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 if (!function_exists('component')) {
 
-    function component(string $name, array $data = []): void
+    function component(string $componentName, array $data = []): void
     {
         $basePath = dirname(__DIR__) . '/Views/components/';
 
         $component = $basePath . str_replace(
             ['\\', '.'],
             ['/', ''],
-            $name
+            $componentName
         ) . '.php';
 
         if (!file_exists($component)) {
-            echo "<!-- COMPONENTE NÃO ENCONTRADO: {$name} -->";
+            echo "<!-- COMPONENTE NÃO ENCONTRADO: {$componentName} -->";
             return;
         }
 

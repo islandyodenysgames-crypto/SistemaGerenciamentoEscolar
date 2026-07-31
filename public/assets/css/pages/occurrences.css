@@ -1,0 +1,406 @@
+/* ==========================================================
+   FORMULÁRIOS DE OCORRÊNCIAS
+========================================================== */
+
+.occurrence-form-card {
+    padding: 30px;
+}
+
+.occurrence-form {
+    display: grid;
+    gap: 28px;
+}
+
+/* ==========================================================
+   RESUMO DO ALUNO
+========================================================== */
+
+.occurrence-student-summary {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface-soft);
+}
+
+.occurrence-student-avatar {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 18px;
+    background: var(--green-soft);
+    color: var(--primary);
+}
+
+.occurrence-student-avatar i,
+.occurrence-student-avatar svg {
+    width: 28px;
+    height: 28px;
+}
+
+.occurrence-student-summary > div:last-child {
+    min-width: 0;
+}
+
+.occurrence-student-summary span {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--text-light);
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.occurrence-student-summary strong {
+    display: block;
+    overflow-wrap: anywhere;
+    color: var(--text-dark);
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1.3;
+}
+
+.occurrence-student-summary small {
+    display: block;
+    margin-top: 5px;
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ==========================================================
+   GRADE DO FORMULÁRIO
+========================================================== */
+
+.occurrence-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.occurrence-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.occurrence-form .form-group-full {
+    grid-column: 1 / -1;
+}
+
+.occurrence-form label {
+    color: var(--text-dark);
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.occurrence-form input,
+.occurrence-form select,
+.occurrence-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    color: var(--text-dark);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    transition: var(--transition);
+}
+
+.occurrence-form input,
+.occurrence-form select {
+    min-height: 46px;
+    padding: 0 14px;
+}
+
+.occurrence-form textarea {
+    min-height: 120px;
+    padding: 14px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.occurrence-form input::placeholder,
+.occurrence-form textarea::placeholder {
+    color: var(--text-light);
+    opacity: .75;
+}
+
+.occurrence-form input:hover,
+.occurrence-form select:hover,
+.occurrence-form textarea:hover {
+    border-color: var(--primary);
+}
+
+.occurrence-form input:focus,
+.occurrence-form select:focus,
+.occurrence-form textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, .12);
+}
+
+.occurrence-form input:disabled,
+.occurrence-form select:disabled,
+.occurrence-form textarea:disabled {
+    cursor: not-allowed;
+    opacity: .65;
+}
+
+/* ==========================================================
+   SUGESTÕES DE TÍTULO
+========================================================== */
+
+.occurrence-title-help {
+    display: block;
+    margin-top: 2px;
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+/* ==========================================================
+   AÇÕES DO FORMULÁRIO
+========================================================== */
+
+.occurrence-form .form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+}
+
+.occurrence-form .form-actions a,
+.occurrence-form .form-actions button {
+    min-width: 150px;
+    justify-content: center;
+    text-align: center;
+}
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+@media (max-width: 900px) {
+    .occurrence-form .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .occurrence-form-card {
+        padding: 22px;
+    }
+
+    .occurrence-form {
+        gap: 22px;
+    }
+
+    .occurrence-student-summary {
+        align-items: flex-start;
+        padding: 16px;
+    }
+
+    .occurrence-student-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+    }
+
+    .occurrence-student-avatar i,
+    .occurrence-student-avatar svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .occurrence-form .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .occurrence-form .form-group-full {
+        grid-column: auto;
+    }
+
+    .occurrence-form .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .occurrence-form .form-actions a,
+    .occurrence-form .form-actions button {
+        width: 100%;
+        min-width: 0;
+    }
+}
+/* Sprint 3.0.1 — anexos nas ocorrências */
+.occurrence-attachments-field > label {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+}
+.occurrence-attachments-field > label svg { width: 18px; height: 18px; }
+.occurrence-upload-box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px dashed #b9c8bd;
+    border-radius: 12px;
+    background: #f8fbf9;
+}
+.occurrence-upload-box input[type="file"] { max-width: 320px; }
+.occurrence-upload-box div { display: grid; gap: .25rem; }
+.occurrence-upload-box small { color: #667085; }
+.occurrence-selected-files { display: grid; gap: .4rem; margin-top: .75rem; }
+.occurrence-selected-file {
+    padding: .6rem .75rem;
+    border-radius: 8px;
+    background: #f2f7f3;
+    color: #344054;
+    font-size: .9rem;
+}
+.occurrence-existing-attachments { margin-top: 1rem; display: grid; gap: .65rem; }
+.occurrence-attachment-list { display: grid; gap: .55rem; }
+.occurrence-attachment-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    border: 1px solid #e2e8e4;
+    border-radius: 10px;
+    padding: .65rem .75rem;
+    background: #fff;
+}
+.occurrence-attachment-item > a {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+}
+.occurrence-attachment-item > a > svg { width: 20px; height: 20px; color: #168443; flex: 0 0 auto; }
+.occurrence-attachment-item span { display: grid; min-width: 0; }
+.occurrence-attachment-item strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.occurrence-attachment-item small { color: #667085; }
+.occurrence-attachment-remove {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 8px;
+    background: #fff1f0;
+    color: #b42318;
+    cursor: pointer;
+}
+.occurrence-attachment-remove svg { width: 17px; height: 17px; }
+@media (max-width: 640px) {
+    .occurrence-upload-box { align-items: stretch; flex-direction: column; }
+    .occurrence-upload-box input[type="file"] { max-width: 100%; }
+}
+
+/* Sprint 3.0.1.1 — anexos nas últimas ocorrências */
+.occurrences-recent-attachments {
+    display: grid;
+    gap: .55rem;
+    margin-top: .85rem;
+    padding: .75rem;
+    border: 1px solid #e2e8e4;
+    border-radius: 10px;
+    background: #f8fbf9;
+}
+.occurrences-recent-attachments-heading {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    color: #344054;
+    font-size: .88rem;
+}
+.occurrences-recent-attachments-heading svg {
+    width: 16px;
+    height: 16px;
+    color: #168443;
+}
+.occurrences-recent-attachments-heading span {
+    display: inline-grid;
+    place-items: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 .35rem;
+    border-radius: 999px;
+    background: #e5f5e9;
+    color: #15753b;
+    font-size: .75rem;
+    font-weight: 700;
+}
+.occurrences-recent-attachments-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: .45rem;
+}
+.occurrences-recent-attachment {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: .5rem;
+    min-width: 0;
+    padding: .55rem .65rem;
+    border: 1px solid #dfe7e1;
+    border-radius: 8px;
+    background: #fff;
+    color: #344054;
+    text-decoration: none;
+    transition: border-color .16s ease, background-color .16s ease;
+}
+.occurrences-recent-attachment:hover {
+    border-color: #afd2b8;
+    background: #f4fbf6;
+}
+.occurrences-recent-attachment > svg {
+    width: 17px;
+    height: 17px;
+    color: #168443;
+}
+.occurrences-recent-attachment span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .82rem;
+    font-weight: 600;
+}
+.occurrences-recent-attachment small {
+    color: #667085;
+    font-size: .72rem;
+    white-space: nowrap;
+}
+.occurrences-recent-attachments-more summary {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    color: #15753b;
+    font-size: .82rem;
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+}
+.occurrences-recent-attachments-more summary::-webkit-details-marker { display: none; }
+.occurrences-recent-attachments-more summary svg { width: 15px; height: 15px; }
+.occurrences-recent-attachments-more[open] summary { margin-bottom: .55rem; }
+
+@media (max-width: 720px) {
+    .occurrences-recent-attachments-list { grid-template-columns: 1fr; }
+    .occurrences-recent-attachment small { display: none; }
+}

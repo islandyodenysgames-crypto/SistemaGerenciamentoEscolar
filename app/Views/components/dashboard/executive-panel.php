@@ -17,6 +17,7 @@ $pendingPercentage = $totalClasses > 0
 $schoolGoals = $schoolGoals ?? \App\Config\SchoolGoals::defaults();
 
 $frequencyGoal = (float) ($schoolGoals['frequency_goal'] ?? 95);
+$attentionThreshold = max(0, $frequencyGoal - 5);
 
 ?>
 
@@ -32,7 +33,7 @@ $frequencyGoal = (float) ($schoolGoals['frequency_goal'] ?? 95);
             <h2>Painel do Gestor</h2>
 
             <p>
-                Resumo executivo da frequência escolar
+                Situação operacional de hoje
             </p>
         </div>
 
@@ -41,7 +42,7 @@ $frequencyGoal = (float) ($schoolGoals['frequency_goal'] ?? 95);
     <div class="manager-panel-grid">
 
         <?php component('dashboard/executive-card', [
-            'url' => base_url('relatorios'),
+            'url' => base_url('relatorios/diario?data=' . date('Y-m-d')),
             'color' => 'green',
             'icon' => 'chart-no-axes-combined',
             'title' => 'Frequência Geral',
@@ -50,38 +51,22 @@ $frequencyGoal = (float) ($schoolGoals['frequency_goal'] ?? 95);
             'value' => number_format($generalPercentage, 1, ',', '.') . '%',
             'progressLabel' => 'Hoje',
             'progressColor' => 'var(--success)',
-            'status' => $generalPercentage >= 95
+            'status' => $generalPercentage >= $frequencyGoal
                 ? 'Excelente'
-                : ($generalPercentage >= 90 ? 'Atenção' : 'Crítico'),
+                : ($generalPercentage >= $attentionThreshold ? 'Atenção' : 'Crítico'),
             'meta' => 'Meta da escola: ≥ ' . number_format($frequencyGoal, 0, ',', '.') . '%',
             'actionIcon' => 'file-text',
             'actionLabel' => 'Ver relatório',
         ]); ?>
 
-        <?php component('dashboard/executive-card', [
-            'url' => base_url('frequencia'),
-            'color' => 'yellow',
-            'icon' => 'school',
-            'title' => 'Turmas Pendentes',
-            'tooltip' => 'Turmas que ainda não registraram frequência hoje.',
-            'percentage' => $pendingPercentage,
-            'value' => (string) $pendingClasses,
-            'progressLabel' => 'de ' . $totalClasses,
-            'progressColor' => 'var(--warning)',
-            'status' => $pendingClasses === 0
-                ? 'Concluído'
-                : ($pendingClasses <= 2 ? 'Atenção' : 'Crítico'),
-            'meta' => number_format($pendingPercentage, 0, ',', '.') . '% das turmas',
-            'actionIcon' => 'clipboard-list',
-            'actionLabel' => 'Abrir Central',
-        ]); ?>
+        <?php component('dashboard/school-index-card', ['index' => $schoolIndex ?? []]); ?>
 
         <?php component('dashboard/executive-card', [
-            'url' => base_url('relatorios'),
+            'url' => base_url('inteligencia/casos?tipo=low_attendance'),
             'color' => 'red',
             'icon' => 'triangle-alert',
             'title' => 'Alunos em Alerta',
-            'tooltip' => 'Quantidade de alunos com frequência abaixo de 85%.',
+            'tooltip' => 'Quantidade de alunos com frequência abaixo da meta de <?= number_format($frequencyGoal, 1, ',', '.') ?>%.',
             'percentage' => min(100, $studentsInAlert * 10),
             'value' => (string) $studentsInAlert,
             'progressLabel' => 'Alunos',
@@ -89,13 +74,13 @@ $frequencyGoal = (float) ($schoolGoals['frequency_goal'] ?? 95);
             'status' => $studentsInAlert === 0
                 ? 'Estável'
                 : ($studentsInAlert <= 10 ? 'Atenção' : 'Crítico'),
-            'meta' => 'Frequência inferior a 85%',
+            'meta' => 'Frequência inferior a ' . number_format($frequencyGoal, 1, ',', '.') . '%',
             'actionIcon' => 'users',
             'actionLabel' => 'Ver alunos',
         ]); ?>
 
         <?php component('dashboard/executive-card', [
-            'url' => base_url('frequencia'),
+            'url' => base_url('frequencia/historico'),
             'color' => 'blue',
             'icon' => 'clipboard-check',
             'title' => 'Chamadas Hoje',
@@ -114,10 +99,6 @@ $frequencyGoal = (float) ($schoolGoals['frequency_goal'] ?? 95);
 
     </div>
 
-    <?php component('dashboard/school-objective', [
-        'title' => 'Objetivo da Escola',
-        'description' => 'Manter a frequência geral acima de 95%, registrar todas as chamadas diariamente e reduzir o número de alunos em situação de alerta.',
-        'icon' => 'trophy',
-    ]); ?>
+    <?php component('dashboard/school-index-details', ['index' => $schoolIndex ?? []]); ?>
 
 </section>

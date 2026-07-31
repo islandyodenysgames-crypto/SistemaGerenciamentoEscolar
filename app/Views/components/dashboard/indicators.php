@@ -1,3 +1,4 @@
+<?php $goalPercentage=(float)($goalPercentage??95); $attentionThreshold=max(0,$goalPercentage-5); ?>
 <div class="card indicators-panel">
 
     <?php component('dashboard/panel-header', [
@@ -48,9 +49,9 @@
 
             $color = match (true) {
 
-                $percentage >= 95 => 'var(--success)',
+                $percentage >= $goalPercentage => 'var(--success)',
 
-                $percentage >= 85 => 'var(--warning)',
+                $percentage >= $attentionThreshold => 'var(--warning)',
 
                 default => 'var(--danger)',
 

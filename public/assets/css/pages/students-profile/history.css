@@ -1,0 +1,123 @@
+/* ==========================================================
+   HISTÓRICO DE FREQUÊNCIA
+========================================================== */
+
+.student-history-card {
+    padding: 30px;
+}
+
+.student-history-header {
+    margin-bottom: 24px;
+}
+
+.student-history-header h3 {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.student-history-header p {
+    margin: 6px 0 0;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.student-history-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.student-history-item {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px;
+    border-radius: 18px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+.student-history-item:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-sm);
+}
+
+.student-history-icon {
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    font-size: 24px;
+}
+
+.student-history-icon.success {
+    background: #dcfce7;
+}
+
+.student-history-icon.danger {
+    background: #fee2e2;
+}
+
+.student-history-icon.warning {
+    background: #fef3c7;
+}
+
+.student-history-icon.info {
+    background: #dbeafe;
+}
+
+.student-history-icon.purple {
+    background: #ede9fe;
+}
+
+.student-history-icon.default {
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+.student-history-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.student-history-content strong {
+    color: var(--text-dark);
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.student-history-content small {
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+@media (max-width: 600px) {
+    .student-history-card {
+        padding: 22px;
+    }
+
+    .student-history-item {
+        align-items: flex-start;
+        padding: 15px;
+    }
+
+    .student-history-icon {
+        width: 46px;
+        height: 46px;
+        font-size: 20px;
+    }
+}

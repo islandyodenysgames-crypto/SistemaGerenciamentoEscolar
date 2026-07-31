@@ -31,3 +31,588 @@ a {
 .bg-soft {
     background: var(--surface-soft);
 }
+/* ==========================================================
+   TEMA ESCURO — SGE
+========================================================== */
+html[data-theme="dark"] {
+    --ds-surface: #1b232b;
+    --ds-surface-soft: #121820;
+    --ds-text-dark: #f1f5f9;
+    --ds-text: #d5dde6;
+    --ds-text-light: #95a4b5;
+    --ds-border: #33404d;
+    --ds-green-soft: #153329;
+    --ds-yellow-soft: #372b13;
+    --ds-red-soft: #3a2024;
+    --ds-blue-soft: #172d46;
+    --ds-orange-soft: #3b271a;
+
+    --surface: #1b232b;
+    --surface-soft: #121820;
+    --background: #121820;
+    --text-dark: #f1f5f9;
+    --text: #d5dde6;
+    --text-light: #95a4b5;
+    --border: #33404d;
+    --green-soft: #153329;
+    --yellow-soft: #372b13;
+    --red-soft: #3a2024;
+    --blue-soft: #172d46;
+    --orange-soft: #3b271a;
+    --shadow: 0 10px 30px rgba(0, 0, 0, .28);
+    --shadow-sm: 0 5px 16px rgba(0, 0, 0, .20);
+    --shadow-md: 0 12px 30px rgba(0, 0, 0, .27);
+    --shadow-lg: 0 20px 48px rgba(0, 0, 0, .35);
+}
+
+html[data-theme="dark"] body,
+html[data-theme="dark"] .app,
+html[data-theme="dark"] .content {
+    background: var(--surface-soft);
+    color: var(--text);
+}
+
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .header,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .modal-content,
+html[data-theme="dark"] .dropdown-menu,
+html[data-theme="dark"] .form-card,
+html[data-theme="dark"] .form-panel,
+html[data-theme="dark"] form.card,
+html[data-theme="dark"] .data-table,
+html[data-theme="dark"] .table-container {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+html[data-theme="dark"] .header-icon-button,
+html[data-theme="dark"] .sidebar-toggle {
+    background: #202a34;
+    color: var(--text);
+    border-color: var(--border);
+}
+
+html[data-theme="dark"] .header-icon-button:hover,
+html[data-theme="dark"] .sidebar-toggle:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+html[data-theme="dark"] .header-search,
+html[data-theme="dark"] .global-search-results,
+html[data-theme="dark"] .data-table thead,
+html[data-theme="dark"] .data-table tbody tr:hover {
+    background: #151d25;
+}
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .form-select,
+html[data-theme="dark"] .form-textarea {
+    background-color: #202a34;
+    color: var(--text-dark);
+    border-color: var(--border);
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+    color: #768697;
+}
+
+html[data-theme="dark"] option {
+    background: #202a34;
+    color: var(--text-dark);
+}
+
+html[data-theme="dark"] .sidebar-menu a:hover {
+    background: #183127;
+    color: #86efac;
+}
+
+html[data-theme="dark"] .logo-image {
+    background: #fff;
+}
+
+html[data-theme="dark"] .logo-text small,
+html[data-theme="dark"] .user-info small {
+    color: var(--text-light);
+}
+
+html[data-theme="dark"] [style*="background: #fff"],
+html[data-theme="dark"] [style*="background:#fff"],
+html[data-theme="dark"] [style*="background: white"],
+html[data-theme="dark"] [style*="background:white"] {
+    background: var(--surface) !important;
+}
+
+html[data-theme="dark"] [style*="color: #0f172a"],
+html[data-theme="dark"] [style*="color:#0f172a"],
+html[data-theme="dark"] [style*="color: #1e293b"],
+html[data-theme="dark"] [style*="color:#1e293b"] {
+    color: var(--text-dark) !important;
+}
+
+html[data-theme="dark"] canvas {
+    filter: brightness(.92) saturate(.88);
+}
+
+@media print {
+    html[data-theme="dark"] {
+        --surface: #fff;
+        --surface-soft: #fff;
+        --text-dark: #0f172a;
+        --text: #334155;
+        --text-light: #64748b;
+        --border: #dbe2ea;
+        color-scheme: light;
+    }
+}
+
+/* ==========================================================
+   TEMA ESCURO 2.1 — COBERTURA GLOBAL
+   Mantém compatibilidade com páginas antigas que ainda usam
+   cores fixas e nomes de componentes diferentes.
+========================================================== */
+html[data-theme="dark"],
+body[data-theme="dark"] {
+    color-scheme: dark;
+    --background: #0f151b;
+    --surface: #18212a;
+    --surface-soft: #111820;
+    --text-dark: #f4f7fa;
+    --text: #d7e0e8;
+    --text-light: #9aa9b8;
+    --border: #33414f;
+    --green-soft: #173329;
+    --yellow-soft: #382d16;
+    --red-soft: #3a2025;
+    --blue-soft: #172f49;
+    --orange-soft: #3b281c;
+}
+
+html[data-theme="dark"] body,
+body[data-theme="dark"] {
+    background-color: #0f151b !important;
+    color: var(--text) !important;
+}
+
+html[data-theme="dark"] :is(
+    .app, .content, .main-content, .page-content, .dashboard-page,
+    .page, .page-wrapper, .section, .content-wrapper
+) {
+    background-color: var(--surface-soft) !important;
+    color: var(--text) !important;
+}
+
+html[data-theme="dark"] :is(
+    .header, .topbar, .sidebar, .sidebar-header, .sidebar-footer,
+    .card, .panel, .widget, .box, .stat-card, .metric-card,
+    .dashboard-card, .summary-card, .info-card, .action-card,
+    .form-card, .form-panel, .filter-card, .filters-card,
+    .table-container, .table-wrapper, .data-table-wrapper,
+    .modal, .modal-content, .modal-card, .drawer, .drawer-content,
+    .dropdown-menu, .popover, .tooltip-content, .empty-state,
+    .accordion-item, .collapsible-panel, .timeline-item
+) {
+    background-color: var(--surface) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] :is(
+    h1, h2, h3, h4, h5, h6,
+    .page-title, .card-title, .panel-title, .section-title,
+    .modal-title, .drawer-title, .form-title,
+    strong, th, label
+) {
+    color: var(--text-dark) !important;
+}
+
+html[data-theme="dark"] :is(
+    p, small, .subtitle, .description, .helper-text, .muted,
+    .text-muted, .card-description, .panel-description,
+    .page-subtitle, .form-hint, .meta, .metadata
+) {
+    color: var(--text-light) !important;
+}
+
+html[data-theme="dark"] :is(
+    input:not([type="checkbox"]):not([type="radio"]),
+    select, textarea, .form-control, .form-select, .form-textarea,
+    .search-input, .header-search, .input-group, .input-wrapper
+) {
+    background-color: #202a34 !important;
+    color: var(--text-dark) !important;
+    border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] :is(input, textarea)::placeholder {
+    color: #8291a1 !important;
+    opacity: 1;
+}
+
+html[data-theme="dark"] :is(table, .data-table) {
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] :is(thead, .table-header, .data-table thead) {
+    background-color: #151e27 !important;
+}
+
+html[data-theme="dark"] :is(td, th, tr) {
+    border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] :is(tbody tr:hover, .table-row:hover) {
+    background-color: #202a34 !important;
+}
+
+html[data-theme="dark"] :is(
+    .btn-secondary, .btn-outline, .button-secondary,
+    .header-icon-button, .icon-button, .sidebar-toggle,
+    .pagination a, .pagination button
+) {
+    background-color: #202a34 !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] :is(
+    .sidebar-menu a, .sidebar-nav a, .menu-item, .nav-link
+) {
+    color: #c7d1dc !important;
+}
+
+html[data-theme="dark"] :is(
+    .sidebar-menu a:hover, .sidebar-menu a.active,
+    .sidebar-nav a:hover, .sidebar-nav a.active,
+    .nav-link:hover, .nav-link.active
+) {
+    background-color: #183127 !important;
+    color: #9af0b5 !important;
+}
+
+html[data-theme="dark"] :is(hr, .divider, .separator) {
+    border-color: var(--border) !important;
+    background-color: var(--border) !important;
+}
+
+html[data-theme="dark"] :is(svg, .icon) {
+    color: inherit;
+}
+
+html[data-theme="dark"] .logo-image,
+html[data-theme="dark"] .school-logo {
+    background-color: #fff;
+}
+
+/* Corrige blocos antigos com branco fixo em style inline. */
+html[data-theme="dark"] [style*="background-color: white"],
+html[data-theme="dark"] [style*="background-color:white"],
+html[data-theme="dark"] [style*="background-color: #fff"],
+html[data-theme="dark"] [style*="background-color:#fff"],
+html[data-theme="dark"] [style*="background: #ffffff"],
+html[data-theme="dark"] [style*="background:#ffffff"] {
+    background-color: var(--surface) !important;
+}
+
+
+/* ==========================================================
+   TEMA ESCURO 2.2 — CONTRASTE ENTRE PAINÉIS E LEGIBILIDADE
+========================================================== */
+html[data-theme="dark"] {
+    --surface: #1b2630;
+    --surface-soft: #0e151c;
+    --surface-raised: #22303b;
+    --surface-muted: #17212a;
+    --border: #435465;
+    --border-strong: #566a7d;
+    --text-dark: #f7fafc;
+    --text: #d8e2eb;
+    --text-light: #a8b6c4;
+    --panel-shadow: 0 10px 28px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.025);
+}
+
+/* Painéis estruturais recebem fundo, borda e sombra perceptíveis. */
+html[data-theme="dark"] :is(
+    section[class*="card"], article[class*="card"], div[class*="card"], form[class*="card"],
+    section[class*="panel"], article[class*="panel"], div[class*="panel"], form[class*="panel"],
+    section[class*="widget"], article[class*="widget"], div[class*="widget"],
+    section[class*="summary"], article[class*="summary"], div[class*="summary"],
+    section[class*="overview"], article[class*="overview"], div[class*="overview"],
+    section[class*="container"], article[class*="container"]
+) {
+    background-color: var(--surface) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] :is(
+    .card, .panel, .widget, .box, .stat-card, .metric-card,
+    .dashboard-card, .summary-card, .info-card, .action-card,
+    .form-card, .form-panel, .filter-card, .filters-card,
+    .table-container, .table-wrapper, .data-table-wrapper,
+    .settings-engine-card, .settings-engine-hero, .settings-history,
+    .management-intelligence-grid article, .school-index-secondary-grid > article,
+    .profile-photo-uploader, .settings-engine-actions, .setting-field,
+    .staged-file-upload__status, .staged-file-upload__item,
+    .monitoring-card__recent-action-controls button
+) {
+    background-color: var(--surface) !important;
+    border-color: var(--border) !important;
+    box-shadow: var(--panel-shadow) !important;
+}
+
+/* Cabeçalhos e subdivisões internas ganham um segundo nível visual. */
+html[data-theme="dark"] :is(
+    .card-header, .panel-header, .widget-header, .section-header,
+    .table-header, .modal-header, .drawer-header,
+    .settings-engine-card__header, .settings-history__header
+) {
+    background-color: var(--surface-raised) !important;
+    border-color: var(--border-strong) !important;
+    color: var(--text-dark) !important;
+}
+
+html[data-theme="dark"] :is(
+    .card-body, .panel-body, .widget-body, .section-body,
+    .modal-body, .drawer-body
+) {
+    background-color: var(--surface) !important;
+    color: var(--text) !important;
+}
+
+/* Elimina cartões brancos remanescentes com texto claro. */
+html[data-theme="dark"] :is(
+    .management-intelligence-grid article,
+    .school-index-secondary-grid > article,
+    .settings-engine-actions,
+    .setting-field,
+    .profile-photo-uploader,
+    .profile-photo-dialog,
+    .global-search-results,
+    .notice-detail-dialog
+) {
+    background: var(--surface) !important;
+    color: var(--text) !important;
+}
+
+/* Separadores internos precisam continuar visíveis. */
+html[data-theme="dark"] :is(
+    .card + .card, .panel + .panel, .widget + .widget
+) {
+    border-color: var(--border-strong) !important;
+}
+
+html[data-theme="dark"] :is(
+    .setting-field, .timeline-item, .accordion-item,
+    .list-item, .notification-item, .activity-item,
+    .table-row, tbody tr
+) {
+    border-color: var(--border) !important;
+}
+
+/* Textos escritos com cores fixas escuras não podem sumir. */
+html[data-theme="dark"] [style*="color: #111"],
+html[data-theme="dark"] [style*="color:#111"],
+html[data-theme="dark"] [style*="color: #111827"],
+html[data-theme="dark"] [style*="color:#111827"],
+html[data-theme="dark"] [style*="color: #1f2937"],
+html[data-theme="dark"] [style*="color:#1f2937"],
+html[data-theme="dark"] [style*="color: #334155"],
+html[data-theme="dark"] [style*="color:#334155"] {
+    color: var(--text-dark) !important;
+}
+
+/* Fundos claros fixos, inclusive tons quase brancos. */
+html[data-theme="dark"] [style*="background: #f8fafc"],
+html[data-theme="dark"] [style*="background:#f8fafc"],
+html[data-theme="dark"] [style*="background-color: #f8fafc"],
+html[data-theme="dark"] [style*="background-color:#f8fafc"],
+html[data-theme="dark"] [style*="background: #f1f5f9"],
+html[data-theme="dark"] [style*="background:#f1f5f9"] {
+    background-color: var(--surface-muted) !important;
+    color: var(--text) !important;
+}
+
+/* Mantém estados semânticos legíveis sem transformá-los em branco. */
+html[data-theme="dark"] :is(.badge, .chip, .tag, .status-badge, .risk-level-badge) {
+    border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+
+/* ==========================================================
+   TEMA ESCURO 2.3 — COMPONENTES ESPECÍFICOS DO SISTEMA
+========================================================== */
+html[data-theme="dark"] {
+    --panel-main: #1b2630;
+    --panel-raised: #22313d;
+    --panel-soft: #16212a;
+    --panel-border: #46596b;
+    --panel-border-strong: #5b7185;
+}
+
+/* Painel do Gestor */
+html[data-theme="dark"] .manager-panel {
+    background: linear-gradient(180deg, #1c2832, #17212a) !important;
+    border-color: var(--panel-border-strong) !important;
+    box-shadow: 0 18px 42px rgba(0,0,0,.34) !important;
+}
+html[data-theme="dark"] .manager-panel-icon {
+    background: #263646 !important;
+    color: #86efac !important;
+}
+html[data-theme="dark"] .manager-card,
+html[data-theme="dark"] .school-index-card {
+    background: #22313d !important;
+    border-color: var(--panel-border) !important;
+    color: var(--text) !important;
+    box-shadow: 0 10px 26px rgba(0,0,0,.26) !important;
+}
+html[data-theme="dark"] .manager-card :is(h3,strong),
+html[data-theme="dark"] .school-index-card :is(h3,strong) { color: var(--text-dark) !important; }
+html[data-theme="dark"] .manager-card :is(p,span,small),
+html[data-theme="dark"] .school-index-card :is(p,span,small) { color: var(--text-light) !important; }
+
+/* Mural de Avisos */
+html[data-theme="dark"] .notice-wall {
+    background: linear-gradient(145deg,#1c2832,#17212a) !important;
+    border-color: var(--panel-border-strong) !important;
+    box-shadow: 0 16px 42px rgba(0,0,0,.32) !important;
+}
+html[data-theme="dark"] .notice-wall-title h2,
+html[data-theme="dark"] .notice-wall-summary strong { color: var(--text-dark) !important; }
+html[data-theme="dark"] .notice-wall-title p,
+html[data-theme="dark"] .notice-wall-summary div > span { color: var(--text-light) !important; }
+html[data-theme="dark"] .notice-wall-icon {
+    background: #173629 !important;
+    color: #86efac !important;
+}
+html[data-theme="dark"] .notice-wall-card:not(.has-banner) {
+    background: linear-gradient(155deg,#253640,#1d2b35) !important;
+    border-color: var(--panel-border) !important;
+}
+html[data-theme="dark"] .notice-wall-card:not(.has-banner) h3 { color: var(--text-dark) !important; }
+html[data-theme="dark"] .notice-wall-card:not(.has-banner) p,
+html[data-theme="dark"] .notice-wall-card:not(.has-banner) .notice-wall-card-footer span { color: var(--text-light) !important; }
+html[data-theme="dark"] .notice-wall-arrow,
+html[data-theme="dark"] .notice-wall-cta {
+    background: #263642 !important;
+    border-color: var(--panel-border) !important;
+    color: #9af0b5 !important;
+}
+html[data-theme="dark"] .notice-wall-summary {
+    background: linear-gradient(90deg,#193027,#1c2b31) !important;
+    border-color: #365c49 !important;
+}
+
+/* Painel disciplinar e seus cards */
+html[data-theme="dark"] .dashboard-occurrence-panel {
+    background: #1c2832 !important;
+    border-color: var(--panel-border-strong) !important;
+    box-shadow: 0 16px 40px rgba(0,0,0,.3) !important;
+}
+html[data-theme="dark"] .dashboard-occurrence-panel-header { border-color: var(--panel-border) !important; }
+html[data-theme="dark"] .dashboard-occurrence-panel-icon { background: #422819 !important; color: #fdba74 !important; }
+html[data-theme="dark"] .dashboard-occurrence-kpi {
+    background: #22313d !important;
+    border-color: var(--panel-border) !important;
+    box-shadow: 0 8px 22px rgba(0,0,0,.24) !important;
+}
+html[data-theme="dark"] .dashboard-occurrence-kpi.today { background: #192d43 !important; border-color: #365b82 !important; }
+html[data-theme="dark"] .dashboard-occurrence-kpi.open { background: #382f18 !important; border-color: #6b5926 !important; }
+html[data-theme="dark"] .dashboard-occurrence-kpi.resolved { background: #173429 !important; border-color: #32664d !important; }
+html[data-theme="dark"] .dashboard-occurrence-kpi.month { background: #2d2743 !important; border-color: #574b80 !important; }
+html[data-theme="dark"] .dashboard-occurrence-kpi strong { color: var(--text-dark) !important; }
+html[data-theme="dark"] .dashboard-occurrence-kpi :is(span,small) { color: var(--text-light) !important; }
+
+/* Evolução da frequência escolar */
+html[data-theme="dark"] .attendance-chart-pro-panel,
+html[data-theme="dark"] .attendance-chart-pro {
+    background: linear-gradient(180deg,#1d2a34,#17212a) !important;
+    border-color: var(--panel-border-strong) !important;
+}
+html[data-theme="dark"] .attendance-chart-pro-summary > div {
+    background: #22313d !important;
+    border-color: var(--panel-border) !important;
+}
+html[data-theme="dark"] .attendance-chart-grid { stroke: #405265 !important; }
+html[data-theme="dark"] .attendance-chart-grid-label,
+html[data-theme="dark"] .attendance-chart-date,
+html[data-theme="dark"] .attendance-chart-axis { fill: #a8b6c4 !important; color: #a8b6c4 !important; }
+html[data-theme="dark"] .attendance-chart-pro-point circle { fill: #1b2630 !important; }
+html[data-theme="dark"] .attendance-chart-pro-action { background: #173429 !important; border: 1px solid #32664d !important; }
+
+/* Calendário Escolar do dashboard */
+html[data-theme="dark"] .dashboard-school-calendar {
+    background: #1c2832 !important;
+    border: 1px solid var(--panel-border-strong) !important;
+    box-shadow: 0 16px 40px rgba(0,0,0,.3) !important;
+}
+html[data-theme="dark"] .dashboard-school-calendar__header h2,
+html[data-theme="dark"] .dashboard-mini-calendar__month strong,
+html[data-theme="dark"] .dashboard-school-calendar__upcoming-title strong,
+html[data-theme="dark"] .dashboard-calendar-event__content { color: var(--text-dark) !important; }
+html[data-theme="dark"] .dashboard-school-calendar__header p,
+html[data-theme="dark"] .dashboard-mini-calendar__month :is(span,b),
+html[data-theme="dark"] .dashboard-calendar-event__content small { color: var(--text-light) !important; }
+html[data-theme="dark"] .dashboard-mini-calendar {
+    background: linear-gradient(180deg,#22313d,#1b2832) !important;
+    border-color: var(--panel-border) !important;
+}
+html[data-theme="dark"] .dashboard-mini-calendar__day { color: var(--text) !important; }
+html[data-theme="dark"] .dashboard-mini-calendar__day:hover,
+html[data-theme="dark"] .dashboard-mini-calendar__day.has-event { background: #2a3a46 !important; border-color: var(--panel-border) !important; }
+html[data-theme="dark"] .dashboard-calendar-event,
+html[data-theme="dark"] .dashboard-school-calendar__empty {
+    background: #22313d !important;
+    border-color: var(--panel-border) !important;
+}
+
+/* Painel de filtros e resumo em Alunos acompanhados */
+html[data-theme="dark"] .monitoring-case-summary article,
+html[data-theme="dark"] .monitoring-case-filters {
+    background: #1c2832 !important;
+    border-color: var(--panel-border-strong) !important;
+    box-shadow: 0 8px 22px rgba(0,0,0,.22) !important;
+}
+html[data-theme="dark"] .monitoring-case-summary strong { color: var(--text-dark) !important; }
+html[data-theme="dark"] .monitoring-case-summary small,
+html[data-theme="dark"] .monitoring-case-filters label { color: var(--text-light) !important; }
+html[data-theme="dark"] .monitoring-case-filters :is(select,input) {
+    background: #24333f !important;
+    color: var(--text-dark) !important;
+    border-color: var(--panel-border) !important;
+}
+html[data-theme="dark"] .monitoring-pagination a {
+    background: #22313d !important;
+    color: var(--text) !important;
+    border-color: var(--panel-border) !important;
+}
+
+/* Cards da página Avisos da Gestão */
+html[data-theme="dark"] .notices-page-kpis > div,
+html[data-theme="dark"] .notice-card {
+    background: #1c2832 !important;
+    border-color: var(--panel-border-strong) !important;
+    color: var(--text) !important;
+    box-shadow: 0 9px 24px rgba(0,0,0,.24) !important;
+}
+html[data-theme="dark"] .notices-page-kpis .active { background: #173429 !important; border-color: #32664d !important; }
+html[data-theme="dark"] .notices-page-kpis .scheduled { background: #192d43 !important; border-color: #365b82 !important; }
+html[data-theme="dark"] .notices-page-kpis .expired { background: #3a2227 !important; border-color: #75414a !important; }
+html[data-theme="dark"] .notices-page-kpis strong,
+html[data-theme="dark"] .notice-card h3 { color: var(--text-dark) !important; }
+html[data-theme="dark"] .notices-page-kpis :is(span,small),
+html[data-theme="dark"] .notice-card :is(p,small,.notice-card-meta span) { color: var(--text-light) !important; }
+html[data-theme="dark"] .notice-card-content,
+html[data-theme="dark"] .notice-card-meta,
+html[data-theme="dark"] .notice-card-actions,
+html[data-theme="dark"] .notice-card-resources {
+    border-color: var(--panel-border) !important;
+}

@@ -6,7 +6,6 @@ namespace App\Repositories;
 
 class AttendanceRepository extends BaseRepository
 {
-
     public function all(): array
     {
         $stmt = $this->db->query("
@@ -23,6 +22,123 @@ class AttendanceRepository extends BaseRepository
                 ON school_classes.id = attendance.school_class_id
             ORDER BY attendance.attendance_date DESC
         ");
+
+        return $stmt->fetchAll();
+    }
+
+    public function history(?string $date = null, ?int $classId = null): array
+    {
+        $where = [];
+        $params = [];
+
+        if (!empty($date)) {
+            $where[] = 'attendance.attendance_date = :date';
+            $params['date'] = $date;
+        }
+
+        if (!empty($classId)) {
+            $where[] = 'attendance.school_class_id = :class_id';
+            $params['class_id'] = $classId;
+        }
+
+        $whereSql = $where
+            ? 'WHERE ' . implode(' AND ', $where)
+            : '';
+
+        $stmt = $this->db->prepare("
+            SELECT
+                attendance.id,
+                attendance.school_class_id,
+                attendance.attendance_date,
+                attendance.notes,
+
+                school_classes.name AS class_name,
+                school_classes.year,
+                school_classes.shift,
+
+                COUNT(attendance_items.id) AS total_students,
+
+                SUM(
+                    CASE
+                        WHEN attendance_items.status = 'P'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS presentes,
+
+                SUM(
+                    CASE
+                        WHEN attendance_items.status = 'F'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS faltas,
+
+                SUM(
+                    CASE
+                        WHEN attendance_items.status = 'FJ'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS justificadas,
+
+                SUM(
+                    CASE
+                        WHEN attendance_items.status = 'AM'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS atestados,
+
+                SUM(
+                    CASE
+                        WHEN attendance_items.status = 'FO'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS onibus,
+
+                ROUND(
+                    (
+                        SUM(
+                            CASE
+                                WHEN attendance_items.status = 'P'
+                                THEN 1
+                                ELSE 0
+                            END
+                        )
+                        /
+                        NULLIF(COUNT(attendance_items.id), 0)
+                    ) * 100,
+                    1
+                ) AS percentage
+
+            FROM attendance
+
+            INNER JOIN school_classes
+                ON school_classes.id = attendance.school_class_id
+
+            LEFT JOIN attendance_items
+                ON attendance_items.attendance_id = attendance.id
+
+            {$whereSql}
+
+            GROUP BY
+                attendance.id,
+                attendance.school_class_id,
+                attendance.attendance_date,
+                attendance.notes,
+                school_classes.name,
+                school_classes.year,
+                school_classes.shift
+
+            ORDER BY
+                attendance.attendance_date DESC,
+                school_classes.year ASC,
+                school_classes.name ASC
+        ");
+
+        $stmt->execute($params);
 
         return $stmt->fetchAll();
     }
@@ -201,7 +317,8 @@ class AttendanceRepository extends BaseRepository
             SELECT
                 students.id,
                 students.name,
-                students.registration
+                students.registration,
+                students.photo_path
             FROM enrollments
             INNER JOIN students
                 ON students.id = enrollments.student_id
@@ -278,4 +395,13 @@ class AttendanceRepository extends BaseRepository
             'status' => $status,
         ]);
     }
+    public function studentIdForItem(int $itemId): ?int
+    {
+        $stmt = $this->db->prepare("SELECT student_id FROM attendance_items WHERE id = :id LIMIT 1");
+        $stmt->execute(['id' => $itemId]);
+        $value = $stmt->fetchColumn();
+        return $value !== false ? (int)$value : null;
+    }
+
+
 }

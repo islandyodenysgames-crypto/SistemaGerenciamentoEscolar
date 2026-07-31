@@ -9,103 +9,83 @@ $statusLabel = $done ? 'Realizada' : 'Pendente';
 
 ?>
 
-<div class="attendance-class-card-v2 attendance-class-card-v2-<?= $statusClass ?>">
+<div class="attendance-class-card-v3 attendance-class-card-v3-<?= e($statusClass) ?>">
 
-    <div class="attendance-card-v2-header">
-
-        <div>
-            <span class="attendance-card-v2-eyebrow">
-                Turma
-            </span>
-
-            <h3>
-                <?= e($class['class_name']) ?>
-                — <?= (int) $class['year'] ?>
-            </h3>
-
-            <p>
-                Turno: <strong><?= e($class['shift']) ?></strong>
-            </p>
-        </div>
-
-        <span class="attendance-card-v2-status attendance-card-v2-status-<?= $statusClass ?>">
-            <?= $statusLabel ?>
-        </span>
-
+    <div class="attendance-class-v3-icon">
+        <i data-lucide="<?= $done ? 'check-circle-2' : 'clock-3' ?>"></i>
     </div>
 
-    <?php if ($done): ?>
+    <div class="attendance-class-v3-main">
 
-        <div class="attendance-card-v2-body">
+        <div class="attendance-class-v3-title-row">
 
-            <div class="attendance-card-v2-progress">
+            <div>
+                <h3>
+                    <?= e($class['class_name']) ?>
+                </h3>
 
-                <?php component('base/progress', [
-                    'percentage' => $percentage,
-                    'label' => 'Frequência',
-                    'size' => 135
-                ]); ?>
-
-                <strong>
-                    <?= number_format($percentage, 1, ',', '.') ?>%
-                </strong>
-
+                <p>
+                    <?= (int) $class['year'] ?>º Ano • <?= e($class['shift']) ?>
+                </p>
             </div>
 
-            <div class="attendance-card-v2-metrics">
+            <span class="attendance-class-v3-status attendance-class-v3-status-<?= e($statusClass) ?>">
+                <?= e($statusLabel) ?>
+            </span>
+
+        </div>
+
+        <?php if ($done): ?>
+
+            <div class="attendance-class-v3-metrics">
 
                 <span>👥 <strong><?= (int) $class['total_students'] ?></strong> Total</span>
                 <span>✅ <strong><?= (int) $class['presentes'] ?></strong> Presentes</span>
                 <span>❌ <strong><?= (int) $class['ranking_absences'] ?></strong> Faltas</span>
-                <span>🟡 <strong><?= (int) $class['justificadas'] ?></strong> Justificadas</span>
+                <span>🟠 <strong><?= (int) $class['justificadas'] ?></strong> Justificadas</span>
                 <span>🔵 <strong><?= (int) $class['atestados'] ?></strong> Atestados</span>
                 <span>🟣 <strong><?= (int) $class['onibus'] ?></strong> Ônibus</span>
-                <span>⭐ <strong><?= number_format((float) $class['ife_score'], 2, ',', '.') ?></strong> IFE</span>
 
             </div>
 
-        </div>
+        <?php else: ?>
 
-    <?php else: ?>
+            <p class="attendance-class-v3-pending-text">
+                Frequência ainda não registrada para esta turma.
+            </p>
 
-        <div class="attendance-card-v2-pending">
+        <?php endif; ?>
 
-            <div class="attendance-card-v2-pending-icon">
-                <i data-lucide="clock-alert"></i>
-            </div>
+    </div>
 
-            <div>
-                <h4>Frequência ainda não registrada</h4>
+    <div class="attendance-class-v3-progress">
 
-                <p>
-                    Esta turma ainda não possui chamada registrada para hoje.
-                </p>
-            </div>
+        <?php component('base/progress', [
+            'percentage' => $percentage,
+            'label' => $done ? 'Frequência' : 'Pendente',
+            'size' => 96
+        ]); ?>
 
-        </div>
+    </div>
 
-    <?php endif; ?>
-
-    <div class="attendance-card-v2-actions">
+    <div class="attendance-class-v3-actions">
 
         <?php if ($done && $attendanceId): ?>
 
             <a
                 href="<?= base_url('frequencia/ver?id=' . $attendanceId) ?>"
-                class="btn-secondary"
+                class="attendance-class-v3-action"
                 title="Ver chamada"
             >
                 <i data-lucide="eye"></i>
-                Ver
             </a>
 
             <a
                 href="<?= base_url('frequencia/editar?id=' . $attendanceId) ?>"
-                class="btn-primary"
+                class="attendance-class-v3-action attendance-class-v3-action-primary"
                 title="Editar chamada"
             >
                 <i data-lucide="pencil"></i>
-                Editar
             </a>
 
             <form
@@ -121,11 +101,10 @@ $statusLabel = $done ? 'Realizada' : 'Pendente';
 
                 <button
                     type="submit"
-                    class="btn-danger"
+                    class="attendance-class-v3-action attendance-class-v3-action-danger"
                     title="Excluir chamada"
                 >
                     <i data-lucide="trash-2"></i>
-                    Excluir
                 </button>
             </form>
 
@@ -133,10 +112,10 @@ $statusLabel = $done ? 'Realizada' : 'Pendente';
 
             <a
                 href="<?= base_url('frequencia/novo?turma=' . $class['class_id']) ?>"
-                class="btn-primary"
+                class="attendance-class-v3-start"
             >
-                <i data-lucide="play"></i>
-                Iniciar frequência
+                <span>Iniciar</span>
+                <i data-lucide="arrow-right"></i>
             </a>
 
         <?php endif; ?>

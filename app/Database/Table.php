@@ -16,18 +16,25 @@ class Table
             ->primary()
             ->autoIncrement();
 
-        $this->columns[] = $column;
-
-        return $column;
+        return $this->addColumn($column);
     }
 
-    public function string(string $name, int $length = 255): Column
-    {
-        $column = new Column('VARCHAR', $name, $length);
+    public function string(
+        string $name,
+        int $length = 255
+    ): Column {
+        return $this->addColumn(
+            new Column('VARCHAR', $name, $length)
+        );
+    }
 
-        $this->columns[] = $column;
-
-        return $column;
+    public function char(
+        string $name,
+        int $length = 1
+    ): Column {
+        return $this->addColumn(
+            new Column('CHAR', $name, $length)
+        );
     }
 
     public function email(string $name = 'email'): Column
@@ -42,41 +49,159 @@ class Table
 
     public function integer(string $name): Column
     {
-        $column = new Column('INT', $name);
+        return $this->addColumn(
+            new Column('INT', $name)
+        );
+    }
 
-        $this->columns[] = $column;
+    public function unsignedInteger(string $name): Column
+    {
+        return $this->integer($name)->unsigned();
+    }
 
-        return $column;
+    public function bigInteger(string $name): Column
+    {
+        return $this->addColumn(
+            new Column('BIGINT', $name)
+        );
+    }
+
+    public function unsignedBigInteger(string $name): Column
+    {
+        return $this->bigInteger($name)->unsigned();
+    }
+
+    public function smallInteger(string $name): Column
+    {
+        return $this->addColumn(
+            new Column('SMALLINT', $name)
+        );
+    }
+
+    public function tinyInteger(string $name): Column
+    {
+        return $this->addColumn(
+            new Column('TINYINT', $name)
+        );
     }
 
     public function boolean(string $name): Column
     {
-        $column = new Column('BOOLEAN', $name);
-
-        $this->columns[] = $column;
-
-        return $column;
+        return $this->addColumn(
+            new Column('BOOLEAN', $name)
+        );
     }
 
-    public function createdAt(): void
-    {
-        $this->columns[] = new Column('TIMESTAMP', 'created_at');
+    public function decimal(
+        string $name,
+        int $precision = 10,
+        int $scale = 2
+    ): Column {
+        $column = new Column('DECIMAL', $name);
+
+        $column->precision($precision, $scale);
+
+        return $this->addColumn($column);
     }
 
-    public function updatedAt(): void
+    public function float(string $name): Column
     {
-        $this->columns[] = new Column('TIMESTAMP', 'updated_at');
+        return $this->addColumn(
+            new Column('FLOAT', $name)
+        );
+    }
+
+    public function double(string $name): Column
+    {
+        return $this->addColumn(
+            new Column('DOUBLE', $name)
+        );
+    }
+
+    public function date(string $name): Column
+    {
+        return $this->addColumn(
+            new Column('DATE', $name)
+        );
+    }
+
+    public function dateTime(string $name): Column
+    {
+        return $this->addColumn(
+            new Column('DATETIME', $name)
+        );
+    }
+
+    public function timestamp(string $name): Column
+    {
+        return $this->addColumn(
+            new Column('TIMESTAMP', $name)
+        );
+    }
+
+    public function time(string $name): Column
+    {
+        return $this->addColumn(
+            new Column('TIME', $name)
+        );
+    }
+
+    public function text(string $name): Column
+    {
+        return $this->addColumn(
+            new Column('TEXT', $name)
+        );
+    }
+
+    public function mediumText(string $name): Column
+    {
+        return $this->addColumn(
+            new Column('MEDIUMTEXT', $name)
+        );
+    }
+
+    public function longText(string $name): Column
+    {
+        return $this->addColumn(
+            new Column('LONGTEXT', $name)
+        );
+    }
+
+    public function json(string $name): Column
+    {
+        return $this->addColumn(
+            new Column('JSON', $name)
+        );
+    }
+
+    public function createdAt(): Column
+    {
+        return $this->timestamp('created_at')
+            ->useCurrent();
+    }
+
+    public function updatedAt(): Column
+    {
+        return $this->timestamp('updated_at')
+            ->useCurrent()
+            ->onUpdateCurrentTimestamp();
     }
 
     public function timestamps(): void
     {
         $this->createdAt();
-
         $this->updatedAt();
     }
 
     public function getColumns(): array
     {
         return $this->columns;
+    }
+
+    private function addColumn(Column $column): Column
+    {
+        $this->columns[] = $column;
+
+        return $column;
     }
 }

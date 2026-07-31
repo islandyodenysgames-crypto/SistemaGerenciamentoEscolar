@@ -1,20 +1,32 @@
 <?php
 
-$studentSuccess = \App\Core\Session::get('student_success');
-$studentError = \App\Core\Session::get('student_error');
+use App\Auth\Permissions;
+use App\Core\Authorization;
 
-\App\Core\Session::remove('student_success');
-\App\Core\Session::remove('student_error');
+$canManageStudents = Authorization::can(
+    Permissions::STUDENTS_MANAGE
+);
 
 component('base/page-header', [
-    'title' => 'Alunos',
-    'subtitle' => 'Gerencie os alunos cadastrados no Sistema de Frequência Escolar'
+    'title' => 'Turmas',
+
+    'subtitle' => $canManageStudents
+        ? 'Gerencie as turmas, acesse os alunos matriculados e organize as listas por turma.'
+        : 'Consulte as turmas e os alunos matriculados.',
 ]);
 
 component('students/page', [
-    'studentSuccess' => $studentSuccess,
-    'studentError' => $studentError,
+    'studentSuccess' => $studentSuccess ?? null,
+
+    'studentError' => $studentError ?? null,
+
+    'classSuccess' => $classSuccess ?? null,
+
+    'classError' => $classError ?? null,
+
     'students' => $students ?? [],
+
+    'classes' => $classes ?? [],
 ]);
 
 ?>

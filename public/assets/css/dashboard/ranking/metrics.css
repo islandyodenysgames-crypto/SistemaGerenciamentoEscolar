@@ -4,7 +4,7 @@
 
 .ranking-metrics {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 14px;
 }
 
@@ -62,4 +62,9 @@
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: .05em;
+}
+
+.ranking-metric-occurrences {
+    background: #f3e8ff;
+    border-color: rgba(124, 58, 237, .25);
 }

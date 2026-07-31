@@ -4,3 +4,37 @@
 @import url("frequencia.css");
 @import url("users.css");
 @import url("settings.css");
+@import url("students.css");
+@import url("students-profile.css");
+@import url("students-profile/occurrence-actions.css");
+@import url("students-report.css");
+@import url("occurrences.css");
+@import url("occurrences-dashboard.css");
+@import url("occurrence-severity.css");
+@import url("dashboard-occurrences.css");
+@import url("notices.css");
+@import url("dashboard-notices.css");
+@import url("subjects.css");
+@import url("notifications.css");
+
+@import url("intelligence.css");
+
+@import url("intelligence-settings.css");
+@import url("monitoring.css");
+
+@import url("attendance-reports.css");
+
+@import url("school-calendar.css");
+
+@import url("students-profile-recurrence.css");
+
+@import url("../dashboard/recurrence-card.css");
+.search-result-group .card-header h3{display:flex;align-items:center;gap:9px}.search-result-group .card-header h3 i{width:20px;color:var(--primary)}
+.search-result-list{display:grid;gap:6px;padding:8px}.search-result-item{display:flex;align-items:center;gap:12px;padding:13px;border-radius:12px;text-decoration:none;color:inherit;border:1px solid transparent}.search-result-item:hover{background:#f8fafc;border-color:var(--border)}.search-result-item>i:first-child{color:var(--primary)}.search-result-item>span{display:flex;flex:1;min-width:0;flex-direction:column}.search-result-item small{color:#64748b;margin-top:3px}
+.favorite-panel{margin-bottom:24px}.favorite-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.favorite-card{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--border);border-radius:14px;text-decoration:none;color:inherit}.favorite-card:hover{border-color:var(--primary);background:#f8fafc}.favorite-card>i{color:#f59e0b;fill:#f59e0b}.favorite-card span{display:flex;flex-direction:column;min-width:0}.favorite-card small{color:#64748b;margin-top:3px}.favorite-empty{padding:16px;color:#64748b;text-align:center}
+.search-result-item-wrap{display:flex;align-items:center;gap:8px}.search-result-item-wrap .search-result-item{flex:1}.favorite-toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:#fff;border-radius:10px;padding:9px 11px;cursor:pointer;color:#475569}.favorite-toggle:hover,.favorite-toggle.is-active{border-color:#f59e0b;color:#b45309;background:#fffbeb}.favorite-toggle.is-active i{fill:#f59e0b}.favorite-toggle i{width:17px}.favorite-toggle:disabled{opacity:.55;cursor:wait}
+.management-intelligence-panel{margin:24px 0}.management-intelligence-panel .card-header h3{display:flex;align-items:center;gap:9px}.management-intelligence-panel .card-header h3 i{color:var(--primary)}.management-intelligence-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.management-intelligence-grid article{border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:7px;background:#fff}.management-intelligence-grid article>span{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#64748b}.management-intelligence-grid article>strong{font-size:25px}.management-intelligence-grid article>small{color:#64748b;line-height:1.45}.risk-distribution{display:flex;gap:6px;flex-wrap:wrap}.risk-distribution b{font-size:12px;padding:6px 8px;border-radius:999px}.risk-distribution .is-critical{background:#fee2e2;color:#b91c1c}.risk-distribution .is-high{background:#ffedd5;color:#c2410c}.risk-distribution .is-moderate{background:#fef3c7;color:#a16207}
+@media(max-width:1000px){.management-intelligence-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:620px){.management-intelligence-grid{grid-template-columns:1fr}.favorite-toggle span{display:none}}
+
+.page-favorite-action{display:flex;justify-content:flex-end;margin:-18px 0 20px}.favorite-toggle-page{min-height:42px;padding:10px 15px;font-weight:700;box-shadow:0 4px 12px rgba(15,23,42,.06)}.favorite-toggle-page.is-active{box-shadow:0 4px 12px rgba(245,158,11,.15)}.global-search-favorite-mark{margin-left:auto!important;color:#f59e0b!important;fill:#f59e0b;width:17px!important;min-width:17px}
+@media(max-width:620px){.page-favorite-action{justify-content:stretch;margin-top:-10px}.favorite-toggle-page{width:100%;justify-content:center}.favorite-toggle-page span{display:inline}}

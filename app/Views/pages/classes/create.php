@@ -9,7 +9,7 @@ component('base/page-header', [
 
 <div class="card">
 
-    <form method="POST" action="<?= base_url('turmas') ?>" class="user-form">
+    <form method="POST" action="<?= base_url('turmas') ?>" class="user-form" enctype="multipart/form-data">
 
         <div class="form-group">
             <label>Nome da turma</label>
@@ -32,6 +32,8 @@ component('base/page-header', [
                 <option value="Integral">Integral</option>
             </select>
         </div>
+
+        <?php component('classes/photo-field', ['inputId' => 'class-photo-create']); ?>
 
         <div class="form-actions">
             <a href="<?= base_url('turmas') ?>" class="btn-secondary">

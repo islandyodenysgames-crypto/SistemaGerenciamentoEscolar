@@ -1,0 +1,382 @@
+/* ==========================================================
+   TEMA ESCURO 2.4 — AUDITORIA GLOBAL DE COMPONENTES
+   Camada final carregada depois de todos os estilos de página.
+========================================================== */
+html[data-theme="dark"] {
+    --dark-page: #0d141b;
+    --dark-surface-1: #17222c;
+    --dark-surface-2: #1d2b36;
+    --dark-surface-3: #243541;
+    --dark-border: #415466;
+    --dark-border-strong: #5a7186;
+    --dark-text: #dce6ee;
+    --dark-title: #f8fafc;
+    --dark-muted: #a7b6c5;
+    --dark-hover: #293b48;
+    --dark-shadow: 0 12px 30px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.025);
+}
+
+html[data-theme="dark"] body,
+html[data-theme="dark"] .app,
+html[data-theme="dark"] main,
+html[data-theme="dark"] .content,
+html[data-theme="dark"] .main-content,
+html[data-theme="dark"] .page-content,
+html[data-theme="dark"] .content-wrapper {
+    background: var(--dark-page) !important;
+    color: var(--dark-text) !important;
+}
+
+/* Containers estruturais detectados na auditoria. */
+html[data-theme="dark"] :where(
+    [class$="-card"], [class*="-card "], [class*="_card"],
+    [class$="-panel"], [class*="-panel "], [class*="_panel"],
+    [class$="-widget"], [class*="-widget "],
+    [class$="-box"], [class*="-box "],
+    [class$="-summary"], [class*="-summary "],
+    [class$="-overview"], [class*="-overview "],
+    [class$="-filters"], [class*="-filters "], [class$="-filter"],
+    [class$="-container"], [class*="-container "],
+    [class$="-wrapper"], [class*="-wrapper "],
+    [class$="-content"], [class*="-content "],
+    [class$="-section"], [class*="-section "],
+    [class$="-item"], [class*="-item "],
+    .card, .panel, .widget, .box, .modal-content, .drawer-content,
+    .dropdown-menu, .popover, .accordion-item, .collapse-content,
+    .table-container, .table-wrapper, .data-table-wrapper
+):not(.btn):not([class*="button"]):not([class*="badge"]):not([class*="chip"]):not([class*="tag"]):not([class*="status"]):not([class*="icon"]):not([class*="avatar"]):not([class*="image"]):not([class*="photo"]):not([class*="banner"]):not([class*="progress"]):not([class*="logo"]) {
+    background-color: var(--dark-surface-1) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+
+/* Cards/painéis de primeiro nível recebem separação clara. */
+html[data-theme="dark"] :where(
+    .card, .panel, .widget, .box, .stat-card, .metric-card,
+    [class$="-card"], [class$="-panel"], [class$="-widget"]
+):not(.btn):not([class*="badge"]):not([class*="status"]):not([class*="image"]):not([class*="banner"]) {
+    box-shadow: var(--dark-shadow) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+/* Cabeçalhos e rodapés internos. */
+html[data-theme="dark"] :where(
+    .card-header, .panel-header, .widget-header, .section-header,
+    .modal-header, .drawer-header, .table-header,
+    [class$="-header"], [class*="-header "],
+    [class$="-footer"], [class*="-footer "]
+):not(.header):not(.sidebar-header):not([class*="button"]):not([class*="icon"]):not([class*="banner"]) {
+    background-color: var(--dark-surface-2) !important;
+    color: var(--dark-title) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+/* Subcards, linhas e blocos internos. */
+html[data-theme="dark"] :where(
+    article, .list-item, .activity-item, .notification-item,
+    .timeline-item, .setting-field, .filter-field, .detail-row,
+    .info-row, .summary-item, .metric-item, .stat-item
+):not([class*="banner"]):not([class*="image"]):not([class*="photo"]):not([class*="badge"]):not([class*="status"]) {
+    border-color: var(--dark-border) !important;
+}
+
+/* Tipografia: evita texto escuro ou branco sobre fundo branco remanescente. */
+html[data-theme="dark"] :where(h1,h2,h3,h4,h5,h6,.title,.page-title,.section-title,.card-title,.panel-title,.widget-title,label,legend,th,strong) {
+    color: var(--dark-title) !important;
+}
+html[data-theme="dark"] :where(p,small,.subtitle,.description,.helper-text,.hint,.muted,.text-muted,.meta,.metadata,.caption) {
+    color: var(--dark-muted) !important;
+}
+html[data-theme="dark"] :where(td,li,dd,dt,span):not([class*="badge"]):not([class*="status"]):not([class*="chip"]):not([class*="tag"]):not([class*="icon"]) {
+    border-color: var(--dark-border);
+}
+
+/* Formulários e buscas. */
+html[data-theme="dark"] :where(input:not([type="checkbox"]):not([type="radio"]),select,textarea,.form-control,.form-select,.search-input,.input-group,.input-wrapper) {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-title) !important;
+    border-color: var(--dark-border) !important;
+}
+html[data-theme="dark"] :where(input,textarea)::placeholder { color: #8798a8 !important; opacity: 1; }
+html[data-theme="dark"] option { background: var(--dark-surface-2) !important; color: var(--dark-title) !important; }
+
+/* Tabelas. */
+html[data-theme="dark"] :where(table,.data-table) { background: var(--dark-surface-1) !important; color: var(--dark-text) !important; }
+html[data-theme="dark"] :where(thead,.data-table thead) { background: var(--dark-surface-3) !important; }
+html[data-theme="dark"] :where(th,td,tr) { border-color: var(--dark-border) !important; }
+html[data-theme="dark"] :where(tbody tr:nth-child(even)) { background-color: rgba(255,255,255,.018) !important; }
+html[data-theme="dark"] :where(tbody tr:hover,.table-row:hover) { background-color: var(--dark-hover) !important; }
+
+/* Fundos claros fixos em classes utilitárias comuns. */
+html[data-theme="dark"] :where(.bg-white,.background-white,.surface-white,.white-card,.light-card,.bg-light,.bg-soft) {
+    background: var(--dark-surface-1) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+
+/* Inline styles encontrados no legado. */
+html[data-theme="dark"] [style*="background:#fff"],
+html[data-theme="dark"] [style*="background: #fff"],
+html[data-theme="dark"] [style*="background:#ffffff"],
+html[data-theme="dark"] [style*="background: #ffffff"],
+html[data-theme="dark"] [style*="background:white"],
+html[data-theme="dark"] [style*="background: white"],
+html[data-theme="dark"] [style*="background-color:#fff"],
+html[data-theme="dark"] [style*="background-color: #fff"],
+html[data-theme="dark"] [style*="background-color:#ffffff"],
+html[data-theme="dark"] [style*="background-color: #ffffff"],
+html[data-theme="dark"] [style*="background-color:white"],
+html[data-theme="dark"] [style*="background-color: white"] {
+    background: var(--dark-surface-1) !important;
+    color: var(--dark-text) !important;
+}
+html[data-theme="dark"] [style*="background:#f8fafc"],
+html[data-theme="dark"] [style*="background: #f8fafc"],
+html[data-theme="dark"] [style*="background:#f1f5f9"],
+html[data-theme="dark"] [style*="background: #f1f5f9"],
+html[data-theme="dark"] [style*="background:#f9fafb"],
+html[data-theme="dark"] [style*="background: #f9fafb"] {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text) !important;
+}
+html[data-theme="dark"] [style*="color:#0f172a"],
+html[data-theme="dark"] [style*="color: #0f172a"],
+html[data-theme="dark"] [style*="color:#111827"],
+html[data-theme="dark"] [style*="color: #111827"],
+html[data-theme="dark"] [style*="color:#1e293b"],
+html[data-theme="dark"] [style*="color: #1e293b"],
+html[data-theme="dark"] [style*="color:#334155"],
+html[data-theme="dark"] [style*="color: #334155"],
+html[data-theme="dark"] [style*="color:#475569"],
+html[data-theme="dark"] [style*="color: #475569"] { color: var(--dark-title) !important; }
+
+/* Componentes com nomes próprios encontrados na varredura das páginas. */
+html[data-theme="dark"] :where(
+    .intelligence-hero,.intelligence-card,.intelligence-section,.intelligence-summary,
+    .class-intelligence-card,.class-intelligence-panel,.comparison-card,.comparison-panel,
+    .student-intelligence-card,.student-intelligence-section,.student-profile-card,
+    .occurrence-card,.occurrence-panel,.severity-card,.recurrence-card,
+    .monitoring-card,.monitoring-panel,.monitoring-plan,.monitoring-action,
+    .calendar-card,.calendar-panel,.calendar-grid,.calendar-event,
+    .report-card,.report-panel,.report-summary,.report-section,
+    .settings-card,.settings-panel,.settings-section,.settings-group,
+    .notice-card,.notice-panel,.notice-item,.notification-card,
+    .subject-card,.user-card,.student-card,.class-card,
+    .frequency-card,.attendance-card,.ranking-card,.heatmap-card
+) {
+    background-color: var(--dark-surface-1) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+
+/* Mantém estados semânticos distinguíveis. */
+html[data-theme="dark"] :where(.alert,.callout,.message,.feedback) { border-color: currentColor !important; }
+html[data-theme="dark"] :where(.badge,.chip,.tag,[class*="status-"]) { box-shadow: none !important; }
+
+/* Gráficos e áreas SVG/canvas. */
+html[data-theme="dark"] :where(.chart-container,.chart-wrapper,.graph-container,.heatmap-container) {
+    background: var(--dark-surface-1) !important;
+    border-color: var(--dark-border) !important;
+}
+html[data-theme="dark"] :where(svg text) { fill: var(--dark-muted); }
+
+/* Impressão sempre clara. */
+@media print {
+    html[data-theme="dark"] body,
+    html[data-theme="dark"] .app,
+    html[data-theme="dark"] main,
+    html[data-theme="dark"] .content,
+    html[data-theme="dark"] [class] {
+        color-scheme: light;
+    }
+}
+
+/* ==========================================================
+   TEMA ESCURO 2.4.1 — CORREÇÕES DIRECIONADAS
+   Inteligência preditiva, acompanhamentos e calendários.
+========================================================== */
+
+/* Inteligência Preditiva das Turmas */
+html[data-theme="dark"] .intelligence-class-predictive-card {
+    background: var(--dark-surface-1) !important;
+    border-color: var(--dark-border) !important;
+    box-shadow: 0 10px 26px rgba(0,0,0,.24) !important;
+}
+html[data-theme="dark"] .intelligence-class-predictive-card__top {
+    background: linear-gradient(135deg, rgba(99,102,241,.16), rgba(23,34,44,.96) 62%) !important;
+    border-bottom-color: var(--dark-border) !important;
+}
+html[data-theme="dark"] .intelligence-class-predictive-card__identity strong,
+html[data-theme="dark"] .intelligence-class-predictive-card > p {
+    color: var(--dark-title) !important;
+}
+html[data-theme="dark"] .intelligence-class-predictive-card > p {
+    color: var(--dark-muted) !important;
+}
+html[data-theme="dark"] .intelligence-class-predictive-indicators .intelligence-class-predictive-indicator {
+    background: linear-gradient(145deg, color-mix(in srgb,var(--metric,#64748b) 18%,var(--dark-surface-2)), var(--dark-surface-2) 78%) !important;
+    border-color: color-mix(in srgb,var(--metric,#64748b) 45%,var(--dark-border)) !important;
+}
+html[data-theme="dark"] .intelligence-class-predictive-indicator small,
+html[data-theme="dark"] .intelligence-class-predictive-indicator strong,
+html[data-theme="dark"] .intelligence-class-predictive-indicator strong svg {
+    color: color-mix(in srgb,var(--metric,#cbd5e1) 68%,#fff) !important;
+}
+html[data-theme="dark"] .intelligence-class-predictive-actions {
+    border-top-color: var(--dark-border) !important;
+}
+html[data-theme="dark"] .intelligence-class-predictive-actions a:not(:first-child) {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-title) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+html[data-theme="dark"] .intelligence-class-predictive-status--insufficient {
+    background: #334454 !important;
+    color: #dbe7f0 !important;
+    border-color: #5a7186 !important;
+}
+
+/* Alunos acompanhados — cards, métricas e blocos internos */
+html[data-theme="dark"] .monitoring-grid .monitoring-card,
+html[data-theme="dark"] .monitoring-case-summary article,
+html[data-theme="dark"] .monitoring-case-filters,
+html[data-theme="dark"] .monitoring-action-attachments,
+html[data-theme="dark"] .monitoring-action-attachment,
+html[data-theme="dark"] .monitoring-card__concluded-notice {
+    background: var(--dark-surface-1) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+html[data-theme="dark"] .monitoring-card__metrics span,
+html[data-theme="dark"] .monitoring-card__teachers span,
+html[data-theme="dark"] .monitoring-action-attachment,
+html[data-theme="dark"] .monitoring-card__recent-actions,
+html[data-theme="dark"] .monitoring-card__actions-body {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+html[data-theme="dark"] .monitoring-card__metrics small,
+html[data-theme="dark"] .monitoring-card__teachers small,
+html[data-theme="dark"] .monitoring-action-attachment small,
+html[data-theme="dark"] .monitoring-card__status-area > small,
+html[data-theme="dark"] .monitoring-case-summary small,
+html[data-theme="dark"] .monitoring-case-filters label {
+    color: var(--dark-muted) !important;
+}
+html[data-theme="dark"] .monitoring-case-summary strong,
+html[data-theme="dark"] .monitoring-action-attachment strong,
+html[data-theme="dark"] .monitoring-card h3,
+html[data-theme="dark"] .monitoring-card h4 {
+    color: var(--dark-title) !important;
+}
+html[data-theme="dark"] .monitoring-toolbar a,
+html[data-theme="dark"] .monitoring-pagination a {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+html[data-theme="dark"] .monitoring-toolbar a.is-active,
+html[data-theme="dark"] .monitoring-pagination a.is-active {
+    background: var(--primary) !important;
+    color: #fff !important;
+    border-color: var(--primary) !important;
+}
+html[data-theme="dark"] .monitoring-status-badge.is-concluded {
+    background: #334454 !important;
+    color: #dbe7f0 !important;
+}
+
+/* Calendário de ocorrências — dias com registros */
+html[data-theme="dark"] .occurrences-calendar-day {
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+html[data-theme="dark"] .occurrences-calendar-day.none {
+    background: var(--dark-surface-2) !important;
+}
+html[data-theme="dark"] .occurrences-calendar-day.low {
+    background: #3b371e !important;
+    border-color: #8b7b2f !important;
+}
+html[data-theme="dark"] .occurrences-calendar-day.medium {
+    background: #49301f !important;
+    border-color: #a85d2a !important;
+}
+html[data-theme="dark"] .occurrences-calendar-day.high {
+    background: #4a2528 !important;
+    border-color: #a6474d !important;
+}
+html[data-theme="dark"] .occurrences-calendar-day.very-high {
+    background: #572328 !important;
+    border-color: #d35b63 !important;
+}
+html[data-theme="dark"] .occurrences-calendar-day-number {
+    background: rgba(15,23,42,.72) !important;
+    color: #fff !important;
+}
+html[data-theme="dark"] .occurrences-calendar-day > strong {
+    color: #fff !important;
+}
+html[data-theme="dark"] .occurrences-calendar-day > small {
+    color: #c6d2dc !important;
+}
+html[data-theme="dark"] .occurrences-calendar-day-status .open {
+    color: #fbbf24 !important;
+}
+html[data-theme="dark"] .occurrences-calendar-day-status .resolved {
+    color: #4ade80 !important;
+}
+
+/* Calendário Escolar — Programação cadastrada */
+html[data-theme="dark"] .calendar-events-panel,
+html[data-theme="dark"] .school-calendar-list,
+html[data-theme="dark"] .school-event-row {
+    background: var(--dark-surface-1) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+html[data-theme="dark"] .school-event-row.is-featured {
+    background: linear-gradient(90deg,#332f1d,var(--dark-surface-1) 72%) !important;
+    box-shadow: 0 10px 24px rgba(0,0,0,.24) !important;
+}
+html[data-theme="dark"] .school-event-period,
+html[data-theme="dark"] .school-event-content,
+html[data-theme="dark"] .school-event-content h3 {
+    color: var(--dark-title) !important;
+}
+html[data-theme="dark"] .school-event-period__point,
+html[data-theme="dark"] .school-event-icon,
+html[data-theme="dark"] .school-event-badges span {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+html[data-theme="dark"] .school-event-content p,
+html[data-theme="dark"] .school-event-content small,
+html[data-theme="dark"] .school-event-period__point small,
+html[data-theme="dark"] .school-event-period > svg {
+    color: var(--dark-muted) !important;
+}
+html[data-theme="dark"] .school-event-badges .featured {
+    background: #4b3c14 !important;
+    color: #fde68a !important;
+}
+html[data-theme="dark"] .calendar-search {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+html[data-theme="dark"] .calendar-search input {
+    background: transparent !important;
+}
+html[data-theme="dark"] .calendar-overview__day {
+    background: var(--dark-surface-1) !important;
+    border-color: var(--dark-border) !important;
+}
+html[data-theme="dark"] .calendar-overview__day.is-empty {
+    background: var(--dark-surface-2) !important;
+}
+html[data-theme="dark"] .calendar-overview__event {
+    background: var(--dark-surface-2) !important;
+    color: #dbe7f0 !important;
+}

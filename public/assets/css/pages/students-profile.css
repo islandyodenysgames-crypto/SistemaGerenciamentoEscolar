@@ -1,0 +1,18 @@
+/* ==========================================================
+   PERFIL DO ALUNO - IMPORTAÇÕES
+========================================================== */
+
+@import url("students-profile/base.css");
+@import url("students-profile/stats.css");
+@import url("students-profile/history.css");
+@import url("students-profile/evolution.css");
+@import url("students-profile/calendar.css");
+@import url("students-profile/occurrences.css");
+@import url("students-profile/occurrence-actions.css");
+
+@import url("students-profile/intelligence.css");
+
+
+.student-monitoring-actions-reading__controls{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-top:.85rem}
+.student-monitoring-actions-reading__controls form{margin:0}
+.student-intelligence-action-edit-form{margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(148,163,184,.25)}

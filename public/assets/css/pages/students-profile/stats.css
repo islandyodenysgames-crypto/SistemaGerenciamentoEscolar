@@ -1,0 +1,88 @@
+/* ==========================================================
+   PERFIL DO ALUNO - INDICADORES
+========================================================== */
+
+.student-profile-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.student-profile-stat {
+    position: relative;
+    overflow: hidden;
+    padding: 24px;
+    border-radius: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.student-profile-stat:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.student-profile-stat::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: var(--primary);
+}
+
+.student-profile-stat:nth-child(2)::after {
+    background: #3b82f6;
+}
+
+.student-profile-stat:nth-child(3)::after {
+    background: #ef4444;
+}
+
+.student-profile-stat:nth-child(4)::after {
+    background: #f59e0b;
+}
+
+.student-profile-stat span {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 34px;
+    line-height: 1;
+}
+
+.student-profile-stat strong {
+    display: block;
+    color: var(--text-dark);
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.student-profile-stat small {
+    display: block;
+    margin-top: 8px;
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+@media (max-width: 900px) {
+    .student-profile-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .student-profile-stats {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,6 +1,19 @@
 <?php
 
 $items = $frequencyLast30Days ?? [];
+$frequencyPeriod = (string) ($frequencyPeriod ?? '30d');
+$periodLabels = [
+    '7d' => 'Últimos 7 dias',
+    '15d' => 'Últimos 15 dias',
+    '30d' => 'Últimos 30 dias',
+    '60d' => 'Últimos 60 dias',
+    '90d' => 'Últimos 90 dias',
+    'month' => 'Este mês',
+    'previous_month' => 'Mês anterior',
+    'semester' => 'Este semestre',
+    'year' => 'Ano letivo',
+];
+$periodLabel = $periodLabels[$frequencyPeriod] ?? $periodLabels['30d'];
 
 $goalPercentage = (float) ($goalPercentage ?? 95);
 
@@ -89,15 +102,36 @@ $gridValues = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
 
 ?>
 
-<div class="card attendance-chart-panel attendance-chart-pro-panel">
+<div
+    id="attendance-frequency-panel"
+    class="card attendance-chart-panel attendance-chart-pro-panel"
+    data-frequency-endpoint="<?= e(base_url('dashboard/frequencia-evolucao')) ?>"
+    data-frequency-period-current="<?= e($frequencyPeriod) ?>"
+    data-frequency-period-label-current="<?= e($periodLabel) ?>"
+    aria-live="polite"
+>
 
-    <?php component('dashboard/panel-header', [
-        'icon' => 'chart-column-big',
-        'title' => 'Frequência dos últimos 30 dias',
-        'subtitle' => 'Evolução diária da presença escolar',
-        'badge' => '30 dias',
-        'badgeClass' => 'badge-success',
-    ]); ?>
+    <div class="attendance-chart-pro-heading">
+        <?php component('dashboard/panel-header', [
+            'icon' => 'chart-column-big',
+            'title' => 'Evolução da frequência escolar',
+            'subtitle' => 'Evolução diária da presença escolar',
+            'badge' => $periodLabel,
+            'badgeClass' => 'badge-success',
+            'badgeDataAttribute' => 'frequency-period-label',
+        ]); ?>
+
+        <form method="get" class="attendance-period-filter" data-frequency-filter>
+            <label for="frequency-period">Período</label>
+            <select id="frequency-period" name="frequency_period" data-frequency-period>
+                <?php foreach ($periodLabels as $value => $label): ?>
+                    <option value="<?= e($value) ?>" <?= $frequencyPeriod === $value ? 'selected' : '' ?>>
+                        <?= e($label) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </form>
+    </div>
 
     <?php if (empty($items)): ?>
 
@@ -113,7 +147,7 @@ $gridValues = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
                 viewBox="0 0 <?= $svgWidth ?> <?= $svgHeight ?>"
                 class="attendance-chart-pro-svg"
                 role="img"
-                aria-label="Gráfico de linhas da frequência dos últimos 30 dias"
+                aria-label="Gráfico de linhas da frequência no período selecionado"
             >
 
                 <?php foreach ($gridValues as $value): ?>

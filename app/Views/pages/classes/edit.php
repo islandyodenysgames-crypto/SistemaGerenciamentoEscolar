@@ -9,7 +9,7 @@ component('base/page-header', [
 
 <div class="card">
 
-    <form method="POST" action="<?= base_url('turmas/editar') ?>" class="user-form">
+    <form method="POST" action="<?= base_url('turmas/editar') ?>" class="user-form" enctype="multipart/form-data">
 
         <input type="hidden" name="id" value="<?= $class['id'] ?>">
 
@@ -43,6 +43,12 @@ component('base/page-header', [
                 <option value="0" <?= (int) $class['active'] === 0 ? 'selected' : '' ?>>Inativa</option>
             </select>
         </div>
+
+        <?php component('classes/photo-field', [
+            'inputId' => 'class-photo-edit',
+            'photoPath' => $class['photo_path'] ?? '',
+            'photoUpdatedAt' => $class['photo_updated_at'] ?? '',
+        ]); ?>
 
         <div class="form-actions">
             <a href="<?= base_url('turmas') ?>" class="btn-secondary">Cancelar</a>

@@ -3,6 +3,7 @@
 component('dashboard/attendance-chart-pro', [
     'frequencyLast30Days' => $frequencyLast30Days ?? [],
     'goalPercentage' => $goalPercentage ?? 95,
+    'frequencyPeriod' => $frequencyPeriod ?? '30d',
 ]);
 
 ?>

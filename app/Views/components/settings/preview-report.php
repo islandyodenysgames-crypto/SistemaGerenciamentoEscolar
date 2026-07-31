@@ -5,7 +5,14 @@
         <div class="settings-report-header">
 
             <div class="settings-report-logo">
-                <i data-lucide="graduation-cap"></i>
+                <?php if (!empty($logoPath)): ?>
+                    <img
+                        src="<?= asset($logoPath) ?>"
+                        alt="<?= e($name ?? 'Logo da escola') ?>"
+                    >
+                <?php else: ?>
+                    <i data-lucide="graduation-cap"></i>
+                <?php endif; ?>
             </div>
 
             <div>

@@ -1,0 +1,349 @@
+/* ==========================================================
+   DASHBOARD GERAL - PAINEL DISCIPLINAR
+========================================================== */
+
+.dashboard-occurrence-panel {
+    display: grid;
+    gap: 24px;
+    min-width: 0;
+    margin-top: 24px;
+    margin-bottom: 28px;
+    padding: 26px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: var(--surface);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.dashboard-occurrence-panel:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.dashboard-occurrence-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+}
+
+.dashboard-occurrence-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    min-width: 0;
+}
+
+.dashboard-occurrence-panel-icon {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 58px;
+    border-radius: 18px;
+    background: #fff7ed;
+    color: #ea580c;
+}
+
+.dashboard-occurrence-panel-icon i,
+.dashboard-occurrence-panel-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.dashboard-occurrence-panel-title > div:last-child {
+    min-width: 0;
+}
+
+.dashboard-occurrence-panel-title span {
+    display: block;
+    margin-bottom: 5px;
+    color: #ea580c;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.dashboard-occurrence-panel-title h2 {
+    margin: 0;
+    overflow-wrap: anywhere;
+    color: var(--text-dark);
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.dashboard-occurrence-panel-title p {
+    max-width: 680px;
+    margin: 7px 0 0;
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.dashboard-occurrence-panel-header .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
+.dashboard-occurrence-panel-header .btn-secondary i,
+.dashboard-occurrence-panel-header .btn-secondary svg {
+    width: 17px;
+    height: 17px;
+}
+
+.dashboard-occurrence-panel-content {
+    min-width: 0;
+}
+
+/* ==========================================================
+   INDICADORES DE OCORRÊNCIAS
+========================================================== */
+
+.dashboard-occurrence-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    min-width: 0;
+}
+
+.dashboard-occurrence-kpis-full {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.dashboard-occurrence-kpi {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+    padding: 22px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    color: inherit;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.dashboard-occurrence-kpi:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-md);
+}
+
+.dashboard-occurrence-kpi:focus-visible {
+    outline: 3px solid rgba(22, 163, 74, .2);
+    outline-offset: 3px;
+}
+
+.dashboard-occurrence-kpi > i,
+.dashboard-occurrence-kpi > svg {
+    width: 58px;
+    height: 58px;
+    padding: 15px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    border-radius: 18px;
+    background: var(--surface-soft);
+    color: var(--text-light);
+}
+
+.dashboard-occurrence-kpi > div {
+    min-width: 0;
+}
+
+.dashboard-occurrence-kpi span {
+    display: block;
+    overflow-wrap: anywhere;
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.3;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.dashboard-occurrence-kpi strong {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-dark);
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.dashboard-occurrence-kpi small {
+    display: block;
+    margin-top: 7px;
+    overflow-wrap: anywhere;
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+/* ==========================================================
+   INDICADOR - HOJE
+========================================================== */
+
+.dashboard-occurrence-kpi.today {
+    border-color: #bfdbfe;
+    background: #eff6ff;
+}
+
+.dashboard-occurrence-kpi.today > i,
+.dashboard-occurrence-kpi.today > svg {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+/* ==========================================================
+   INDICADOR - ABERTAS
+========================================================== */
+
+.dashboard-occurrence-kpi.open {
+    border-color: #fde68a;
+    background: #fffbeb;
+}
+
+.dashboard-occurrence-kpi.open > i,
+.dashboard-occurrence-kpi.open > svg {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+/* ==========================================================
+   INDICADOR - RESOLVIDAS
+========================================================== */
+
+.dashboard-occurrence-kpi.resolved {
+    border-color: #bbf7d0;
+    background: #ecfdf5;
+}
+
+.dashboard-occurrence-kpi.resolved > i,
+.dashboard-occurrence-kpi.resolved > svg {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+/* ==========================================================
+   INDICADOR - ESTE MÊS
+========================================================== */
+
+.dashboard-occurrence-kpi.month {
+    border-color: #ddd6fe;
+    background: #f5f3ff;
+}
+
+.dashboard-occurrence-kpi.month > i,
+.dashboard-occurrence-kpi.month > svg {
+    background: #ede9fe;
+    color: #7c3aed;
+}
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+@media (max-width: 1150px) {
+    .dashboard-occurrence-kpis,
+    .dashboard-occurrence-kpis-full {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    .dashboard-occurrence-panel {
+        gap: 20px;
+        padding: 21px;
+        border-radius: 20px;
+    }
+
+    .dashboard-occurrence-panel-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 18px;
+        padding-bottom: 18px;
+    }
+
+    .dashboard-occurrence-panel-title {
+        align-items: flex-start;
+    }
+
+    .dashboard-occurrence-panel-title h2 {
+        font-size: 21px;
+    }
+
+    .dashboard-occurrence-panel-header .btn-secondary {
+        width: 100%;
+    }
+
+    .dashboard-occurrence-kpis,
+    .dashboard-occurrence-kpis-full {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-occurrence-panel {
+        padding: 17px;
+    }
+
+    .dashboard-occurrence-panel-title {
+        gap: 13px;
+    }
+
+    .dashboard-occurrence-panel-icon {
+        width: 50px;
+        height: 50px;
+        flex-basis: 50px;
+        border-radius: 15px;
+    }
+
+    .dashboard-occurrence-panel-icon i,
+    .dashboard-occurrence-panel-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .dashboard-occurrence-panel-title h2 {
+        font-size: 19px;
+    }
+
+    .dashboard-occurrence-panel-title p {
+        font-size: 12px;
+    }
+
+    .dashboard-occurrence-kpi {
+        grid-template-columns: 50px minmax(0, 1fr);
+        gap: 13px;
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    .dashboard-occurrence-kpi > i,
+    .dashboard-occurrence-kpi > svg {
+        width: 50px;
+        height: 50px;
+        padding: 13px;
+        border-radius: 15px;
+    }
+
+    .dashboard-occurrence-kpi strong {
+        font-size: 28px;
+    }
+}

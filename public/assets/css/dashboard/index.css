@@ -11,3 +11,6 @@
 @import url("pending.css");
 @import url("empty-state.css");
 @import url("responsive.css");
+@import url("recurrence-card.css");
+
+@import url("frequency-heatmap.css");

@@ -46,6 +46,8 @@
             <?php foreach ($ranking as $index => $item): ?>
 
                 <?php
+$goalPercentage = (float)($goalPercentage ?? 95);
+$attentionThreshold = max(0, $goalPercentage - 5);
 
                 $hasAttendance = (int) ($item['has_attendance'] ?? 0) === 1;
 
@@ -64,8 +66,8 @@
 
                 $performanceClass = match (true) {
                     !$hasAttendance => 'pending',
-                    $percentage >= 95 => 'success',
-                    $percentage >= 90 => 'warning',
+                    $percentage >= $goalPercentage => 'success',
+                    $percentage >= $attentionThreshold => 'warning',
                     default => 'danger',
                 };
 
@@ -159,6 +161,22 @@
                                     </strong>
 
                                     <small>Frequência</small>
+
+                                </div>
+
+                                <div class="ranking-metric ranking-metric-occurrences">
+
+                                    <span>📋</span>
+
+                                    <strong>
+                                        <?= (int) ($item['justificadas'] ?? 0) ?>
+                                        /
+                                        <?= (int) ($item['atestados'] ?? 0) ?>
+                                        /
+                                        <?= (int) ($item['onibus'] ?? 0) ?>
+                                    </strong>
+
+                                    <small>Jus. / Ates. / Ônibus</small>
 
                                 </div>
 

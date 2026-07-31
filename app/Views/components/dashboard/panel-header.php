@@ -26,7 +26,7 @@
 
     <?php if (!empty($badge)): ?>
 
-        <span class="badge <?= e($badgeClass ?? 'badge-success') ?>">
+        <span class="badge <?= e($badgeClass ?? 'badge-success') ?>"<?= !empty($badgeDataAttribute) ? ' data-' . e($badgeDataAttribute) : '' ?>>
             <?= e($badge) ?>
         </span>
 

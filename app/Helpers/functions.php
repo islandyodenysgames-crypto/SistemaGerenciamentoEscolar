@@ -13,3 +13,4 @@ require_once __DIR__ . '/form.php';
 require_once __DIR__ . '/flash.php';
 require_once __DIR__ . '/school.php';
 require_once __DIR__ . '/navigation.php';
+require_once __DIR__ . '/media.php';

@@ -1,0 +1,414 @@
+/* ==========================================================
+   SELEÇÃO DE ALUNOS PARA OCORRÊNCIA
+========================================================== */
+
+.student-card-selections {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.student-selection-control {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.student-selection-control input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.student-selection-control span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--text-light);
+    transition: var(--transition);
+}
+
+.student-selection-control span svg {
+    width: 17px;
+    height: 17px;
+}
+
+.student-selection-control:hover span {
+    transform: translateY(-2px);
+    border-color: #93c5fd;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.student-occurrence-select input:checked + span {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, .24);
+}
+
+.student-delete-select input:checked + span {
+    border-color: #dc2626;
+    background: #dc2626;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(220, 38, 38, .2);
+}
+
+/* ==========================================================
+   CARD SELECIONADO
+========================================================== */
+
+.student-profile-card {
+    position: relative;
+}
+
+.student-profile-card.is-selected-for-occurrence {
+    border-color: #60a5fa;
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, .12),
+        var(--shadow-md);
+}
+
+.student-profile-card.is-selected-for-occurrence::after {
+    content: "Selecionado para ocorrência";
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    z-index: 2;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .02em;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.student-profile-card.is-selected-for-deletion {
+    border-color: #f87171;
+    box-shadow:
+        0 0 0 3px rgba(220, 38, 38, .1),
+        var(--shadow-md);
+}
+
+/* ==========================================================
+   BARRA FLUTUANTE DE SELEÇÃO
+========================================================== */
+
+.student-selection-bar {
+    position: fixed;
+    left: calc(var(--sidebar-width, 260px) + 32px);
+    right: 32px;
+    bottom: 24px;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    padding: 18px 20px;
+    border: 1px solid #bfdbfe;
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, .96);
+    box-shadow:
+        0 18px 50px rgba(15, 23, 42, .18),
+        0 0 0 1px rgba(37, 99, 235, .04);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.student-selection-bar[hidden] {
+    display: none;
+}
+
+.student-selection-bar-summary {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.student-selection-bar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.student-selection-bar-icon svg {
+    width: 23px;
+    height: 23px;
+}
+
+.student-selection-bar-summary strong {
+    display: block;
+    color: var(--text-dark);
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.student-selection-bar-summary small {
+    display: block;
+    margin-top: 4px;
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.student-selection-bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* ==========================================================
+   ALUNOS SELECIONADOS NO FORMULÁRIO
+========================================================== */
+
+.multiple-occurrence-students {
+    display: grid;
+    gap: 18px;
+    margin-bottom: 26px;
+    padding: 22px;
+    border: 1px solid #bfdbfe;
+    border-radius: 20px;
+    background: #eff6ff;
+}
+
+.multiple-occurrence-students-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.multiple-occurrence-eyebrow {
+    display: block;
+    color: #2563eb;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.multiple-occurrence-students-header h3 {
+    margin: 5px 0 0;
+    color: var(--text-dark);
+    font-size: 19px;
+    font-weight: 900;
+}
+
+.multiple-occurrence-students-header p {
+    margin: 7px 0 0;
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+.multiple-occurrence-students-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    max-height: 330px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.multiple-occurrence-student {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) 22px;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid #dbeafe;
+    border-radius: 15px;
+    background: #ffffff;
+}
+
+.multiple-occurrence-student-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.multiple-occurrence-student-avatar svg {
+    width: 20px;
+    height: 20px;
+}
+
+.multiple-occurrence-student > div:nth-child(2) {
+    min-width: 0;
+}
+
+.multiple-occurrence-student strong {
+    display: block;
+    overflow: hidden;
+    color: var(--text-dark);
+    font-size: 13px;
+    font-weight: 900;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.multiple-occurrence-student small {
+    display: block;
+    margin-top: 4px;
+    overflow: hidden;
+    color: var(--text-light);
+    font-size: 11px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.multiple-occurrence-student-check {
+    width: 20px;
+    height: 20px;
+    color: #16a34a;
+}
+
+/* ==========================================================
+   AVISO ANTES DE SALVAR
+========================================================== */
+
+.multiple-occurrence-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 22px;
+    padding: 15px 17px;
+    border: 1px solid #fde68a;
+    border-radius: 15px;
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.multiple-occurrence-warning svg {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+}
+
+.multiple-occurrence-warning p {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.55;
+}
+
+/* ==========================================================
+   TOOLBAR
+========================================================== */
+
+.students-toolbar-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.students-toolbar button:disabled,
+.student-selection-bar button:disabled {
+    cursor: not-allowed;
+    opacity: .55;
+    transform: none;
+}
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+@media (max-width: 1050px) {
+    .student-selection-bar {
+        left: 24px;
+        right: 24px;
+    }
+}
+
+@media (max-width: 760px) {
+    .multiple-occurrence-students-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .student-selection-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+
+    .student-selection-bar-actions {
+        width: 100%;
+    }
+
+    .student-selection-bar-actions .btn-primary,
+    .student-selection-bar-actions .btn-secondary {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .multiple-occurrence-students-header {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 560px) {
+    .student-selection-bar {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        padding: 15px;
+        border-radius: 17px;
+    }
+
+    .student-selection-bar-actions {
+        flex-direction: column;
+    }
+
+    .student-selection-bar-actions .btn-primary,
+    .student-selection-bar-actions .btn-secondary {
+        width: 100%;
+    }
+
+    .students-toolbar-actions {
+        width: 100%;
+    }
+
+    .students-toolbar-actions .btn-secondary,
+    .students-toolbar-actions .btn-danger {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .multiple-occurrence-students {
+        padding: 17px;
+    }
+}

@@ -8,6 +8,7 @@ component('base/page-header', [
 $schoolName = school('name', app_name());
 $schoolLogo = school('logo_path');
 $schoolConfigured = school('id') !== null;
+$frequencyGoal = (float)($frequencyGoal ?? 95);
 
 ?>
 
@@ -32,94 +33,138 @@ $schoolConfigured = school('id') !== null;
 
 <div class="settings-grid">
 
-    <a href="<?= base_url('configuracoes/identidade') ?>" class="card settings-card">
+    <a
+        href="<?= base_url('configuracoes/inteligencia') ?>"
+        class="card settings-card"
+    >
+        <div class="settings-card-icon">
+            <i data-lucide="brain-circuit"></i>
+        </div>
+        <div>
+            <h3>Inteligência Escolar</h3>
+            <p>Reincidência, pesos de risco, tendências, alertas e recomendações.</p>
+            <span class="settings-status settings-status-success">Engine ativo</span>
+        </div>
+    </a>
+
+    <a
+        href="<?= base_url('configuracoes/identidade') ?>"
+        class="card settings-card"
+    >
         <div class="settings-card-icon">
             <i data-lucide="school"></i>
         </div>
 
         <div>
+
             <h3>Identidade da Escola</h3>
-            <p>Logo, nome, contatos, redes sociais e dados institucionais.</p>
+
+            <p>
+                Logo, nome, contatos, redes sociais e identidade visual da escola.
+            </p>
 
             <span class="settings-status <?= $schoolConfigured ? 'settings-status-success' : 'settings-status-warning' ?>">
                 <?= $schoolConfigured ? 'Configurada' : 'Incompleta' ?>
             </span>
+
         </div>
+
     </a>
 
-    <a href="#" class="card settings-card">
+    <a
+        href="<?= base_url('configuracoes/metas') ?>"
+        class="card settings-card"
+    >
         <div class="settings-card-icon">
             <i data-lucide="target"></i>
         </div>
 
         <div>
+
             <h3>Metas da Escola</h3>
-            <p>Frequência mínima, objetivos e parâmetros de acompanhamento.</p>
+
+            <p>
+                Frequência mínima, indicadores e metas institucionais.
+            </p>
 
             <span class="settings-status settings-status-success">
-                95%
+                <?= number_format($frequencyGoal, 1, ',', '.') ?>%
             </span>
+
         </div>
+
     </a>
 
-    <a href="#" class="card settings-card">
+    <a
+        href="#"
+        class="card settings-card"
+    >
         <div class="settings-card-icon">
             <i data-lucide="calendar-days"></i>
         </div>
 
         <div>
+
             <h3>Ano Letivo</h3>
-            <p>Calendário escolar, períodos e configurações do ano vigente.</p>
+
+            <p>
+                Calendário escolar, períodos letivos e configurações anuais.
+            </p>
 
             <span class="settings-status settings-status-warning">
                 Pendente
             </span>
+
         </div>
+
     </a>
 
-    <a href="<?= base_url('usuarios') ?>" class="card settings-card">
+    <a
+        href="<?= base_url('usuarios') ?>"
+        class="card settings-card"
+    >
         <div class="settings-card-icon">
             <i data-lucide="users"></i>
         </div>
 
         <div>
+
             <h3>Usuários e Permissões</h3>
-            <p>Gerencie usuários, acessos e permissões do sistema.</p>
+
+            <p>
+                Gerencie usuários, perfis de acesso e permissões do sistema.
+            </p>
 
             <span class="settings-status settings-status-success">
                 Ativo
             </span>
+
         </div>
+
     </a>
 
-    <a href="#" class="card settings-card">
-        <div class="settings-card-icon">
-            <i data-lucide="palette"></i>
-        </div>
-
-        <div>
-            <h3>Aparência</h3>
-            <p>Cores, tema visual e identidade gráfica da aplicação.</p>
-
-            <span class="settings-status settings-status-success">
-                Padrão
-            </span>
-        </div>
-    </a>
-
-    <a href="#" class="card settings-card">
+    <a
+        href="<?= base_url('configuracoes/dados') ?>"
+        class="card settings-card"
+    >
         <div class="settings-card-icon">
             <i data-lucide="database-backup"></i>
         </div>
 
         <div>
-            <h3>Backup</h3>
-            <p>Exportação, restauração e segurança dos dados escolares.</p>
 
-            <span class="settings-status settings-status-warning">
-                Não configurado
+            <h3>Backup</h3>
+
+            <p>
+                Exportação, restauração e segurança dos dados escolares.
+            </p>
+
+            <span class="settings-status settings-status-success">
+                Disponível
             </span>
+
         </div>
+
     </a>
 
 </div>

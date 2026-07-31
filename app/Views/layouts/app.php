@@ -11,6 +11,22 @@
 
     <title><?= $title ?? app_name() ?></title>
 
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('sge-theme');
+                var theme = saved === 'dark' || saved === 'light'
+                    ? saved
+                    : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                document.documentElement.dataset.theme = theme;
+                document.documentElement.classList.add(theme === 'dark' ? 'theme-dark' : 'theme-light');
+                document.documentElement.style.colorScheme = theme;
+            } catch (error) {
+                document.documentElement.dataset.theme = 'light';
+            }
+        })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
     <link
@@ -27,10 +43,13 @@
     ======================================================= -->
 
     <link rel="stylesheet" href="<?= asset('assets/css/design-system/index.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/core/index.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/core/index.css?v=7') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/components/index.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/components/staged-file-upload.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/components/profile-photo-uploader.css?v=1') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/dashboard/index.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/pages/index.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/core/dark-audit.css?v=2') ?>">
 
     <?php
 
@@ -77,7 +96,7 @@
          LUCIDE
     ======================================================= -->
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="<?= asset('assets/js/vendor/lucide-local.js') ?>"></script>
 
     <!-- ======================================================
          HTML2CANVAS
@@ -93,8 +112,11 @@
     <script src="<?= asset('assets/js/core/export.js') ?>"></script>
     <script src="<?= asset('assets/js/layout/sidebar.js') ?>"></script>
     <script src="<?= asset('assets/js/core/theme-manager.js') ?>"></script>
-    <script src="<?= asset('assets/js/core/theme.js') ?>"></script>
+    <script src="<?= asset('assets/js/core/theme.js?v=3') ?>"></script>
     <script src="<?= asset('assets/js/core/notifications.js') ?>"></script>
+    <script src="<?= asset('assets/js/core/global-search.js') ?>"></script>
+    <script src="<?= asset('assets/js/core/favorites.js') ?>"></script>
+    <script src="<?= asset('assets/js/components/staged-file-upload.js') ?>"></script>
 
     <!-- ======================================================
          JAVASCRIPT DA PÁGINA
@@ -128,6 +150,7 @@
 
     <?php endif; ?>
 
+    <script src="<?= asset('assets/js/components/profile-photo-uploader.js?v=1') ?>"></script>
 </body>
 
 </html>

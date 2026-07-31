@@ -133,6 +133,38 @@
     box-shadow: var(--shadow-sm);
 }
 
+
+.attendance-student-identity {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+}
+
+.attendance-student-photo {
+    width: 78px;
+    height: 78px;
+    flex: 0 0 78px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 3px solid color-mix(in srgb, var(--primary) 22%, #fff);
+    border-radius: 22px;
+    background: var(--green-soft);
+    color: var(--primary);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, .08);
+}
+
+.attendance-student-photo i,
+.attendance-student-photo svg {
+    width: 34px;
+    height: 34px;
+}
+
+.attendance-student-details {
+    min-width: 0;
+}
+
 .student-name {
     font-size: 22px;
     font-weight: 900;
@@ -247,6 +279,36 @@
     height: 100%;
     background: var(--primary);
     transition: width .3s ease;
+}
+
+.attendance-action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.attendance-action-buttons a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.attendance-action-buttons i {
+    width: 18px;
+    height: 18px;
+}
+
+.attendance-action-buttons .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.attendance-action-buttons .btn-primary i {
+    width: 18px;
+    height: 18px;
 }
 
 /* ==========================================================
@@ -548,5 +610,441 @@
 
     .attendance-card-v2-actions {
         justify-content: flex-start;
+    }
+}
+
+/* ==========================================================
+   CENTRAL DE FREQUÊNCIA V3
+========================================================== */
+
+.attendance-central-v3 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 28px;
+    align-items: start;
+}
+
+.attendance-central-main {
+    display: grid;
+    gap: 24px;
+}
+
+.attendance-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.attendance-kpi-card {
+    padding: 24px;
+    border-radius: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.attendance-kpi-card:hover,
+.attendance-action-card:hover,
+.attendance-summary-panel:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.attendance-kpi-card span {
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.attendance-kpi-card strong {
+    display: block;
+    margin-top: 10px;
+    color: var(--text-dark);
+    font-size: 34px;
+    font-weight: 900;
+}
+
+.attendance-kpi-card small {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-light);
+    font-weight: 700;
+}
+
+.attendance-kpi-success {
+    border-top: 5px solid var(--success);
+}
+
+.attendance-kpi-warning {
+    border-top: 5px solid var(--warning);
+}
+
+.attendance-kpi-info {
+    border-top: 5px solid var(--primary);
+}
+
+.attendance-action-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 26px;
+    border-radius: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.attendance-action-card h3 {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.attendance-action-card p {
+    margin: 6px 0 0;
+    color: var(--text-light);
+    font-weight: 700;
+}
+
+.attendance-classes-v3 {
+    display: grid;
+    gap: 18px;
+}
+
+/* ==========================================================
+   PAINEL LATERAL
+========================================================== */
+
+.attendance-summary-panel {
+    position: sticky;
+    top: 24px;
+    padding: 28px;
+    border-radius: 26px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.attendance-summary-panel h3 {
+    margin: 0 0 24px;
+    color: var(--text-dark);
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.attendance-summary-list {
+    display: grid;
+    gap: 14px;
+}
+
+.attendance-summary-list div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 18px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+}
+
+.attendance-summary-list span {
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.attendance-summary-list strong {
+    color: var(--text-dark);
+    font-size: 22px;
+    font-weight: 900;
+}
+
+/* ==========================================================
+   RESPONSIVO V3
+========================================================== */
+
+@media (max-width: 1200px) {
+    .attendance-central-v3 {
+        grid-template-columns: 1fr;
+    }
+
+    .attendance-summary-panel {
+        position: static;
+    }
+}
+
+@media (max-width: 900px) {
+    .attendance-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .attendance-action-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 600px) {
+    .attendance-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================
+   CARD DA TURMA V3
+========================================================== */
+
+.attendance-class-card-v3 {
+    display: grid;
+    grid-template-columns: 62px minmax(0, 1fr) 108px 112px;
+    gap: 20px;
+    align-items: center;
+    padding: 22px;
+    border-radius: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 6px solid var(--warning);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.attendance-class-card-v3:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.attendance-class-card-v3-done {
+    border-left-color: var(--success);
+}
+
+.attendance-class-v3-icon {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: var(--yellow-soft);
+    color: var(--warning);
+}
+
+.attendance-class-card-v3-done .attendance-class-v3-icon {
+    background: var(--green-soft);
+    color: var(--success);
+}
+
+.attendance-class-v3-icon i {
+    width: 30px;
+    height: 30px;
+}
+
+.attendance-class-v3-title-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+
+.attendance-class-v3-title-row h3 {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 21px;
+    font-weight: 900;
+}
+
+.attendance-class-v3-title-row p {
+    margin: 5px 0 0;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.attendance-class-v3-status {
+    display: inline-flex;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.attendance-class-v3-status-done {
+    background: var(--green-soft);
+    color: var(--success);
+}
+
+.attendance-class-v3-status-pending {
+    background: var(--yellow-soft);
+    color: var(--warning);
+}
+
+.attendance-class-v3-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.attendance-class-v3-metrics span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.attendance-class-v3-metrics strong {
+    color: var(--text-dark);
+    font-weight: 900;
+}
+
+.attendance-class-v3-pending-text {
+    margin: 0;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.attendance-class-v3-progress {
+    display: flex;
+    justify-content: center;
+}
+
+.attendance-class-v3-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+}
+
+.attendance-class-v3-actions form {
+    margin: 0;
+}
+
+.attendance-class-v3-action {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text);
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.attendance-class-v3-action:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.attendance-class-v3-action-primary {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+.attendance-class-v3-action-danger {
+    background: var(--red-soft);
+    color: var(--danger);
+    border-color: rgba(239, 68, 68, .25);
+}
+
+.attendance-class-v3-action i {
+    width: 18px;
+    height: 18px;
+}
+
+.attendance-class-v3-start {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 14px;
+    border-radius: 14px;
+    background: var(--primary);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.attendance-class-v3-start:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    color: #ffffff;
+}
+
+.attendance-class-v3-start i {
+    width: 17px;
+    height: 17px;
+}
+
+/* ==========================================================
+   CARD DA TURMA V3 - RESPONSIVO
+========================================================== */
+
+@media (max-width: 1100px) {
+    .attendance-class-card-v3 {
+        grid-template-columns: 62px minmax(0, 1fr) 108px;
+    }
+
+    .attendance-class-v3-actions {
+        grid-column: 2 / -1;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 760px) {
+    .attendance-class-card-v3 {
+        grid-template-columns: 1fr;
+    }
+
+    .attendance-class-v3-progress,
+    .attendance-class-v3-actions {
+        justify-content: flex-start;
+    }
+
+    .attendance-class-v3-title-row {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 640px) {
+    .attendance-student-identity {
+        gap: 13px;
+    }
+
+    .attendance-student-photo {
+        width: 64px;
+        height: 64px;
+        flex-basis: 64px;
+        border-radius: 18px;
+    }
+
+    .attendance-student-photo i,
+    .attendance-student-photo svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .student-name {
+        font-size: 18px;
     }
 }
