@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Auth\Permissions;
+use App\Core\Csrf;
+use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
 use App\Services\SchoolDataMaintenanceService;
@@ -22,12 +24,14 @@ final class DataMaintenanceController extends BaseController
             'summary' => $this->service->summary(),
             'success' => flash('data_maintenance_success'),
             'error' => flash('data_maintenance_error'),
+            'csrfToken' => Csrf::token(),
         ]);
     }
 
     public function export(): void
     {
         if (!$this->guard() || !$this->authorize(Permissions::SETTINGS_MANAGE)) return;
+        if (!$this->validateCsrf()) return;
         try {
             $path = $this->service->createBackup();
             header('Content-Type: application/zip');
@@ -45,9 +49,11 @@ final class DataMaintenanceController extends BaseController
     public function restore(): void
     {
         if (!$this->guard() || !$this->authorize(Permissions::SETTINGS_MANAGE)) return;
+        if (!$this->validateCsrf()) return;
         if (trim((string)($_POST['confirmation'] ?? '')) !== 'RESTAURAR DADOS') {
             Session::set('data_maintenance_error', 'Digite RESTAURAR DADOS para confirmar a operação.');
             Response::redirect(base_url('configuracoes/dados'));
+            return;
         }
         try {
             $this->service->restoreBackup($_FILES['backup_file'] ?? []);
@@ -61,9 +67,11 @@ final class DataMaintenanceController extends BaseController
     public function clear(): void
     {
         if (!$this->guard() || !$this->authorize(Permissions::SETTINGS_MANAGE)) return;
+        if (!$this->validateCsrf()) return;
         if (trim((string)($_POST['confirmation'] ?? '')) !== 'LIMPAR DADOS') {
             Session::set('data_maintenance_error', 'Digite LIMPAR DADOS para confirmar a operação.');
             Response::redirect(base_url('configuracoes/dados'));
+            return;
         }
         try {
             $result = $this->service->clearSchoolData($_POST);
@@ -78,5 +86,17 @@ final class DataMaintenanceController extends BaseController
             Session::set('data_maintenance_error', $e->getMessage());
         }
         Response::redirect(base_url('configuracoes/dados'));
+    }
+
+    private function validateCsrf(): bool
+    {
+        if (Csrf::validate((string) Request::post('_token', ''))) {
+            return true;
+        }
+
+        Session::set('data_maintenance_error', 'A sessão do formulário expirou. Atualize a página e tente novamente.');
+        Response::redirect(base_url('configuracoes/dados'));
+
+        return false;
     }
 }

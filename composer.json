@@ -16,5 +16,9 @@
 
     "require": {
         "phpoffice/phpspreadsheet": "^5.8"
+    },
+    "scripts": {
+        "test": "php tests/run.php",
+        "quality": "php scripts/project_quality_audit.php"
     }
 }

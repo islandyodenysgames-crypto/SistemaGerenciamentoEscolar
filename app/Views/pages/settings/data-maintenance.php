@@ -40,6 +40,7 @@ $lastBackup = $summary['lastBackup'] ?? null;
             <div class="data-last-backup">Último backup: <strong><?=e(date('d/m/Y H:i', strtotime((string)($lastBackup['created_at']??'now'))))?></strong></div>
         <?php endif; ?>
         <form method="post" action="<?=base_url('configuracoes/dados/exportar')?>">
+            <input type="hidden" name="_token" value="<?=e((string)($csrfToken ?? ''))?>">
             <button class="btn-primary" type="submit"><i data-lucide="archive"></i> Gerar e baixar backup</button>
         </form>
     </section>
@@ -50,6 +51,7 @@ $lastBackup = $summary['lastBackup'] ?? null;
             <div><h2>Restaurar backup</h2><p>Substitui os dados atuais pelos dados de um backup anterior.</p></div>
         </div>
         <form method="post" enctype="multipart/form-data" action="<?=base_url('configuracoes/dados/restaurar')?>" class="data-action-form" data-confirm-form>
+            <input type="hidden" name="_token" value="<?=e((string)($csrfToken ?? ''))?>">
             <label class="form-label">Arquivo de backup (.zip)</label>
             <input class="form-control" type="file" name="backup_file" accept=".zip,application/zip" required>
             <label class="form-label">Digite <strong>RESTAURAR DADOS</strong> para confirmar</label>
@@ -66,6 +68,7 @@ $lastBackup = $summary['lastBackup'] ?? null;
     </div>
 
     <form method="post" action="<?=base_url('configuracoes/dados/limpar')?>" class="data-action-form" data-confirm-form id="clear-school-data-form">
+        <input type="hidden" name="_token" value="<?=e((string)($csrfToken ?? ''))?>">
         <div class="data-preserve-box">
             <h3>O que deseja manter?</h3>
             <p>Marque os cadastros que serão reaproveitados após a limpeza.</p>
