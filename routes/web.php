@@ -20,6 +20,7 @@ use App\Controllers\SchoolClassController;
 use App\Controllers\SchoolCalendarController;
 use App\Controllers\SchoolSettingsController;
 use App\Controllers\SchoolGoalsSettingsController;
+use App\Controllers\SchoolYearController;
 use App\Controllers\SearchController;
 use App\Controllers\SettingsController;
 use App\Controllers\StudentController;
@@ -82,6 +83,22 @@ $router->post(
 $router->get('/configuracoes/metas', [SchoolGoalsSettingsController::class, 'index']);
 $router->post('/configuracoes/metas', [SchoolGoalsSettingsController::class, 'update']);
 $router->post('/configuracoes/metas/restaurar', [SchoolGoalsSettingsController::class, 'reset']);
+
+$router->get('/configuracoes/ano-letivo', [SchoolYearController::class, 'index']);
+$router->post('/configuracoes/ano-letivo', [SchoolYearController::class, 'store']);
+$router->post('/configuracoes/ano-letivo/atualizar', [SchoolYearController::class, 'update']);
+$router->post('/configuracoes/ano-letivo/ativar', [SchoolYearController::class, 'activate']);
+$router->post('/configuracoes/ano-letivo/encerrar', [SchoolYearController::class, 'close']);
+$router->post('/configuracoes/ano-letivo/arquivar', [SchoolYearController::class, 'archive']);
+$router->post('/configuracoes/ano-letivo/reabrir', [SchoolYearController::class, 'reopen']);
+$router->post('/configuracoes/ano-letivo/periodos/salvar', [SchoolYearController::class, 'savePeriod']);
+$router->post('/configuracoes/ano-letivo/periodos/excluir', [SchoolYearController::class, 'deletePeriod']);
+$router->post('/configuracoes/ano-letivo/dias/gerar', [SchoolYearController::class, 'generateDays']);
+$router->post('/configuracoes/ano-letivo/dias/salvar', [SchoolYearController::class, 'saveDay']);
+$router->post('/configuracoes/ano-letivo/periodos/fechar', [SchoolYearController::class, 'closePeriod']);
+$router->post('/configuracoes/ano-letivo/periodos/reabrir', [SchoolYearController::class, 'reopenPeriod']);
+$router->post('/configuracoes/ano-letivo/encerrar-seguro', [SchoolYearController::class, 'closeYearSafely']);
+$router->post('/configuracoes/ano-letivo/assistente', [SchoolYearController::class, 'createNextYear']);
 
 
 

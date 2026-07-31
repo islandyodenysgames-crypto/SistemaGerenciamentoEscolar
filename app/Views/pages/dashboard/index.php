@@ -4,6 +4,16 @@ component('base/page-header', [
     'title' => 'Página Inicial',
     'subtitle' => 'Centro de Operações Escolar',
 ]);
+$academicYear=$academicContext['year']??null;$academicPeriod=$academicContext['period']??null;$academicDays=$academicContext['days']??[];
+if($academicYear): ?>
+<div class="card" style="margin-bottom:20px">
+ <div class="settings-summary">
+  <div class="settings-summary-card"><span>Ano letivo</span><strong><?=e($academicYear['name'])?></strong></div>
+  <div class="settings-summary-card"><span>Período atual</span><strong><?=e($academicPeriod['name']??'Entre períodos')?></strong></div>
+  <div class="settings-summary-card"><span>Dias letivos restantes</span><strong><?=(int)($academicDays['remaining']??0)?></strong></div>
+ </div>
+</div>
+<?php endif;
 
 component('dashboard/page', [
 

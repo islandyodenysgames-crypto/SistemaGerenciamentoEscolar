@@ -46,6 +46,7 @@ class AuthController extends Controller
             Response::redirect(base_url('login'));
         }
 
+        session_regenerate_id(true);
         Session::set('user', $user);
 
         Response::redirect(base_url());
@@ -53,7 +54,22 @@ class AuthController extends Controller
 
     public function logout(): void
     {
-        Session::remove('user');
+        $_SESSION = [];
+
+        if (ini_get('session.use_cookies')) {
+            $parameters = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $parameters['path'],
+                $parameters['domain'],
+                $parameters['secure'],
+                $parameters['httponly']
+            );
+        }
+
+        Session::destroy();
 
         Response::redirect(base_url('login'));
     }

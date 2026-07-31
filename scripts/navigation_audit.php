@@ -46,7 +46,7 @@ foreach ($iterator as $file) {
     }
 
     preg_match_all(
-        '/(?:base_url|url)\\(\\s*[\'\"]([^\'\"]+)[\'\"]/i',
+        '/base_url\\(\\s*[\'\"]([^\'\"]+)[\'\"]/i',
         $source,
         $matches,
         PREG_OFFSET_CAPTURE

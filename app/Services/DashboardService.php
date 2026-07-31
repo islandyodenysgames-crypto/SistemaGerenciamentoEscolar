@@ -19,7 +19,8 @@ class DashboardService
         private IntelligenceService $intelligenceService,
         private FavoriteService $favoriteService,
         private SettingManager $settings,
-        private SchoolGeneralIndexService $schoolGeneralIndexService
+        private SchoolGeneralIndexService $schoolGeneralIndexService,
+        private CurrentAcademicContextService $academicContext
     ) {
     }
 
@@ -156,6 +157,7 @@ class DashboardService
 
             'favorites' => $this->favoriteService->allForUser((int) ($user['id'] ?? 0)),
             'schoolGoals' => ['frequency_goal' => $frequencyGoal, 'attention_threshold' => $attentionThreshold],
+            'academicContext' => $this->academicContext->get(),
 
         ];
     }

@@ -36,7 +36,7 @@ class SchoolCalendarRepository extends BaseRepository
 
     public function create(array $d): int
     {
-        $stmt=$this->db->prepare("INSERT INTO school_calendar_events (title,description,type,start_date,end_date,start_time,end_time,location,all_day,featured,active,created_by,created_at,updated_at) VALUES (:title,:description,:type,:start_date,:end_date,:start_time,:end_time,:location,:all_day,:featured,:active,:created_by,NOW(),NOW())");
+        $stmt=$this->db->prepare("INSERT INTO school_calendar_events (title,description,type,start_date,end_date,start_time,end_time,location,all_day,featured,active,created_by,school_year_id,school_period_id,affects_school_day,school_day_type,created_at,updated_at) VALUES (:title,:description,:type,:start_date,:end_date,:start_time,:end_time,:location,:all_day,:featured,:active,:created_by,:school_year_id,:school_period_id,:affects_school_day,:school_day_type,NOW(),NOW())");
         $stmt->execute($d);
         return (int)$this->db->lastInsertId();
     }
@@ -44,7 +44,7 @@ class SchoolCalendarRepository extends BaseRepository
     public function update(int $id,array $d): bool
     {
         $d['id']=$id;
-        $stmt=$this->db->prepare("UPDATE school_calendar_events SET title=:title,description=:description,type=:type,start_date=:start_date,end_date=:end_date,start_time=:start_time,end_time=:end_time,location=:location,all_day=:all_day,featured=:featured,active=:active,updated_at=NOW() WHERE id=:id");
+        $stmt=$this->db->prepare("UPDATE school_calendar_events SET title=:title,description=:description,type=:type,start_date=:start_date,end_date=:end_date,start_time=:start_time,end_time=:end_time,location=:location,all_day=:all_day,featured=:featured,active=:active,school_year_id=:school_year_id,school_period_id=:school_period_id,affects_school_day=:affects_school_day,school_day_type=:school_day_type,updated_at=NOW() WHERE id=:id");
         return $stmt->execute($d);
     }
 

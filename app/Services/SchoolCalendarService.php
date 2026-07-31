@@ -10,7 +10,7 @@ use InvalidArgumentException;
 class SchoolCalendarService
 {
     private const TYPES=['ASSESSMENT','MEETING','COUNCIL','EVENT','TRAINING','HOLIDAY','DEADLINE','OTHER'];
-    public function __construct(private SchoolCalendarRepository $repository){}
+    public function __construct(private SchoolCalendarRepository $repository,private SchoolDayService $schoolDays){}
     public function types(): array { return ['ASSESSMENT'=>'Avaliação','MEETING'=>'Reunião','COUNCIL'=>'Conselho de classe','EVENT'=>'Evento','TRAINING'=>'Formação','HOLIDAY'=>'Feriado/Recesso','DEADLINE'=>'Prazo','OTHER'=>'Outro']; }
     public function all(): array { return $this->repository->all(); }
     public function find(int $id): ?array { return $this->repository->find($id); }
@@ -20,8 +20,8 @@ class SchoolCalendarService
         $start=sprintf('%04d-%02d-01',$year,$month); $end=date('Y-m-t',strtotime($start));
         return ['year'=>$year,'month'=>$month,'events'=>$this->repository->forRange($start,$end),'upcoming'=>$this->upcoming(5)];
     }
-    public function create(array $data): int { return $this->repository->create($this->normalize($data,true)); }
-    public function update(int $id,array $data): bool { $d=$this->normalize($data,false); unset($d['created_by']); return $this->repository->update($id,$d); }
+    public function create(array $data): int { $d=$this->normalize($data,true);$id=$this->repository->create($d);$this->schoolDays->syncCalendarEvent($id,$d);return $id; }
+    public function update(int $id,array $data): bool { $d=$this->normalize($data,false); unset($d['created_by']);$ok=$this->repository->update($id,$d);$this->schoolDays->syncCalendarEvent($id,$d);return $ok; }
     public function delete(int $id): bool { return $this->repository->delete($id); }
     private function normalize(array $d,bool $creating): array {
         $title=trim((string)($d['title']??'')); if($title==='') throw new InvalidArgumentException('Informe o título do evento.');
@@ -34,7 +34,9 @@ class SchoolCalendarService
         // Horários informados sempre prevalecem sobre uma marcação antiga de "dia inteiro".
         $allDay=(!empty($d['all_day']) && $startTime===null && $endTime===null)?1:0;
         if($startTime!==null && $endTime!==null && $endTime<$startTime) throw new InvalidArgumentException('O horário final não pode ser anterior ao horário inicial.');
-        $result=['title'=>$title,'description'=>trim((string)($d['description']??''))?:null,'type'=>$type,'start_date'=>$start,'end_date'=>$end?:null,'start_time'=>$allDay?null:$startTime,'end_time'=>$allDay?null:$endTime,'location'=>trim((string)($d['location']??''))?:null,'all_day'=>$allDay,'featured'=>((string)($d['featured']??'0'))==='1'?1:0,'active'=>((string)($d['active']??'0'))==='1'?1:0];
+        $yearId=(int)($d['school_year_id']??0)?:null;$periodId=(int)($d['school_period_id']??0)?:null;$affects=((string)($d['affects_school_day']??'0'))==='1'?1:0;
+        $dayType=strtoupper(trim((string)($d['school_day_type']??'')))?:null;
+        $result=['title'=>$title,'description'=>trim((string)($d['description']??''))?:null,'type'=>$type,'start_date'=>$start,'end_date'=>$end?:null,'start_time'=>$allDay?null:$startTime,'end_time'=>$allDay?null:$endTime,'location'=>trim((string)($d['location']??''))?:null,'all_day'=>$allDay,'featured'=>((string)($d['featured']??'0'))==='1'?1:0,'active'=>((string)($d['active']??'0'))==='1'?1:0,'school_year_id'=>$yearId,'school_period_id'=>$periodId,'affects_school_day'=>$affects,'school_day_type'=>$affects?$dayType:null];
         if($creating) $result['created_by']=(int)($d['created_by']??0)?:null;
         return $result;
     }

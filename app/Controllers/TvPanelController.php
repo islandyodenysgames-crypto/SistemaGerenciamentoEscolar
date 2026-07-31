@@ -57,6 +57,7 @@ final class TvPanelController extends BaseController
             'executive' => $payload['executive'] ?? [],
             'occurrences' => $payload['occurrenceSummary'] ?? [],
             'intelligence' => $payload['intelligence'] ?? [],
+            'academicContext' => $payload['academicContext'] ?? [],
             'hallOfFame' => $hall = $this->hallOfFame->build(),
             'intelligentContent' => $this->intelligentContent->build($payload, $hall, $this->configuration()),
         ]);
