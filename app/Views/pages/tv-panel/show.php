@@ -243,7 +243,7 @@ $hallCards = [
 <?php if (in_array('indicators', $slides, true)): ?>
 <section class="tv-slide tv-slide-indicators" data-tv-slide>
     <div class="slide-heading"><div class="slide-icon"><?= $svgIcon('chart') ?></div><div><span>INDICADORES GERAIS</span><h1>Nossa escola em números</h1><p>Um retrato atualizado da comunidade escolar.</p></div></div>
-    <div class="indicator-grid"><?php foreach ([['Alunos matriculados',$totalStudents ?? 0,'👨‍🎓'],['Turmas ativas',$totalClasses ?? 0,'🏫'],['Frequência hoje',number_format($percentage,1,',','.') . '%','✅'],['Chamadas concluídas',$executive['doneClasses'] ?? 0,'📝'],['Ocorrências abertas',$occurrenceSummary['open'] ?? 0,'⚠️'],['Avisos ativos',$activeNoticesCount ?? 0,'📣']] as $it): ?><article><span><?= $it[2] ?></span><strong data-tv-counter><?= e((string)$it[1]) ?></strong><small><?= e($it[0]) ?></small></article><?php endforeach; ?></div>
+    <div class="indicator-grid"><?php foreach ([['Alunos matriculados',$totalStudents ?? 0,'👨‍🎓'],['Turmas ativas',$totalClasses ?? 0,'🏫'],['Frequência hoje',number_format($percentage,1,',','.') . '%','✅'],['Chamadas concluídas',$executive['doneClasses'] ?? 0,'📝'],['Eventos próximos',count($upcoming ?? []),'📅'],['Avisos ativos',$activeNoticesCount ?? 0,'📣']] as $it): ?><article><span><?= $it[2] ?></span><strong data-tv-counter><?= e((string)$it[1]) ?></strong><small><?= e($it[0]) ?></small></article><?php endforeach; ?></div>
 </section>
 <?php endif; ?>
 

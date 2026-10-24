@@ -49,15 +49,8 @@ class SchoolClassService
 
     public function savePhoto(array $file, string $oldPath = ''): string
     {
-        if ((int)($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-            throw new \InvalidArgumentException('Não foi possível enviar a foto da turma.');
-        }
-
-        if ((int)($file['size'] ?? 0) > self::PHOTO_MAX_BYTES) {
-            throw new \InvalidArgumentException('A foto da turma deve possuir no máximo 8 MB.');
-        }
-
-        $tmp = (string)($file['tmp_name'] ?? '');
+        $inspected = FileSecurityService::inspectUpload($file, ['jpg', 'jpeg', 'png', 'webp'], self::PHOTO_MAX_BYTES);
+        $tmp = $inspected['tmp_name'];
         $info = $tmp !== '' ? @getimagesize($tmp) : false;
         $allowed = [
             IMAGETYPE_JPEG => 'jpg',
@@ -80,7 +73,7 @@ class SchoolClassService
             throw new \InvalidArgumentException('Não foi possível preparar a pasta de fotos das turmas.');
         }
 
-        $name = 'turma-' . bin2hex(random_bytes(8)) . '.' . $allowed[$info[2]];
+        $name = FileSecurityService::randomName($allowed[$info[2]], 'turma');
         $target = $absoluteDir . '/' . $name;
 
         if (!move_uploaded_file($tmp, $target)) {
@@ -112,6 +105,7 @@ class SchoolClassService
             throw new \InvalidArgumentException('A foto recortada da turma deve possuir no máximo 8 MB.');
         }
 
+        $validated = FileSecurityService::inspectImageBytes($binary, ['jpg'], self::PHOTO_MAX_BYTES);
         $info = @getimagesizefromstring($binary);
         if (!$info || (int)($info[2] ?? 0) !== IMAGETYPE_JPEG) {
             throw new \InvalidArgumentException('O recorte enviado não é uma imagem JPEG válida.');
@@ -127,7 +121,7 @@ class SchoolClassService
             throw new \InvalidArgumentException('Não foi possível preparar a pasta de fotos das turmas.');
         }
 
-        $name = 'turma-' . bin2hex(random_bytes(8)) . '.jpg';
+        $name = FileSecurityService::randomName($validated['extension'], 'turma');
         $target = $absoluteDir . '/' . $name;
         if (@file_put_contents($target, $binary, LOCK_EX) === false) {
             throw new \InvalidArgumentException('Não foi possível salvar a foto recortada da turma.');
@@ -143,15 +137,12 @@ class SchoolClassService
 
     public function removePhoto(string $path): void
     {
-        $path = ltrim(str_replace(['..', '\\'], ['', '/'], $path), '/');
+        $path = str_replace('\\', '/', ltrim($path, '/'));
         if ($path === '' || !str_starts_with($path, 'uploads/classes/')) {
             return;
         }
 
-        $absolute = dirname(__DIR__, 2) . '/public/' . $path;
-        if (is_file($absolute)) {
-            @unlink($absolute);
-        }
+        FileSecurityService::deleteWithin(dirname(__DIR__, 2) . '/public', $path);
     }
 
     public function exists(

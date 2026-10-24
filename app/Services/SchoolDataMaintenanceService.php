@@ -91,15 +91,10 @@ final class SchoolDataMaintenanceService
         if (!class_exists(ZipArchive::class)) {
             throw new RuntimeException('A extensão ZIP do PHP não está habilitada.');
         }
-        if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK || !is_uploaded_file((string)($file['tmp_name'] ?? ''))) {
-            throw new RuntimeException('Selecione um arquivo de backup ZIP válido.');
-        }
-        if ((int)($file['size'] ?? 0) > 500 * 1024 * 1024) {
-            throw new RuntimeException('O arquivo excede o limite de 500 MB.');
-        }
+        $inspected = FileSecurityService::inspectUpload($file, ['zip'], 500 * 1024 * 1024);
 
         $zip = new ZipArchive();
-        if ($zip->open((string)$file['tmp_name']) !== true) {
+        if ($zip->open($inspected['tmp_name']) !== true) {
             throw new RuntimeException('Não foi possível abrir o arquivo ZIP.');
         }
 
@@ -116,6 +111,8 @@ final class SchoolDataMaintenanceService
             $zip->close();
             throw new RuntimeException('O conteúdo do backup é inválido ou incompatível.');
         }
+
+        $this->validateZipEntries($zip);
 
         $currentTables = array_flip($this->tables());
         $this->db->exec('SET FOREIGN_KEY_CHECKS=0');
@@ -147,11 +144,11 @@ final class SchoolDataMaintenanceService
         $uploads = $this->root . '/public/uploads';
         $this->clearDirectory($uploads, []);
         for ($i = 0; $i < $zip->numFiles; $i++) {
-            $name = (string)$zip->getNameIndex($i);
-            if (!str_starts_with($name, 'uploads/') || str_contains($name, '..')) continue;
+            $name = str_replace('\\', '/', (string)$zip->getNameIndex($i));
+            if (!str_starts_with($name, 'uploads/')) continue;
             $relative = substr($name, 8);
             if ($relative === '' || str_ends_with($name, '/')) continue;
-            $target = $uploads . '/' . ltrim(str_replace('\\', '/', $relative), '/');
+            $target = $uploads . '/' . ltrim($relative, '/');
             $dir = dirname($target);
             if (!is_dir($dir)) mkdir($dir, 0775, true);
             $stream = $zip->getStream($name);
@@ -162,6 +159,28 @@ final class SchoolDataMaintenanceService
             }
         }
         $zip->close();
+    }
+
+    private function validateZipEntries(ZipArchive $zip): void
+    {
+        if ($zip->numFiles > 20000) throw new RuntimeException('O backup contém arquivos demais.');
+        $total = 0;
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $stat = $zip->statIndex($i);
+            $name = str_replace('\\', '/', (string) ($stat['name'] ?? ''));
+            if ($name === '' || str_contains($name, "\0") || str_starts_with($name, '/') || preg_match('#(^|/)\.\.(/|$)|^[A-Za-z]:#', $name)) {
+                throw new RuntimeException('O backup contém um caminho de arquivo inseguro.');
+            }
+            $total += (int) ($stat['size'] ?? 0);
+            if ($total > 2 * 1024 * 1024 * 1024) throw new RuntimeException('O conteúdo descompactado do backup excede o limite permitido.');
+            $opsys = 0; $attributes = 0;
+            if ($zip->getExternalAttributesIndex($i, $opsys, $attributes) && $opsys === ZipArchive::OPSYS_UNIX && (($attributes >> 16) & 0170000) === 0120000) {
+                throw new RuntimeException('O backup não pode conter links simbólicos.');
+            }
+            if (!in_array($name, ['manifest.json', 'database.json'], true) && !str_starts_with($name, 'uploads/')) {
+                throw new RuntimeException('O backup contém arquivos fora das áreas permitidas.');
+            }
+        }
     }
 
     public function clearSchoolData(array $options): array

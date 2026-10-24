@@ -36,7 +36,8 @@ class ProfilePhotoService
             throw new InvalidArgumentException('A foto deve ter no máximo 10 MB.');
         }
 
-        $extension = $matches[1] === 'jpeg' ? 'jpg' : $matches[1];
+        $image = FileSecurityService::inspectImageBytes($bytes, ['jpg', 'png', 'webp'], self::MAX_BYTES);
+        $extension = $image['extension'];
         $folder = $entity === 'student' ? 'students' : 'users';
         $relativeDir = 'uploads/' . $folder . '/' . $id;
         $absoluteDir = public_path($relativeDir);
@@ -45,7 +46,7 @@ class ProfilePhotoService
             throw new InvalidArgumentException('Não foi possível preparar a pasta da foto.');
         }
 
-        $filename = 'profile-' . bin2hex(random_bytes(10)) . '.' . $extension;
+        $filename = FileSecurityService::randomName($extension, 'profile');
         $absolutePath = $absoluteDir . DIRECTORY_SEPARATOR . $filename;
         if (file_put_contents($absolutePath, $bytes) === false) {
             throw new InvalidArgumentException('Não foi possível salvar a foto.');
@@ -67,8 +68,8 @@ class ProfilePhotoService
     private function removePublicFile(?string $path): void
     {
         if (!$path) return;
-        $safe = ltrim(str_replace(['..', '\\'], ['', '/'], $path), '/');
-        $absolute = public_path($safe);
-        if (is_file($absolute)) @unlink($absolute);
+        $normalized = str_replace('\\', '/', ltrim($path, '/'));
+        if (!preg_match('#^uploads/(students|users)/[0-9]+/[A-Za-z0-9.-]+$#', $normalized)) return;
+        FileSecurityService::deleteWithin(public_path(), $normalized);
     }
 }

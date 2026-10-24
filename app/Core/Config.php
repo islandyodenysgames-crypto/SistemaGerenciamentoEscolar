@@ -35,6 +35,11 @@ class Config
                 'login_lockout' => (int) Env::get('LOGIN_LOCKOUT', '900'),
             ],
 
+            'tv' => [
+                'access_token' => Env::get('TV_PANEL_ACCESS_TOKEN', ''),
+                'cookie_name' => Env::get('TV_PANEL_COOKIE_NAME', 'sge_tv_device'),
+            ],
+
             'database' => [
                 'connection' => Env::get('DB_CONNECTION', 'mysql'),
                 'host' => Env::get('DB_HOST', '127.0.0.1'),

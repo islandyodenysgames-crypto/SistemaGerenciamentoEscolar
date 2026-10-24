@@ -16,31 +16,8 @@ class FileUploadService
 
     public function uploadLogo(array $file): ?string
     {
-        if (
-            empty($file['tmp_name']) ||
-            !is_uploaded_file($file['tmp_name'])
-        ) {
-            return null;
-        }
-
-        $extension = strtolower(
-            pathinfo(
-                $file['name'],
-                PATHINFO_EXTENSION
-            )
-        );
-
-        $allowed = [
-            'png',
-            'jpg',
-            'jpeg',
-            'svg',
-            'webp',
-        ];
-
-        if (!in_array($extension, $allowed, true)) {
-            return null;
-        }
+        if ((int) ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) return null;
+        $inspected = FileSecurityService::inspectUpload($file, ['png', 'jpg', 'jpeg', 'webp'], 5 * 1024 * 1024);
 
         if (!is_dir($this->destination)) {
             mkdir(
@@ -50,14 +27,13 @@ class FileUploadService
             );
         }
 
-        $filename = 'school-logo.' . $extension;
+        $filename = FileSecurityService::randomName($inspected['extension'], 'school-logo');
 
         $target = $this->destination . DIRECTORY_SEPARATOR . $filename;
 
-        move_uploaded_file(
-            $file['tmp_name'],
-            $target
-        );
+        if (!move_uploaded_file($inspected['tmp_name'], $target)) {
+            throw new \InvalidArgumentException('Não foi possível salvar o logotipo da escola.');
+        }
 
         return 'uploads/schools/' . $filename;
     }

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Core\Controller;
+use App\Auth\Permissions;
+use App\Core\Session;
 use App\Repositories\SchoolRepository;
 use App\Services\FileUploadService;
 use App\Services\SchoolService;
 
-class SchoolSettingsController extends Controller
+class SchoolSettingsController extends BaseController
 {
     private SchoolService $schoolService;
 
@@ -26,6 +27,7 @@ class SchoolSettingsController extends Controller
 
     public function identity(): void
     {
+        if (!$this->guard() || !$this->authorize(Permissions::SETTINGS_MANAGE)) return;
         $this->view('pages/settings/school/identity', [
             'title' => 'Identidade da Escola',
             'school' => $this->schoolService->current(),
@@ -34,12 +36,18 @@ class SchoolSettingsController extends Controller
 
     public function update(): void
     {
+        if (!$this->guard() || !$this->authorize(Permissions::SETTINGS_MANAGE)) return;
         $currentSchool = $this->schoolService->current();
 
         $logoPath = $currentSchool['logo_path'] ?? null;
 
         if (!empty($_FILES['logo']['tmp_name'])) {
-            $uploadedLogo = $this->fileUploadService->uploadLogo($_FILES['logo']);
+            try {
+                $uploadedLogo = $this->fileUploadService->uploadLogo($_FILES['logo']);
+            } catch (\InvalidArgumentException $error) {
+                Session::set('settings_error', $error->getMessage());
+                redirect('configuracoes/identidade');
+            }
 
             if ($uploadedLogo !== null) {
                 $logoPath = $uploadedLogo;

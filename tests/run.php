@@ -12,6 +12,8 @@ require_once $root . '/app/Auth/Roles.php';
 require_once $root . '/app/Auth/Permissions.php';
 require_once $root . '/app/Services/LoginThrottleService.php';
 require_once $root . '/app/Services/AuthService.php';
+require_once $root . '/app/Services/FileSecurityService.php';
+require_once $root . '/app/Services/TvPanelAccessService.php';
 require_once $root . '/app/Helpers/url.php';
 
 use App\Auth\Permissions;
@@ -22,6 +24,8 @@ use App\Core\Request;
 use App\Core\Session;
 use App\Services\LoginThrottleService;
 use App\Services\AuthService;
+use App\Services\FileSecurityService;
+use App\Services\TvPanelAccessService;
 
 $tests = 0;
 $failures = [];
@@ -129,6 +133,41 @@ $assert(str_contains($routerSource, 'reload_required'), 'Falha CSRF em AJAX deve
 
 $csrfJavascript = (string) file_get_contents($root . '/public/assets/js/core/csrf.js');
 $assert(str_contains($csrfJavascript, 'window.fetch') && str_contains($csrfJavascript, 'XMLHttpRequest.prototype.open') && str_contains($csrfJavascript, 'HTMLFormElement.prototype.submit'), 'CSRF do cliente deve cobrir fetch, XMLHttpRequest e submit programático.');
+
+$temporaryDirectory = sys_get_temp_dir() . '/sge-file-security-' . bin2hex(random_bytes(4));
+mkdir($temporaryDirectory, 0770, true);
+$pngBytes = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', true);
+$pngPath = $temporaryDirectory . '/valid.png'; file_put_contents($pngPath, $pngBytes);
+$validImage = FileSecurityService::inspectUpload(['name'=>'foto.png','tmp_name'=>$pngPath,'error'=>UPLOAD_ERR_OK,'size'=>strlen($pngBytes)], ['png'], 1024, false);
+$assert($validImage['mime_type'] === 'image/png', 'Imagem válida deve ser identificada pelo MIME real.');
+$rejected = static function (callable $callback): bool { try { $callback(); return false; } catch (InvalidArgumentException) { return true; } };
+$phpPath = $temporaryDirectory . '/fake.jpg'; file_put_contents($phpPath, '<?php echo "x";');
+$assert($rejected(fn () => FileSecurityService::inspectUpload(['name'=>'foto.jpg','tmp_name'=>$phpPath,'error'=>UPLOAD_ERR_OK,'size'=>20], ['jpg'], 1024, false)), 'PHP disfarçado de imagem deve ser rejeitado.');
+$assert($rejected(fn () => FileSecurityService::inspectUpload(['name'=>'foto.jpg','tmp_name'=>$pngPath,'error'=>UPLOAD_ERR_OK,'size'=>strlen($pngBytes)], ['jpg'], 1024, false)), 'Extensão incompatível com MIME deve ser rejeitada.');
+$assert($rejected(fn () => FileSecurityService::inspectUpload(['name'=>'foto.png','tmp_name'=>$pngPath,'error'=>UPLOAD_ERR_OK,'size'=>strlen($pngBytes)], ['png'], 10, false)), 'Arquivo acima do limite real deve ser rejeitado.');
+$assert($rejected(fn () => FileSecurityService::inspectUpload(['name'=>'foto.png','tmp_name'=>$pngPath,'error'=>UPLOAD_ERR_PARTIAL,'size'=>1], ['png'], 1024, false)), 'Upload interrompido deve ser rejeitado.');
+$assert(FileSecurityService::safePath($temporaryDirectory, '../outside.txt') === null, 'Path traversal deve ser rejeitado.');
+$inside = $temporaryDirectory . '/inside.txt'; file_put_contents($inside, 'ok');
+$assert(FileSecurityService::deleteWithin($temporaryDirectory, 'inside.txt') && !is_file($inside), 'Exclusão confinada deve remover somente arquivo autorizado.');
+@unlink($pngPath); @unlink($phpPath); @rmdir($temporaryDirectory);
+
+$_SESSION = [];
+$_ENV['APP_ENV'] = 'production'; $_ENV['TV_PANEL_ACCESS_TOKEN'] = ''; Config::load();
+$tvAccess = new TvPanelAccessService();
+$assert(!$tvAccess->canView(), 'Painel TV sem token deve ser bloqueado em produção.');
+$tvToken = str_repeat('a', 40); $_ENV['TV_PANEL_ACCESS_TOKEN'] = $tvToken; Config::load();
+$assert(!$tvAccess->pair('token-incorreto'), 'Pareamento do Painel TV deve rejeitar token incorreto.');
+$assert($tvAccess->pair($tvToken), 'Pareamento do Painel TV deve aceitar token correto.');
+$_COOKIE['sge_tv_device'] = hash('sha256', $tvToken);
+$assert($tvAccess->canView(), 'Cookie pareado deve permitir atualização automática do Painel TV.');
+$assert(str_contains(base_url('uploads/students/1/profile.jpg'), 'arquivos/visualizar?path='), 'Fotografia de estudante deve usar endpoint autenticado.');
+$assert(base_url('uploads/classes/turma.jpg') === '/uploads/classes/turma.jpg', 'Foto institucional de turma deve permanecer pública.');
+
+$tvControllerSource = (string) file_get_contents($root . '/app/Controllers/TvPanelController.php');
+$dataMethod = strstr($tvControllerSource, 'public function data()');
+$dataMethod = is_string($dataMethod) ? strstr($dataMethod, 'public function pair()', true) : '';
+$assert(is_string($dataMethod) && !str_contains($dataMethod, "'occurrences'") && !str_contains($dataMethod, "'intelligence'"), 'JSON do Painel TV não deve expor ocorrências ou inteligência.');
+$assert(!str_contains((string) file_get_contents($root . '/app/Services/FileUploadService.php'), "'svg'"), 'Novos uploads de logotipo não devem aceitar SVG.');
 
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {

@@ -1,0 +1,9 @@
+Options -Indexes
+
+<FilesMatch "\.(php[0-9]?|phtml|phar|cgi|pl|py|sh|svg|htaccess)$">
+    Require all denied
+</FilesMatch>
+
+RewriteEngine On
+RewriteRule ^(students|users|occurrences|occurrence-actions|monitoring-actions)(/|$) - [F,L,NC]
+RewriteRule ^notices/[0-9]{4}/[0-9]{2}/[0-9]+/attachments(/|$) - [F,L,NC]
