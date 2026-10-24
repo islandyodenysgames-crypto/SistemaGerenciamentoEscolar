@@ -30,7 +30,7 @@ class Config
             'security' => [
                 'trusted_proxies' => array_values(array_filter(array_map('trim', explode(',', (string) Env::get('TRUSTED_PROXIES', ''))))),
                 'login_identity_limit' => (int) Env::get('LOGIN_IDENTITY_LIMIT', '5'),
-                'login_origin_limit' => (int) Env::get('LOGIN_ORIGIN_LIMIT', '20'),
+                'login_origin_limit' => (int) Env::get('LOGIN_ORIGIN_LIMIT', '50'),
                 'login_window' => (int) Env::get('LOGIN_WINDOW', '900'),
                 'login_lockout' => (int) Env::get('LOGIN_LOCKOUT', '900'),
             ],

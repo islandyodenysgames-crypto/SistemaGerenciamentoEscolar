@@ -91,25 +91,18 @@ class Router
 
     private function rejectInvalidCsrf(string $uri): void
     {
-        Csrf::rotate();
-        http_response_code(419);
         if (Request::expectsJson()) {
+            http_response_code(419);
             header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['success' => false, 'code' => 'CSRF_TOKEN_MISMATCH', 'message' => 'A sessão do formulário expirou. Atualize a página e tente novamente.']);
+            echo json_encode(['success' => false, 'code' => 'CSRF_TOKEN_MISMATCH', 'message' => 'A sessão do formulário expirou. Atualize a página e tente novamente.', 'reload_required' => true]);
             return;
         }
         Session::set('csrf_error', 'A sessão do formulário expirou. Atualize a página e tente novamente.');
         $referer = (string) ($_SERVER['HTTP_REFERER'] ?? '');
-        $appUrl = (string) Config::get('app.url', '/');
         $target = $uri === '/login' ? base_url('login') : base_url();
-        if ($referer !== '' && self::isSafeLocalUrl($referer, $appUrl)) $target = $referer;
-        header('Location: ' . $target);
-    }
-
-    private static function isSafeLocalUrl(string $url, string $appUrl): bool
-    {
-        $host = parse_url($url, PHP_URL_HOST);
-        $appHost = parse_url($appUrl, PHP_URL_HOST);
-        return $host === null || $host === false || ($appHost !== null && strcasecmp((string) $host, (string) $appHost) === 0);
+        $safeReferer = Request::safeApplicationReturnUrl($referer);
+        if ($safeReferer !== null) $target = $safeReferer;
+        http_response_code(303);
+        header('Location: ' . $target, true, 303);
     }
 }

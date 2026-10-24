@@ -18,6 +18,7 @@ use App\Auth\Permissions;
 use App\Auth\Roles;
 use App\Core\Csrf;
 use App\Core\Config;
+use App\Core\Request;
 use App\Core\Session;
 use App\Services\LoginThrottleService;
 use App\Services\AuthService;
@@ -54,6 +55,12 @@ $assert(substr_count($view, 'name="_token"') === 3, 'Todos os formularios de man
 $html = '<form method="post" action="/save"><button>Salvar</button></form><form method="get"></form>';
 $protected = Csrf::injectIntoHtml($html);
 $assert(substr_count($protected, 'name="_token"') === 1, 'A proteção central deve injetar CSRF em formulários POST.');
+$variants = "<form METHOD=POST></form><form method = 'POST'></form><form\n method=\"post\"></form>";
+$assert(substr_count(Csrf::injectIntoHtml($variants), 'name="_token"') === 3, 'A proteção central deve cobrir variações válidas do atributo method.');
+$alreadyProtected = '<form method="post"><input type="hidden" name=_token value="existente"></form>';
+$assert(substr_count(Csrf::injectIntoHtml($alreadyProtected), 'name=_token') === 1, 'Token explícito não deve ser duplicado.');
+$nestedForms = '<form method="post"><form method="post"><input name="_token" value="existente"></form></form>';
+$assert(substr_count(Csrf::injectIntoHtml($nestedForms), '_token') === 2, 'Cada formulário POST deve possuir seu próprio token, inclusive em HTML legado aninhado.');
 $_POST = []; $_SERVER['HTTP_X_CSRF_TOKEN'] = $token;
 $assert(Csrf::validate(Csrf::requestToken()), 'O token CSRF de AJAX deve ser aceito.');
 unset($_SERVER['HTTP_X_CSRF_TOKEN']);
@@ -69,7 +76,20 @@ $assert($throttle->retryAfter('teste@escola.local', '127.0.0.1') === 0, 'Primeir
 $throttle->recordFailure('teste@escola.local', '127.0.0.1');
 $assert($throttle->retryAfter('teste@escola.local', '127.0.0.1') > 0, 'Limite de login deve aplicar bloqueio temporário.');
 $throttle->recordSuccess('teste@escola.local');
-@unlink($throttleFile);
+$corruptThrottle = new LoginThrottleService($throttleFile);
+file_put_contents($throttleFile, '{arquivo-corrompido');
+$assert($corruptThrottle->retryAfter('outro@escola.local', '127.0.0.2') === 0, 'Arquivo corrompido do limitador deve ser recuperado sem bloquear usuários.');
+$assert(is_array(json_decode((string) file_get_contents($throttleFile), true)), 'Arquivo corrompido deve ser regravado de forma íntegra.');
+file_put_contents($throttleFile, json_encode(['expired' => ['attempts' => 1, 'started_at' => 1, 'locked_until' => 1]]));
+$corruptThrottle->retryAfter('novo@escola.local', '127.0.0.3');
+$prunedThrottleData = json_decode((string) file_get_contents($throttleFile), true);
+$assert(is_array($prunedThrottleData) && !isset($prunedThrottleData['expired']), 'Registros vencidos do limitador devem ser removidos automaticamente.');
+@unlink($throttleFile); @unlink($throttleFile . '.lock');
+$blockedParent = sys_get_temp_dir() . '/sge-throttle-parent-' . bin2hex(random_bytes(4));
+file_put_contents($blockedParent, 'arquivo');
+$unavailableThrottle = new LoginThrottleService($blockedParent . '/login.json');
+$assert($unavailableThrottle->retryAfter('teste@escola.local', '127.0.0.1') === 0, 'Falha de armazenamento não deve indisponibilizar o login.');
+@unlink($blockedParent);
 
 $database = new PDO('sqlite::memory:');
 $database->exec('CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT, role TEXT, password TEXT, active INTEGER, photo_path TEXT, photo_updated_at TEXT)');
@@ -85,12 +105,30 @@ $assert($auth->currentUser(1) === null, 'Revalidação deve invalidar usuário i
 
 $_ENV['APP_URL'] = 'https://escola.exemplo/sistema/public'; Config::load();
 $assert(base_url('login') === 'https://escola.exemplo/sistema/public/login', 'base_url deve respeitar APP_URL com HTTPS e subdiretório.');
+$assert(Request::safeApplicationReturnUrl('https://escola.exemplo/sistema/public/alunos') !== null, 'Retorno interno válido deve ser aceito.');
+$assert(Request::safeApplicationReturnUrl('https://malicioso.exemplo/sistema/public') === null, 'Retorno para host externo deve ser rejeitado.');
+$assert(Request::safeApplicationReturnUrl('https://escola.exemplo/outro-sistema') === null, 'Retorno fora do APP_URL deve ser rejeitado.');
+$assert(Request::safeApplicationReturnUrl('//malicioso.exemplo/caminho') === null, 'URL relativa a protocolo externo deve ser rejeitada.');
 $_ENV['APP_URL'] = '/'; Config::load();
 $assert(base_url() === '/' && base_url('login') === '/login', 'base_url deve funcionar na raiz do domínio.');
+
+$_SERVER = ['HTTPS' => 'off', 'SERVER_PORT' => '80', 'REMOTE_ADDR' => '10.0.0.10', 'HTTP_X_FORWARDED_PROTO' => 'https'];
+$_ENV['TRUSTED_PROXIES'] = ''; Config::load();
+$assert(!Request::isSecure(), 'Proxy não confiável não pode forçar cookie Secure via cabeçalho.');
+$_ENV['TRUSTED_PROXIES'] = '10.0.0.10'; Config::load();
+$assert(Request::isSecure(), 'Proxy explicitamente confiável deve informar HTTPS.');
+$_SERVER = ['HTTPS' => 'on', 'SERVER_PORT' => '443', 'REMOTE_ADDR' => '127.0.0.1'];
+$assert(Request::isSecure(), 'HTTPS direto deve ser reconhecido.');
 
 $routes = (string) file_get_contents($root . '/routes/web.php');
 $assert((bool) preg_match('/\\$router->post\\(\\s*[\'\"]\\/logout[\'\"]/', $routes), 'Logout deve usar POST.');
 $assert(!str_contains((string) file_get_contents($root . '/app/Console/Commands/SeedCommand.php'), 'admin123'), 'Seed não pode conter senha administrativa fixa.');
+$routerSource = (string) file_get_contents($root . '/app/Core/Router.php');
+$assert(str_contains($routerSource, "http_response_code(419)") && str_contains($routerSource, "http_response_code(303)"), 'Falha CSRF deve responder 419 para AJAX e 303 para formulário HTML.');
+$assert(str_contains($routerSource, 'reload_required'), 'Falha CSRF em AJAX deve indicar recarregamento obrigatório.');
+
+$csrfJavascript = (string) file_get_contents($root . '/public/assets/js/core/csrf.js');
+$assert(str_contains($csrfJavascript, 'window.fetch') && str_contains($csrfJavascript, 'XMLHttpRequest.prototype.open') && str_contains($csrfJavascript, 'HTMLFormElement.prototype.submit'), 'CSRF do cliente deve cobrir fetch, XMLHttpRequest e submit programático.');
 
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {

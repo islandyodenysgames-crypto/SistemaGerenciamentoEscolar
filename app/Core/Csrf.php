@@ -52,11 +52,34 @@ final class Csrf
     public static function injectIntoHtml(string $html): string
     {
         $token = htmlspecialchars(self::token(), ENT_QUOTES, 'UTF-8');
-        return (string) preg_replace_callback('/<form\b([^>]*)>(.*?)<\/form>/is', static function (array $match) use ($token): string {
-            if (!preg_match('/\bmethod\s*=\s*(["\']?)post\1/i', $match[1]) || preg_match('/\bname\s*=\s*(["\'])_token\1/i', $match[2])) {
-                return $match[0];
+        preg_match_all('/<form\b[^>]*>|<\/form\s*>|<input\b[^>]*>/is', $html, $matches, PREG_OFFSET_CAPTURE);
+        $stack = [];
+        $forms = [];
+        foreach ($matches[0] as [$tag, $offset]) {
+            if (preg_match('/^<form\b/i', $tag)) {
+                $stack[] = [
+                    'end' => $offset + strlen($tag),
+                    'post' => (bool) preg_match('/\bmethod\s*=\s*(?:"post"|\'post\'|post(?=\s|\/?>|$))/i', $tag),
+                    'protected' => false,
+                ];
+                continue;
             }
-            return '<form' . $match[1] . '><input type="hidden" name="_token" value="' . $token . '">' . $match[2] . '</form>';
-        }, $html);
+            if (preg_match('/^<input\b/i', $tag) && preg_match('/\bname\s*=\s*(?:"_token"|\'_token\'|_token(?=\s|\/?>|$))/i', $tag) && $stack !== []) {
+                $stack[array_key_last($stack)]['protected'] = true;
+                continue;
+            }
+            if (preg_match('/^<\/form/i', $tag) && $stack !== []) {
+                $forms[] = array_pop($stack);
+            }
+        }
+        $forms = array_merge($forms, $stack);
+        usort($forms, static fn (array $a, array $b): int => $b['end'] <=> $a['end']);
+        $field = '<input type="hidden" name="_token" value="' . $token . '">';
+        foreach ($forms as $form) {
+            if ($form['post'] && !$form['protected']) {
+                $html = substr_replace($html, $field, $form['end'], 0);
+            }
+        }
+        return $html;
     }
 }

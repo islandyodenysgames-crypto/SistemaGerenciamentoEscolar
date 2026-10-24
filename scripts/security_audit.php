@@ -5,7 +5,9 @@ declare(strict_types=1);
 $root = dirname(__DIR__);
 $errors = [];
 $checks = [
-    ['app/Controllers/AuthController.php', 'session_regenerate_id(true)', 'O login nao regenera a sessao.'],
+    ['app/Controllers/AuthController.php', 'Session::authenticate($user)', 'O login nao estabelece a sessao pelo fluxo seguro.'],
+    ['app/Core/Session.php', 'session_regenerate_id(true)', 'O fluxo seguro de sessao nao regenera o identificador.'],
+    ['app/Core/Router.php', "\$method === 'POST' && !Csrf::validate", 'O Router nao valida CSRF de forma central.'],
     ['app/Controllers/DataMaintenanceController.php', 'Csrf::validate', 'A manutencao de dados nao valida CSRF.'],
     ['app/Controllers/DataMaintenanceController.php', 'Permissions::SETTINGS_MANAGE', 'A manutencao de dados nao exige permissao administrativa.'],
     ['app/Controllers/SchoolYearController.php', 'Csrf::validate', 'O ciclo academico nao valida CSRF.'],

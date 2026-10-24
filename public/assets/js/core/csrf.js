@@ -24,4 +24,26 @@
         if (!(form instanceof HTMLFormElement) || !mutating(form.method) || form.querySelector('[name="_token"]')) return;
         const field = document.createElement('input'); field.type = 'hidden'; field.name = '_token'; field.value = token; form.appendChild(field);
     }, true);
+
+    const nativeSubmit = HTMLFormElement.prototype.submit;
+    HTMLFormElement.prototype.submit = function () {
+        if (mutating(this.method) && !this.querySelector('[name="_token"]')) {
+            const field = document.createElement('input'); field.type = 'hidden'; field.name = '_token'; field.value = token; this.appendChild(field);
+        }
+        return nativeSubmit.call(this);
+    };
+
+    const nativeOpen = XMLHttpRequest.prototype.open;
+    const nativeSend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.open = function (method, url) {
+        this.__csrfProtectedRequest = mutating(method) && local(String(url));
+        return nativeOpen.apply(this, arguments);
+    };
+    XMLHttpRequest.prototype.send = function () {
+        if (this.__csrfProtectedRequest) {
+            this.setRequestHeader('X-CSRF-Token', token);
+            this.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        }
+        return nativeSend.apply(this, arguments);
+    };
 })();

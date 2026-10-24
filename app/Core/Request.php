@@ -60,4 +60,20 @@ class Request
         return str_contains(strtolower((string) ($_SERVER['HTTP_ACCEPT'] ?? '')), 'application/json')
             || strtolower((string) ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '')) === 'xmlhttprequest';
     }
+
+    public static function safeApplicationReturnUrl(string $candidate): ?string
+    {
+        if ($candidate === '' || str_starts_with($candidate, '//')) return null;
+        $appUrl = (string) Config::get('app.url', '/');
+        $candidateHost = parse_url($candidate, PHP_URL_HOST);
+        $appHost = parse_url($appUrl, PHP_URL_HOST);
+        if ($candidateHost !== null && $candidateHost !== false && ($appHost === null || strcasecmp((string) $candidateHost, (string) $appHost) !== 0)) return null;
+        $candidateScheme = parse_url($candidate, PHP_URL_SCHEME);
+        $appScheme = parse_url($appUrl, PHP_URL_SCHEME);
+        if ($candidateScheme !== null && $candidateScheme !== false && $appScheme !== null && strcasecmp((string) $candidateScheme, (string) $appScheme) !== 0) return null;
+        $path = parse_url($candidate, PHP_URL_PATH) ?: '/';
+        $basePath = rtrim((string) (parse_url($appUrl, PHP_URL_PATH) ?: '/'), '/');
+        if ($basePath !== '' && $basePath !== '/' && $path !== $basePath && !str_starts_with($path, $basePath . '/')) return null;
+        return $candidate;
+    }
 }
