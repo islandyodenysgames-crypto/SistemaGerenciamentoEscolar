@@ -7,11 +7,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\Core\App as Application;
 use App\Core\Config;
 use App\Core\Env;
+use App\Core\ErrorHandler;
 use App\Core\Session;
 
 Env::load(dirname(__DIR__) . '/.env');
 
 Config::load();
+
+ErrorHandler::register();
 
 date_default_timezone_set(Config::get('app.timezone', 'America/Fortaleza'));
 

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? app_name() ?></title>
+    <meta name="csrf-token" content="<?= e(\App\Core\Csrf::token()) ?>">
     <script>
         (function () {
             try {
@@ -32,5 +33,6 @@
     <script src="<?= asset('assets/js/vendor/lucide-local.js') ?>"></script>
     <script src="<?= asset('assets/js/core/theme.js?v=3') ?>"></script>
     <script src="<?= asset('assets/js/core/app.js') ?>"></script>
+    <script src="<?= asset('assets/js/core/csrf.js?v=1') ?>"></script>
 </body>
 </html>

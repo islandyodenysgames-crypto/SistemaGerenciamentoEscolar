@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-use Throwable;
+use App\Services\AuthenticatedSessionService;
 
 class Router
 {
@@ -48,6 +48,13 @@ class Router
 
         $uri = $this->normalize($uri);
 
+        $this->container->get(AuthenticatedSessionService::class)->revalidateIfDue();
+
+        if ($method === 'POST' && !Csrf::validate(Csrf::requestToken())) {
+            $this->rejectInvalidCsrf($uri);
+            return;
+        }
+
         if (!isset($this->routes[$method][$uri])) {
             $this->notFound();
             return;
@@ -55,30 +62,14 @@ class Router
 
         $action = $this->routes[$method][$uri];
 
-        try {
-
-            if (is_callable($action)) {
-                $action();
-                return;
-            }
-
-            [$controller, $controllerMethod] = $action;
-
-            $instance = $this->container->get($controller);
-
-            $instance->$controllerMethod();
-
-        } catch (Throwable $e) {
-
-            throw $e;
-
-            /*
-             * Futuramente:
-             *
-             * ErrorHandler::render($e);
-             */
-
+        if (is_callable($action)) {
+            $action();
+            return;
         }
+
+        [$controller, $controllerMethod] = $action;
+        $instance = $this->container->get($controller);
+        $instance->$controllerMethod();
     }
 
     private function normalize(string $uri): string
@@ -96,5 +87,29 @@ class Router
 
         echo '<h1>404</h1>';
         echo '<p>Página não encontrada.</p>';
+    }
+
+    private function rejectInvalidCsrf(string $uri): void
+    {
+        Csrf::rotate();
+        http_response_code(419);
+        if (Request::expectsJson()) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['success' => false, 'code' => 'CSRF_TOKEN_MISMATCH', 'message' => 'A sessão do formulário expirou. Atualize a página e tente novamente.']);
+            return;
+        }
+        Session::set('csrf_error', 'A sessão do formulário expirou. Atualize a página e tente novamente.');
+        $referer = (string) ($_SERVER['HTTP_REFERER'] ?? '');
+        $appUrl = (string) Config::get('app.url', '/');
+        $target = $uri === '/login' ? base_url('login') : base_url();
+        if ($referer !== '' && self::isSafeLocalUrl($referer, $appUrl)) $target = $referer;
+        header('Location: ' . $target);
+    }
+
+    private static function isSafeLocalUrl(string $url, string $appUrl): bool
+    {
+        $host = parse_url($url, PHP_URL_HOST);
+        $appHost = parse_url($appUrl, PHP_URL_HOST);
+        return $host === null || $host === false || ($appHost !== null && strcasecmp((string) $host, (string) $appHost) === 0);
     }
 }

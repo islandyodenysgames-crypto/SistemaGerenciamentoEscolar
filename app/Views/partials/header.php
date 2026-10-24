@@ -2,57 +2,11 @@
 
 use App\Auth\Roles;
 use App\Core\Session;
-use App\Database\Connection;
 
 $loggedUser = Session::get('user');
 
 if (!is_array($loggedUser)) {
     $loggedUser = [];
-}
-
-/*
- * Mantém o usuário do cabeçalho sincronizado com o banco.
- *
- * Sessões criadas antes da inclusão das fotos podem não possuir
- * photo_path/photo_updated_at. Consultar pelo ID também garante que uma
- * foto substituída seja refletida imediatamente em todas as telas.
- */
-$loggedUserId = (int) ($loggedUser['id'] ?? 0);
-
-if ($loggedUserId > 0) {
-    try {
-        $stmt = Connection::getInstance()->prepare("
-            SELECT
-                id,
-                name,
-                email,
-                role,
-                active,
-                photo_path,
-                photo_updated_at
-            FROM users
-            WHERE id = :id
-            LIMIT 1
-        "
-        );
-
-        $stmt->execute(['id' => $loggedUserId]);
-        $freshLoggedUser = $stmt->fetch();
-
-        if (is_array($freshLoggedUser) && $freshLoggedUser !== []) {
-            $loggedUser = array_merge($loggedUser, $freshLoggedUser);
-            $loggedUser['id'] = (int) ($loggedUser['id'] ?? 0);
-            $loggedUser['active'] = (int) ($loggedUser['active'] ?? 0);
-            $loggedUser['role'] = Roles::normalize(
-                (string) ($loggedUser['role'] ?? Roles::TEACHER)
-            );
-            $loggedUser['role_label'] = Roles::label($loggedUser['role']);
-
-            Session::set('user', $loggedUser);
-        }
-    } catch (\Throwable) {
-        // Mantém os dados existentes da sessão caso o banco esteja indisponível.
-    }
 }
 
 $userName = trim(

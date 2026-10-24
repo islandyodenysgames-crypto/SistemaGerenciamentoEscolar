@@ -3,14 +3,24 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__);
+require_once $root . '/app/Core/Env.php';
+require_once $root . '/app/Core/Config.php';
+require_once $root . '/app/Core/Request.php';
 require_once $root . '/app/Core/Session.php';
 require_once $root . '/app/Core/Csrf.php';
 require_once $root . '/app/Auth/Roles.php';
 require_once $root . '/app/Auth/Permissions.php';
+require_once $root . '/app/Services/LoginThrottleService.php';
+require_once $root . '/app/Services/AuthService.php';
+require_once $root . '/app/Helpers/url.php';
 
 use App\Auth\Permissions;
 use App\Auth\Roles;
 use App\Core\Csrf;
+use App\Core\Config;
+use App\Core\Session;
+use App\Services\LoginThrottleService;
+use App\Services\AuthService;
 
 $tests = 0;
 $failures = [];
@@ -38,8 +48,49 @@ $assert(substr_count($lifecycle, 'createBackup') >= 2, 'Fechamentos criticos dev
 $controller = (string) file_get_contents($root . '/app/Controllers/DataMaintenanceController.php');
 $view = (string) file_get_contents($root . '/app/Views/pages/settings/data-maintenance.php');
 $assert(str_contains($controller, 'Csrf::validate'), 'Manutencao de dados deve validar CSRF.');
-$assert(substr_count($controller, "Response::redirect(base_url('configuracoes/dados'));\n            return;") >= 2, 'Confirmacoes invalidas devem interromper restauracao e limpeza.');
+$assert(substr_count($controller, "Response::redirect(base_url('configuracoes/dados'))") >= 2 && substr_count($controller, 'return;') >= 2, 'Confirmacoes invalidas devem interromper restauracao e limpeza.');
 $assert(substr_count($view, 'name="_token"') === 3, 'Todos os formularios de manutencao devem enviar CSRF.');
+
+$html = '<form method="post" action="/save"><button>Salvar</button></form><form method="get"></form>';
+$protected = Csrf::injectIntoHtml($html);
+$assert(substr_count($protected, 'name="_token"') === 1, 'A proteção central deve injetar CSRF em formulários POST.');
+$_POST = []; $_SERVER['HTTP_X_CSRF_TOKEN'] = $token;
+$assert(Csrf::validate(Csrf::requestToken()), 'O token CSRF de AJAX deve ser aceito.');
+unset($_SERVER['HTTP_X_CSRF_TOKEN']);
+$assert(Session::isExpired(100, 200, 60), 'Sessão inativa deve expirar.');
+$assert(!Session::isExpired(150, 200, 60), 'Sessão dentro do limite não deve expirar.');
+
+$_ENV['LOGIN_IDENTITY_LIMIT'] = '2'; $_ENV['LOGIN_ORIGIN_LIMIT'] = '10'; $_ENV['LOGIN_WINDOW'] = '900'; $_ENV['LOGIN_LOCKOUT'] = '60';
+Config::load();
+$throttleFile = sys_get_temp_dir() . '/sge-login-throttle-' . bin2hex(random_bytes(4)) . '.json';
+$throttle = new LoginThrottleService($throttleFile);
+$throttle->recordFailure('teste@escola.local', '127.0.0.1');
+$assert($throttle->retryAfter('teste@escola.local', '127.0.0.1') === 0, 'Primeira falha não deve bloquear antes do limite.');
+$throttle->recordFailure('teste@escola.local', '127.0.0.1');
+$assert($throttle->retryAfter('teste@escola.local', '127.0.0.1') > 0, 'Limite de login deve aplicar bloqueio temporário.');
+$throttle->recordSuccess('teste@escola.local');
+@unlink($throttleFile);
+
+$database = new PDO('sqlite::memory:');
+$database->exec('CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT, role TEXT, password TEXT, active INTEGER, photo_path TEXT, photo_updated_at TEXT)');
+$insert = $database->prepare('INSERT INTO users VALUES (1, :name, :email, :role, :password, 1, NULL, NULL)');
+$insert->execute(['name' => 'Usuário Teste', 'email' => 'teste@escola.local', 'role' => 'TEACHER', 'password' => password_hash('senha-correta', PASSWORD_DEFAULT)]);
+$auth = new AuthService($database);
+$assert($auth->attempt('teste@escola.local', 'senha-correta') !== null, 'Login válido deve ser aceito.');
+$assert($auth->attempt('teste@escola.local', 'senha-incorreta') === null, 'Login inválido deve ser rejeitado.');
+$database->exec("UPDATE users SET role = 'ADMIN' WHERE id = 1");
+$assert(($auth->currentUser(1)['role'] ?? '') === 'ADMIN', 'Revalidação deve refletir mudança de papel.');
+$database->exec('UPDATE users SET active = 0 WHERE id = 1');
+$assert($auth->currentUser(1) === null, 'Revalidação deve invalidar usuário inativo.');
+
+$_ENV['APP_URL'] = 'https://escola.exemplo/sistema/public'; Config::load();
+$assert(base_url('login') === 'https://escola.exemplo/sistema/public/login', 'base_url deve respeitar APP_URL com HTTPS e subdiretório.');
+$_ENV['APP_URL'] = '/'; Config::load();
+$assert(base_url() === '/' && base_url('login') === '/login', 'base_url deve funcionar na raiz do domínio.');
+
+$routes = (string) file_get_contents($root . '/routes/web.php');
+$assert((bool) preg_match('/\\$router->post\\(\\s*[\'\"]\\/logout[\'\"]/', $routes), 'Logout deve usar POST.');
+$assert(!str_contains((string) file_get_contents($root . '/app/Console/Commands/SeedCommand.php'), 'admin123'), 'Seed não pode conter senha administrativa fixa.');
 
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {

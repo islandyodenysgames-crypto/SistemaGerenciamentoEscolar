@@ -10,6 +10,7 @@
         content="width=device-width, initial-scale=1.0">
 
     <title><?= $title ?? app_name() ?></title>
+    <meta name="csrf-token" content="<?= e(\App\Core\Csrf::token()) ?>">
 
     <script>
         (function () {
@@ -109,6 +110,7 @@
     ======================================================= -->
 
     <script src="<?= asset('assets/js/core/app.js') ?>"></script>
+    <script src="<?= asset('assets/js/core/csrf.js?v=1') ?>"></script>
     <script src="<?= asset('assets/js/core/export.js') ?>"></script>
     <script src="<?= asset('assets/js/layout/sidebar.js') ?>"></script>
     <script src="<?= asset('assets/js/core/theme-manager.js') ?>"></script>

@@ -6,13 +6,16 @@ if (!function_exists('base_url')) {
 
     function base_url(string $path = ''): string
     {
-        $base = '/SistemaFrequenciaEscolar/public';
+        $base = rtrim((string) \App\Core\Config::get('app.url', '/'), '/');
+        if ($base === '') {
+            $base = '/';
+        }
 
-        return $base . (
-            $path !== ''
-                ? '/' . ltrim($path, '/')
-                : ''
-        );
+        if ($path === '') {
+            return $base;
+        }
+
+        return ($base === '/' ? '' : rtrim($base, '/')) . '/' . ltrim($path, '/');
     }
 
 }
