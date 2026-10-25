@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Auth\Permissions;
 use App\Core\Request;
-use App\Core\Controller;
 use App\Core\Response;
 use App\Core\Session;
 use App\Services\Occurrence\OccurrenceService;
@@ -14,7 +14,7 @@ use App\Services\SchoolClassService;
 use App\Services\SubjectService;
 use App\Services\RecurrenceIntelligenceService;
 
-class OccurrenceDashboardController extends Controller
+class OccurrenceDashboardController extends BaseController
 {
     public function __construct(
         private OccurrenceService $service,
@@ -25,16 +25,9 @@ class OccurrenceDashboardController extends Controller
     ) {
     }
 
-    private function guard(): void
-    {
-        if (!Session::has('user')) {
-            Response::redirect(base_url('login'));
-        }
-    }
-
     public function index(): void
     {
-        $this->guard();
+        if (!$this->guard() || !$this->authorize(Permissions::OCCURRENCES_VIEW)) return;
 
         $year = (int) Request::get('ano', date('Y'));
         $month = (int) Request::get('mes', date('n'));

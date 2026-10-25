@@ -47,6 +47,14 @@ $assert(Permissions::roleHas(Roles::ADMIN, Permissions::SETTINGS_MANAGE), 'Admin
 $assert(Permissions::roleHas(Roles::DIRECTION, Permissions::SETTINGS_MANAGE), 'Direcao deve gerenciar configuracoes.');
 $assert(!Permissions::roleHas(Roles::TEACHER, Permissions::SETTINGS_MANAGE), 'Professor nao deve gerenciar configuracoes.');
 $assert(!Permissions::roleHas(Roles::SECRETARY, Permissions::SETTINGS_MANAGE), 'Secretaria nao deve executar manutencao critica.');
+$assert(Permissions::roleHas(Roles::ADMIN, Permissions::USERS_MANAGE), 'Administrador deve gerenciar usuarios.');
+$assert(Permissions::roleHas(Roles::DIRECTION, Permissions::REPORTS_VIEW), 'Direcao deve consultar relatorios.');
+$assert(Permissions::roleHas(Roles::COORDINATION, Permissions::OCCURRENCES_MANAGE), 'Coordenacao deve administrar ocorrencias.');
+$assert(Permissions::roleHas(Roles::SECRETARY, Permissions::ATTENDANCE_MANAGE), 'Secretaria deve preservar o fluxo legitimo de frequencia.');
+$assert(!Permissions::roleHas(Roles::SECRETARY, Permissions::OCCURRENCES_MANAGE), 'Secretaria nao deve administrar ocorrencias.');
+$assert(Permissions::roleHas(Roles::TEACHER, Permissions::OCCURRENCES_CREATE), 'Professor deve preservar a criacao legitima de ocorrencias.');
+$assert(!Permissions::roleHas(Roles::TEACHER, Permissions::OCCURRENCES_MANAGE), 'Professor nao deve administrar ocorrencias de terceiros.');
+$assert(!Permissions::roleHas(Roles::TEACHER, Permissions::USERS_MANAGE), 'Professor nao deve acessar administracao de usuarios.');
 
 $lifecycle = (string) file_get_contents($root . '/app/Services/AcademicLifecycleService.php');
 $assert(substr_count($lifecycle, '->transaction(') >= 4, 'Operacoes criticas do ciclo academico devem ser transacionais.');
@@ -108,6 +116,8 @@ $database->exec("UPDATE users SET role = 'ADMIN' WHERE id = 1");
 $assert(($auth->currentUser(1)['role'] ?? '') === 'ADMIN', 'Revalidação deve refletir mudança de papel.');
 $database->exec('UPDATE users SET active = 0 WHERE id = 1');
 $assert($auth->currentUser(1) === null, 'Revalidação deve invalidar usuário inativo.');
+$sessionRevalidation=(string)file_get_contents($root.'/app/Services/AuthenticatedSessionService.php');
+$assert(str_contains($sessionRevalidation,"Config::get('session.revalidate_interval', 0)")&&str_contains($sessionRevalidation,'$interval > 0'),'Conta e perfil devem ser revalidados em toda requisição por padrão.');
 
 $_ENV['APP_URL'] = 'https://escola.exemplo/sistema/public'; Config::load();
 $assert(base_url('login') === 'https://escola.exemplo/sistema/public/login', 'base_url deve respeitar APP_URL com HTTPS e subdiretório.');
@@ -213,6 +223,17 @@ $assert(str_contains($maintenanceSource, "'pre-restore-'") && str_contains($main
 $assert(str_contains($maintenanceSource, 'while(($row=$statement->fetch'), 'Exportação deve processar registros incrementalmente.');
 $assert(str_contains($maintenanceSource, "'.partial'"), 'Backup deve ser publicado somente após concluir arquivo temporário.');
 $assert(str_contains($maintenanceSource, 'withMaintenanceLock') && str_contains($maintenanceSource, 'LOCK_EX'), 'Operações de manutenção concorrentes devem ser serializadas.');
+
+$settingsController=(string)file_get_contents($root.'/app/Controllers/SettingsController.php');
+$reportController=(string)file_get_contents($root.'/app/Controllers/ReportController.php');
+$searchService=(string)file_get_contents($root.'/app/Services/SearchService.php');
+$favoriteService=(string)file_get_contents($root.'/app/Services/FavoriteService.php');
+$fileController=(string)file_get_contents($root.'/app/Controllers/FileAccessController.php');
+$assert(str_contains($settingsController,'Permissions::SETTINGS_MANAGE'),'Pagina de configuracoes deve exigir permissao administrativa.');
+$assert(str_contains($reportController,'Permissions::REPORTS_VIEW'),'Exportacoes devem exigir permissao de relatorios no servidor.');
+$assert(str_contains($searchService,'allowedGroups')&&str_contains($searchService,'student_monitoring_users'),'Busca deve filtrar recursos e casos pelo escopo do usuario.');
+$assert(str_contains($favoriteService,'isAccessible'),'Favoritos devem rejeitar IDs inexistentes ou fora do escopo.');
+$assert(str_contains($fileController,'withinRecordScope')&&str_contains($fileController,"http_response_code(404)"),'Downloads privados devem validar escopo e ocultar existencia do arquivo.');
 
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {

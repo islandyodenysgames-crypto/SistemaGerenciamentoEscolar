@@ -23,7 +23,7 @@ class Config
                 'name' => Env::get('SESSION_NAME', 'sge_session'),
                 'lifetime' => (int) Env::get('SESSION_LIFETIME', '1800'),
                 'regenerate_interval' => (int) Env::get('SESSION_REGENERATE_INTERVAL', '900'),
-                'revalidate_interval' => (int) Env::get('SESSION_REVALIDATE_INTERVAL', '300'),
+                'revalidate_interval' => (int) Env::get('SESSION_REVALIDATE_INTERVAL', '0'),
                 'same_site' => Env::get('SESSION_SAME_SITE', 'Lax'),
             ],
 

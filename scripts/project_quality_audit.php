@@ -14,7 +14,7 @@ foreach ($files as $file) {
     if ($code !== 0) { $failures++; fwrite(STDERR, "Sintaxe invalida: {$file}\n"); }
 }
 echo sprintf("Sintaxe PHP: %d arquivo(s), %d falha(s).\n", count($files), $failures);
-foreach (['tests/run.php', 'scripts/navigation_audit.php', 'scripts/academic_cycle_audit.php', 'scripts/security_audit.php', 'scripts/csrf_audit.php', 'scripts/file_security_audit.php', 'scripts/backup_recovery_audit.php', 'scripts/operational_readiness_audit.php'] as $script) {
+foreach (['tests/run.php', 'scripts/navigation_audit.php', 'scripts/academic_cycle_audit.php', 'scripts/security_audit.php', 'scripts/csrf_audit.php', 'scripts/file_security_audit.php', 'scripts/backup_recovery_audit.php', 'scripts/authorization_scope_audit.php', 'scripts/operational_readiness_audit.php'] as $script) {
     passthru(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($root . '/' . $script), $code);
     if ($code !== 0) $failures++;
 }

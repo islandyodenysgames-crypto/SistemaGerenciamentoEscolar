@@ -21,7 +21,8 @@ final class AuthenticatedSessionService
         }
         $now = time();
         $last = (int) Session::get('_user_revalidated_at', 0);
-        if (($now - $last) < max(30, (int) Config::get('session.revalidate_interval', 300))) {
+        $interval = max(0, (int) Config::get('session.revalidate_interval', 0));
+        if ($interval > 0 && ($now - $last) < $interval) {
             return;
         }
         $fresh = $this->auth->currentUser((int) $sessionUser['id']);
