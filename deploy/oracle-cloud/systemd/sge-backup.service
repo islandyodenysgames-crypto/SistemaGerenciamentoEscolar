@@ -1,0 +1,16 @@
+[Unit]
+Description=Backup externo criptografado do SGE
+After=mysql.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=sge-deploy
+Group=www-data
+EnvironmentFile=/etc/sge/backup.env
+ExecStart=/var/www/sge/current/deploy/oracle-cloud/scripts/backup-external.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+PrivateTmp=true
+NoNewPrivileges=true

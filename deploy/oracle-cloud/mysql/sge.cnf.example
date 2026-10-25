@@ -1,0 +1,13 @@
+[mysqld]
+bind-address = 127.0.0.1
+mysqlx-bind-address = 127.0.0.1
+skip-name-resolve = ON
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+max_connections = 50
+innodb_buffer_pool_size = 512M
+innodb_log_file_size = 128M
+max_allowed_packet = 512M
+slow_query_log = ON
+long_query_time = 2
+log_error_verbosity = 2

@@ -1,0 +1,7 @@
+-- Substitua as senhas fora do Git. Execute como administrador local do MySQL.
+CREATE DATABASE IF NOT EXISTS `sge_production` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER IF NOT EXISTS 'sge_app'@'localhost' IDENTIFIED BY 'SUBSTITUA_APP_PASSWORD';
+CREATE USER IF NOT EXISTS 'sge_migrator'@'localhost' IDENTIFIED BY 'SUBSTITUA_MIGRATOR_PASSWORD';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `sge_production`.* TO 'sge_app'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, DROP, REFERENCES ON `sge_production`.* TO 'sge_migrator'@'localhost';
+FLUSH PRIVILEGES;
