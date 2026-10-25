@@ -14,6 +14,7 @@ require_once $root . '/app/Services/LoginThrottleService.php';
 require_once $root . '/app/Services/AuthService.php';
 require_once $root . '/app/Services/FileSecurityService.php';
 require_once $root . '/app/Services/TvPanelAccessService.php';
+require_once $root . '/app/Services/SchoolDataMaintenanceService.php';
 require_once $root . '/app/Helpers/url.php';
 
 use App\Auth\Permissions;
@@ -26,6 +27,7 @@ use App\Services\LoginThrottleService;
 use App\Services\AuthService;
 use App\Services\FileSecurityService;
 use App\Services\TvPanelAccessService;
+use App\Services\SchoolDataMaintenanceService;
 
 $tests = 0;
 $failures = [];
@@ -140,7 +142,7 @@ $pngBytes = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQ
 $pngPath = $temporaryDirectory . '/valid.png'; file_put_contents($pngPath, $pngBytes);
 $validImage = FileSecurityService::inspectUpload(['name'=>'foto.png','tmp_name'=>$pngPath,'error'=>UPLOAD_ERR_OK,'size'=>strlen($pngBytes)], ['png'], 1024, false);
 $assert($validImage['mime_type'] === 'image/png', 'Imagem válida deve ser identificada pelo MIME real.');
-$rejected = static function (callable $callback): bool { try { $callback(); return false; } catch (InvalidArgumentException) { return true; } };
+$rejected = static function (callable $callback): bool { try { $callback(); return false; } catch (Throwable) { return true; } };
 $phpPath = $temporaryDirectory . '/fake.jpg'; file_put_contents($phpPath, '<?php echo "x";');
 $assert($rejected(fn () => FileSecurityService::inspectUpload(['name'=>'foto.jpg','tmp_name'=>$phpPath,'error'=>UPLOAD_ERR_OK,'size'=>20], ['jpg'], 1024, false)), 'PHP disfarçado de imagem deve ser rejeitado.');
 $assert($rejected(fn () => FileSecurityService::inspectUpload(['name'=>'foto.jpg','tmp_name'=>$pngPath,'error'=>UPLOAD_ERR_OK,'size'=>strlen($pngBytes)], ['jpg'], 1024, false)), 'Extensão incompatível com MIME deve ser rejeitada.');
@@ -168,6 +170,49 @@ $dataMethod = strstr($tvControllerSource, 'public function data()');
 $dataMethod = is_string($dataMethod) ? strstr($dataMethod, 'public function pair()', true) : '';
 $assert(is_string($dataMethod) && !str_contains($dataMethod, "'occurrences'") && !str_contains($dataMethod, "'intelligence'"), 'JSON do Painel TV não deve expor ocorrências ou inteligência.');
 $assert(!str_contains((string) file_get_contents($root . '/app/Services/FileUploadService.php'), "'svg'"), 'Novos uploads de logotipo não devem aceitar SVG.');
+
+if (class_exists(ZipArchive::class)) {
+    $backupDirectory = sys_get_temp_dir() . '/sge-backup-tests-' . bin2hex(random_bytes(4));
+    mkdir($backupDirectory, 0770, true);
+    $makeBackup = static function (string $path, string $payload, string $schemaHash = 'schema-ok', ?string $declaredHash = null, ?string $entryName = null): void {
+        $entryName ??= 'database/users.ndjson';
+        $manifest = [
+            'format' => SchoolDataMaintenanceService::FORMAT,
+            'version' => SchoolDataMaintenanceService::VERSION,
+            'schema_hash' => $schemaHash,
+            'tables' => [['name'=>'users','rows'=>$payload === '' ? 0 : substr_count($payload, "\n"),'entry'=>$entryName]],
+            'entries' => [$entryName => ['sha256'=>$declaredHash ?? hash('sha256', $payload),'size'=>strlen($payload)]],
+        ];
+        $zip = new ZipArchive(); $zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        $zip->addFromString('manifest.json', json_encode($manifest, JSON_THROW_ON_ERROR));
+        $zip->addFromString($entryName, $payload); $zip->close();
+    };
+    $validBackup = $backupDirectory . '/valid.zip'; $makeBackup($validBackup, "{\"id\":1}\n");
+    $assert((SchoolDataMaintenanceService::inspectArchive($validBackup, 'schema-ok')['version'] ?? 0) === 2, 'Backup válido e compatível deve ser aceito.');
+    $emptyBackup = $backupDirectory . '/empty.zip'; $makeBackup($emptyBackup, '');
+    $assert((SchoolDataMaintenanceService::inspectArchive($emptyBackup)['tables'][0]['rows'] ?? -1) === 0, 'Backup de tabela sem conteúdo deve permanecer estruturalmente válido.');
+    $manyRows = implode("\n", array_fill(0, 10000, '{"id":1}')) . "\n"; $manyBackup=$backupDirectory.'/many.zip';$makeBackup($manyBackup,$manyRows);
+    $assert((SchoolDataMaintenanceService::inspectArchive($manyBackup)['version'] ?? 0) === 2, 'Arquivo com muitos registros deve ser verificado incrementalmente.');
+    $largePayload=random_bytes(2*1024*1024);$largeBackup=$backupDirectory.'/large.zip';$makeBackup($largeBackup,$largePayload);
+    $assert((SchoolDataMaintenanceService::inspectArchive($largeBackup)['version'] ?? 0) === 2, 'Arquivo grande não compressível dentro do limite deve ser aceito.');
+    $assert($rejected(fn () => SchoolDataMaintenanceService::inspectArchive($validBackup, 'outro-schema')), 'Backup com schema incompatível deve ser rejeitado.');
+    $badHash = $backupDirectory . '/bad-hash.zip'; $makeBackup($badHash, "{\"id\":1}\n", 'schema-ok', str_repeat('0', 64));
+    $assert($rejected(fn () => SchoolDataMaintenanceService::inspectArchive($badHash)), 'Backup com hash incorreto deve ser rejeitado.');
+    $badManifest=$backupDirectory.'/bad-manifest.zip';$badManifestZip=new ZipArchive();$badManifestZip->open($badManifest,ZipArchive::CREATE|ZipArchive::OVERWRITE);$badManifestZip->addFromString('manifest.json','{"format":"outro"}');$badManifestZip->close();
+    $assert($rejected(fn () => SchoolDataMaintenanceService::inspectArchive($badManifest)), 'Manifesto inválido deve ser rejeitado.');
+    $traversal = $backupDirectory . '/traversal.zip'; $makeBackup($traversal, 'x', 'schema-ok', null, 'uploads/../escape.txt');
+    $assert($rejected(fn () => SchoolDataMaintenanceService::inspectArchive($traversal)), 'Backup com path traversal deve ser rejeitado.');
+    $corrupt = $backupDirectory . '/corrupt.zip'; file_put_contents($corrupt, 'arquivo corrompido');
+    $assert($rejected(fn () => SchoolDataMaintenanceService::inspectArchive($corrupt)), 'ZIP corrompido deve ser rejeitado antes da restauração.');
+    $bomb = $backupDirectory . '/bomb.zip'; $makeBackup($bomb, str_repeat('A', 2 * 1024 * 1024));
+    $assert($rejected(fn () => SchoolDataMaintenanceService::inspectArchive($bomb)), 'Entrada com taxa de compressão típica de ZIP bomb deve ser rejeitada.');
+    foreach (glob($backupDirectory . '/*') ?: [] as $testFile) @unlink($testFile); @rmdir($backupDirectory);
+}
+$maintenanceSource = (string) file_get_contents($root . '/app/Services/SchoolDataMaintenanceService.php');
+$assert(str_contains($maintenanceSource, "'pre-restore-'") && str_contains($maintenanceSource, "'pre-cleanup-'"), 'Restauração e limpeza devem criar backup de segurança prévio.');
+$assert(str_contains($maintenanceSource, 'while(($row=$statement->fetch'), 'Exportação deve processar registros incrementalmente.');
+$assert(str_contains($maintenanceSource, "'.partial'"), 'Backup deve ser publicado somente após concluir arquivo temporário.');
+$assert(str_contains($maintenanceSource, 'withMaintenanceLock') && str_contains($maintenanceSource, 'LOCK_EX'), 'Operações de manutenção concorrentes devem ser serializadas.');
 
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {

@@ -33,7 +33,7 @@ final class DataMaintenanceController extends BaseController
         if (!$this->guard() || !$this->authorize(Permissions::SETTINGS_MANAGE)) return;
         if (!$this->validateCsrf()) return;
         try {
-            $path = $this->service->createBackup();
+            $path = $this->service->createBackup($this->actorId(), Request::clientIp());
             header('Content-Type: application/zip');
             header('Content-Disposition: attachment; filename="' . basename($path) . '"');
             header('Content-Length: ' . filesize($path));
@@ -56,7 +56,7 @@ final class DataMaintenanceController extends BaseController
             return;
         }
         try {
-            $this->service->restoreBackup($_FILES['backup_file'] ?? []);
+            $this->service->restoreBackup($_FILES['backup_file'] ?? [], $this->actorId(), Request::clientIp());
             Session::set('data_maintenance_success', 'Backup restaurado com sucesso. Entre novamente caso a sessão tenha sido alterada.');
         } catch (Throwable $e) {
             Session::set('data_maintenance_error', $e->getMessage());
@@ -74,7 +74,7 @@ final class DataMaintenanceController extends BaseController
             return;
         }
         try {
-            $result = $this->service->clearSchoolData($_POST);
+            $result = $this->service->clearSchoolData($_POST, $this->actorId(), Request::clientIp());
             $kept = [];
             if ($result['kept_classes']) $kept[] = 'turmas';
             if ($result['kept_students']) $kept[] = 'alunos e matrículas';
@@ -98,5 +98,11 @@ final class DataMaintenanceController extends BaseController
         Response::redirect(base_url('configuracoes/dados'));
 
         return false;
+    }
+
+    private function actorId(): ?int
+    {
+        $user = Session::get('user', []);
+        return is_array($user) && isset($user['id']) ? (int) $user['id'] : null;
     }
 }
