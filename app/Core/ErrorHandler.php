@@ -30,7 +30,7 @@ final class ErrorHandler
         self::log($id, $exception);
         if (PHP_SAPI === 'cli') {
             fwrite(STDERR, self::isDebug() ? (string) $exception . PHP_EOL : "Erro interno. Identificador: {$id}" . PHP_EOL);
-            return;
+            exit(1);
         }
         if (headers_sent()) return;
         http_response_code(500);

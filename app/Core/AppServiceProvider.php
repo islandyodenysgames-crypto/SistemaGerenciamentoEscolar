@@ -61,6 +61,7 @@ use App\Services\SchoolDataMaintenanceService;
 use App\Services\SearchService;
 use App\Services\StudentService;
 use App\Services\UserService;
+use PDO;
 
 class AppServiceProvider
 {
@@ -74,6 +75,10 @@ class AppServiceProvider
 
         $container->instance(
             Connection::class,
+            Connection::getInstance()
+        );
+        $container->instance(
+            PDO::class,
             Connection::getInstance()
         );
 
