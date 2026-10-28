@@ -4,37 +4,34 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Core\Controller;
+use App\Auth\Permissions;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
 use App\Services\ReportService;
 
-class ReportController extends Controller
+class ReportController extends BaseController
 {
     public function __construct(private ReportService $service) {}
 
-    private function guard(): void
-    {
-        if (!Session::has('user')) Response::redirect(base_url('login'));
-    }
+    private function allowReports(): bool { return $this->guard() && $this->authorize(Permissions::REPORTS_VIEW); }
 
     public function index(): void
     {
-        $this->guard();
+        if (!$this->allowReports()) return;
         $this->view('pages/reports/index', ['title' => 'Relatórios - ' . app_name()] + $this->service->overview());
     }
 
     public function daily(): void
     {
-        $this->guard();
+        if (!$this->allowReports()) return;
         $date = (string) Request::get('data', date('Y-m-d'));
         $this->view('pages/reports/diario', ['title' => 'Relatório Diário - ' . app_name(), 'date' => $date] + $this->service->daily($date));
     }
 
     public function consolidated(): void
     {
-        $this->guard();
+        if (!$this->allowReports()) return;
         $start = (string) Request::get('inicio', date('Y-m-d', strtotime('-29 days')));
         $end = (string) Request::get('fim', date('Y-m-d'));
         $classId = (int) Request::get('turma', 0);
@@ -44,7 +41,7 @@ class ReportController extends Controller
 
     public function occurrences(): void
     {
-        $this->guard();
+        if (!$this->allowReports()) return;
         $start = (string) Request::get('inicio', date('Y-m-d', strtotime('-29 days')));
         $end = (string) Request::get('fim', date('Y-m-d'));
         $classId = (int) Request::get('turma', 0);
@@ -56,7 +53,7 @@ class ReportController extends Controller
 
     public function exportCsv(): never
     {
-        $this->guard();
+        if (!$this->allowReports()) { http_response_code(403); exit; }
         $start = (string) Request::get('inicio', date('Y-m-d', strtotime('-29 days')));
         $end = (string) Request::get('fim', date('Y-m-d'));
         $classId = (int) Request::get('turma', 0);

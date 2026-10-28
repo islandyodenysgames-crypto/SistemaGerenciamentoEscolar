@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Core\Controller;
+use App\Auth\Permissions;
 use App\Core\Response;
 use App\Core\Session;
 use App\Services\DashboardService;
 use App\Services\AttendanceAnalyticsService;
 use App\Core\Settings\SettingManager;
 
-class DashboardController extends Controller
+class DashboardController extends BaseController
 {
     public function __construct(
         private DashboardService $service,
@@ -20,16 +20,11 @@ class DashboardController extends Controller
     ) {
     }
 
-    private function guard(): void
-    {
-        if (!Session::has('user')) {
-            Response::redirect(base_url('login'));
-        }
-    }
+    private function allowDashboard(): bool { return $this->guard() && $this->authorize(Permissions::DASHBOARD_VIEW); }
 
     public function frequencyEvolution(): void
     {
-        $this->guard();
+        if (!$this->allowDashboard()) return;
 
         $allowed = [
             '7d', '15d', '30d', '60d', '90d',
@@ -78,7 +73,7 @@ class DashboardController extends Controller
 
     public function frequencyHeatmap(): void
     {
-        $this->guard();
+        if (!$this->allowDashboard()) return;
 
         $allowed = ['week', 'month', 'bimester', 'semester'];
         $period = strtolower(trim((string) ($_GET['period'] ?? 'month')));
@@ -105,7 +100,7 @@ class DashboardController extends Controller
 
     public function index(): void
     {
-        $this->guard();
+        if (!$this->allowDashboard()) return;
 
         $this->view('pages/dashboard/index', array_merge(
             [

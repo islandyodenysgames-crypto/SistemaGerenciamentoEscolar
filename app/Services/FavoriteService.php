@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Auth\Roles;
 use App\Database\Connection;
 
 class FavoriteService
 {
     private const TYPES = ['student', 'class', 'monitoring'];
 
-    public function toggle(int $userId, string $type, int $id): bool
+    public function toggle(int $userId, string $type, int $id, string $role = Roles::TEACHER): bool
     {
         $type = strtolower(trim($type));
         if ($userId <= 0 || $id <= 0 || !in_array($type, self::TYPES, true)) {
@@ -18,6 +19,7 @@ class FavoriteService
         }
 
         $db = Connection::getInstance();
+        if (!$this->isAccessible($db, $userId, $role, $type, $id)) throw new \InvalidArgumentException('Favorito indisponível.');
         $stmt = $db->prepare('SELECT id FROM user_favorites WHERE user_id=:user_id AND favorite_type=:type AND favorite_id=:favorite_id LIMIT 1');
         $stmt->execute(['user_id' => $userId, 'type' => $type, 'favorite_id' => $id]);
         $existing = $stmt->fetchColumn();
@@ -31,6 +33,14 @@ class FavoriteService
         $insert = $db->prepare('INSERT INTO user_favorites (user_id,favorite_type,favorite_id) VALUES (:user_id,:type,:favorite_id)');
         $insert->execute(['user_id' => $userId, 'type' => $type, 'favorite_id' => $id]);
         return true;
+    }
+
+    private function isAccessible(\PDO $db, int $userId, string $role, string $type, int $id): bool
+    {
+        if ($type === 'student') { $stmt=$db->prepare('SELECT 1 FROM students WHERE id=? LIMIT 1');$stmt->execute([$id]);return (bool)$stmt->fetchColumn(); }
+        if ($type === 'class') { $stmt=$db->prepare('SELECT 1 FROM school_classes WHERE id=? LIMIT 1');$stmt->execute([$id]);return (bool)$stmt->fetchColumn(); }
+        if (Roles::hasFullAccess($role)) { $stmt=$db->prepare('SELECT 1 FROM student_monitoring WHERE id=? LIMIT 1');$stmt->execute([$id]);return (bool)$stmt->fetchColumn(); }
+        $stmt=$db->prepare('SELECT 1 FROM student_monitoring_users WHERE monitoring_id=? AND user_id=? LIMIT 1');$stmt->execute([$id,$userId]);return (bool)$stmt->fetchColumn();
     }
 
     public function isFavorite(int $userId, string $type, int $id): bool

@@ -8,20 +8,21 @@ use App\Database\Connection;
 
 class SearchService
 {
-    public function search(string $term, int $limit = 8): array
+    public function search(string $term, int $limit = 8, ?array $allowedGroups = null, array $context = []): array
     {
         $term = trim($term);
         if (mb_strlen($term) < 2) {
             return ['students'=>[],'classes'=>[],'occurrences'=>[],'monitoring'=>[],'notices'=>[],'users'=>[]];
         }
         $limit = max(1, min(12, $limit));
+        $allowed = array_fill_keys($allowedGroups ?? ['students','classes','occurrences','monitoring','notices','users'], true);
         return [
-            'students'=>$this->students($term,$limit),
-            'classes'=>$this->classes($term,$limit),
-            'occurrences'=>$this->occurrences($term,$limit),
-            'monitoring'=>$this->monitoring($term,$limit),
-            'notices'=>$this->notices($term,$limit),
-            'users'=>$this->users($term,$limit),
+            'students'=>isset($allowed['students'])?$this->students($term,$limit):[],
+            'classes'=>isset($allowed['classes'])?$this->classes($term,$limit):[],
+            'occurrences'=>isset($allowed['occurrences'])?$this->occurrences($term,$limit):[],
+            'monitoring'=>isset($allowed['monitoring'])?$this->monitoring($term,$limit,(int)($context['user_id']??0),!empty($context['view_all_monitoring'])):[],
+            'notices'=>isset($allowed['notices'])?$this->notices($term,$limit,!empty($context['manage_notices'])):[],
+            'users'=>isset($allowed['users'])?$this->users($term,$limit):[],
         ];
     }
 
@@ -82,14 +83,17 @@ class SearchService
         return $this->rows("SELECT o.id,COALESCE(NULLIF(o.title,''),CONCAT('Ocorrência #',o.id)) AS title,CONCAT(s.name,' · ',DATE_FORMAT(o.occurrence_date,'%d/%m/%Y')) AS subtitle,CONCAT('/ocorrencias/editar?id=',o.id) AS url,'occurrence' AS type FROM student_occurrences o JOIN students s ON s.id=o.student_id WHERE o.title LIKE :term OR o.description LIKE :term OR s.name LIKE :term ORDER BY o.occurrence_date DESC,o.id DESC LIMIT {$limit}",$term);
     }
 
-    private function monitoring(string $term,int $limit): array
+    private function monitoring(string $term,int $limit,int $userId,bool $viewAll): array
     {
-        return $this->rows("SELECT m.id,COALESCE(NULLIF(m.case_title,''),CONCAT('Caso #',m.id)) AS title,CONCAT(s.name,' · ',CASE WHEN m.status='ACTIVE' THEN 'Ativo' ELSE 'Concluído' END) AS subtitle,CONCAT('/acompanhamentos?student_id=',m.student_id,'&case_id=',m.id) AS url,'monitoring' AS type FROM student_monitoring m JOIN students s ON s.id=m.student_id WHERE m.case_title LIKE :term OR m.problem_details LIKE :term OR m.reason LIKE :term OR s.name LIKE :term ORDER BY (m.status='ACTIVE') DESC,m.id DESC LIMIT {$limit}",$term);
+        $scope = $viewAll ? '' : ' AND EXISTS (SELECT 1 FROM student_monitoring_users smu WHERE smu.monitoring_id=m.id AND smu.user_id=' . max(0,$userId) . ')';
+        return $this->rows("SELECT m.id,COALESCE(NULLIF(m.case_title,''),CONCAT('Caso #',m.id)) AS title,CONCAT(s.name,' · ',CASE WHEN m.status='ACTIVE' THEN 'Ativo' ELSE 'Concluído' END) AS subtitle,CONCAT('/acompanhamentos?student_id=',m.student_id,'&case_id=',m.id) AS url,'monitoring' AS type FROM student_monitoring m JOIN students s ON s.id=m.student_id WHERE (m.case_title LIKE :term OR m.problem_details LIKE :term OR m.reason LIKE :term OR s.name LIKE :term){$scope} ORDER BY (m.status='ACTIVE') DESC,m.id DESC LIMIT {$limit}",$term);
     }
 
-    private function notices(string $term,int $limit): array
+    private function notices(string $term,int $limit,bool $manage): array
     {
-        return $this->rows("SELECT n.id,n.title,CONCAT(CASE n.priority WHEN 'URGENT' THEN 'Urgente' WHEN 'IMPORTANT' THEN 'Importante' ELSE 'Informativo' END,' · Aviso') AS subtitle,CONCAT('/avisos/editar?id=',n.id) AS url,'notice' AS type FROM school_notices n WHERE n.title LIKE :term OR n.content LIKE :term ORDER BY n.active DESC,n.pinned DESC,n.id DESC LIMIT {$limit}",$term);
+        $url = $manage ? "CONCAT('/avisos/editar?id=',n.id)" : "'/avisos'";
+        $active = $manage ? '' : 'n.active=1 AND ';
+        return $this->rows("SELECT n.id,n.title,CONCAT(CASE n.priority WHEN 'URGENT' THEN 'Urgente' WHEN 'IMPORTANT' THEN 'Importante' ELSE 'Informativo' END,' · Aviso') AS subtitle,{$url} AS url,'notice' AS type FROM school_notices n WHERE {$active}(n.title LIKE :term OR n.content LIKE :term) ORDER BY n.active DESC,n.pinned DESC,n.id DESC LIMIT {$limit}",$term);
     }
 
     private function users(string $term,int $limit): array
