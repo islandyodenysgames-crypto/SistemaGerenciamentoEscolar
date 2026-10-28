@@ -13,6 +13,8 @@ use App\Services\NoticeService;
 use App\Services\SchoolCalendarService;
 use App\Services\TvHallOfFameService;
 use App\Services\TvIntelligentContentService;
+use App\Services\TvPanelAccessService;
+use App\Services\FileSecurityService;
 
 final class TvPanelController extends BaseController
 {
@@ -24,43 +26,46 @@ final class TvPanelController extends BaseController
         private NoticeService $notices,
         private SchoolCalendarService $calendar,
         private TvHallOfFameService $hallOfFame,
-        private TvIntelligentContentService $intelligentContent
+        private TvIntelligentContentService $intelligentContent,
+        private TvPanelAccessService $access
     ) {}
 
     public function show(): void
     {
+        if (!$this->allowDisplay()) return;
+        $this->privateDisplayHeaders();
         $config = $this->configuration();
-        $data = $this->dashboard->data();
-        $data['schoolCalendar']['upcoming'] = $this->calendar->upcoming(24);
-        $tvNotices = $this->notices->activeForTvPanel(8);
-        $data['activeNotices'] = $tvNotices;
-        $data['activeNoticesCount'] = count($tvNotices);
+        $data = $this->publicDashboardData();
         $data['tvConfig'] = $config;
-        $data['hallOfFame'] = $this->hallOfFame->build();
-        $data['intelligentContent'] = $this->intelligentContent->build($data, $data['hallOfFame'], $config);
         $data['title'] = 'Painel TV - ' . app_name();
         $this->view('pages/tv-panel/show', $data, 'tv');
     }
 
     public function data(): void
     {
-        $payload = $this->dashboard->data();
-        $payload['schoolCalendar']['upcoming'] = $this->calendar->upcoming(24);
-        $tvNotices = $this->notices->activeForTvPanel(8);
+        if (!$this->allowDisplay()) return;
+        $this->privateDisplayHeaders();
+        $payload = $this->publicDashboardData();
         Response::json([
             'success' => true,
             'generatedAt' => date(DATE_ATOM),
             'frequency' => $payload['schoolFrequencyToday'] ?? [],
             'ranking' => array_slice((array)($payload['ranking'] ?? []), 0, 10),
-            'notices' => $tvNotices,
+            'notices' => $payload['activeNotices'] ?? [],
             'calendar' => $payload['schoolCalendar'] ?? [],
             'executive' => $payload['executive'] ?? [],
-            'occurrences' => $payload['occurrenceSummary'] ?? [],
-            'intelligence' => $payload['intelligence'] ?? [],
-            'academicContext' => $payload['academicContext'] ?? [],
-            'hallOfFame' => $hall = $this->hallOfFame->build(),
-            'intelligentContent' => $this->intelligentContent->build($payload, $hall, $this->configuration()),
+            'hallOfFame' => $payload['hallOfFame'] ?? [],
+            'intelligentContent' => $payload['intelligentContent'] ?? [],
         ]);
+    }
+
+    public function pair(): void
+    {
+        header('Referrer-Policy: no-referrer');
+        if (!$this->access->pair((string) ($_GET['token'] ?? ''))) {
+            http_response_code(403); echo 'Não foi possível autorizar este dispositivo.'; return;
+        }
+        header('Location: ' . base_url('painel-tv'), true, 303);
     }
 
     public function settings(): void
@@ -169,6 +174,7 @@ final class TvPanelController extends BaseController
         if ($binary === false || strlen($binary) > 8 * 1024 * 1024) {
             throw new \InvalidArgumentException('O banner recortado da Dica do Dia é inválido ou excede 8 MB.');
         }
+        $validated = FileSecurityService::inspectImageBytes($binary, ['jpg', 'png', 'webp'], 8 * 1024 * 1024);
         $info = @getimagesizefromstring($binary);
         if (!$info || (int)$info[0] !== 1200 || (int)$info[1] !== 900) {
             throw new \InvalidArgumentException('Confirme o recorte para gerar o banner em 1200 × 900 px.');
@@ -178,7 +184,7 @@ final class TvPanelController extends BaseController
         if (!is_dir($absoluteDir) && !mkdir($absoluteDir, 0775, true) && !is_dir($absoluteDir)) {
             throw new \InvalidArgumentException('Não foi possível preparar a pasta do Painel TV.');
         }
-        $name = 'dica-do-dia-' . bin2hex(random_bytes(8)) . '.jpg';
+        $name = FileSecurityService::randomName($validated['extension'], 'dica-do-dia');
         if (file_put_contents($absoluteDir . '/' . $name, $binary, LOCK_EX) === false) {
             throw new \InvalidArgumentException('Não foi possível salvar o banner da Dica do Dia.');
         }
@@ -189,13 +195,8 @@ final class TvPanelController extends BaseController
 
     private function saveDailyTipBanner(array $file, string $oldPath = ''): string
     {
-        if ((int)($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-            throw new \InvalidArgumentException('Não foi possível enviar o banner da Dica do Dia.');
-        }
-        if ((int)($file['size'] ?? 0) > 8 * 1024 * 1024) {
-            throw new \InvalidArgumentException('O banner da Dica do Dia deve ter no máximo 8 MB.');
-        }
-        $tmp = (string)($file['tmp_name'] ?? '');
+        $validated = FileSecurityService::inspectUpload($file, ['jpg', 'jpeg', 'png', 'webp'], 8 * 1024 * 1024);
+        $tmp = $validated['tmp_name'];
         $info = $tmp !== '' ? @getimagesize($tmp) : false;
         $allowed = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
         if (!$info || !isset($allowed[$info[2]])) {
@@ -209,7 +210,7 @@ final class TvPanelController extends BaseController
         if (!is_dir($absoluteDir) && !mkdir($absoluteDir, 0775, true) && !is_dir($absoluteDir)) {
             throw new \InvalidArgumentException('Não foi possível preparar a pasta do Painel TV.');
         }
-        $name = 'dica-do-dia-' . bin2hex(random_bytes(8)) . '.' . $allowed[$info[2]];
+        $name = FileSecurityService::randomName($allowed[$info[2]], 'dica-do-dia');
         if (!move_uploaded_file($tmp, $absoluteDir . '/' . $name)) {
             throw new \InvalidArgumentException('Não foi possível salvar o banner da Dica do Dia.');
         }
@@ -220,10 +221,9 @@ final class TvPanelController extends BaseController
 
     private function removePublicFile(string $path): void
     {
-        $path = ltrim(str_replace(['..', '\\'], ['', '/'], $path), '/');
-        if ($path === '') return;
-        $absolute = dirname(__DIR__, 2) . '/public/' . $path;
-        if (is_file($absolute)) @unlink($absolute);
+        $path = str_replace('\\', '/', ltrim($path, '/'));
+        if (!preg_match('#^uploads/tv-panel/[A-Za-z0-9.-]+$#', $path)) return;
+        FileSecurityService::deleteWithin(dirname(__DIR__, 2) . '/public', $path);
     }
 
     private function cleanText(mixed $value, int $maxLength, string $fallback): string
@@ -274,5 +274,50 @@ final class TvPanelController extends BaseController
         if (!$row) return $defaults;
         $decoded = json_decode((string)($row['value'] ?? ''), true);
         return is_array($decoded) ? array_replace($defaults, $decoded) : $defaults;
+    }
+
+    private function allowDisplay(): bool
+    {
+        if ($this->access->canView()) return true;
+        $this->privateDisplayHeaders();
+        http_response_code(403);
+        echo 'Painel TV não autorizado neste dispositivo.';
+        return false;
+    }
+
+    private function privateDisplayHeaders(): void
+    {
+        header('Cache-Control: private, no-store, max-age=0');
+        header('Pragma: no-cache');
+        header('X-Content-Type-Options: nosniff');
+        header('Referrer-Policy: no-referrer');
+    }
+
+    private function publicDashboardData(): array
+    {
+        $source = $this->dashboard->data();
+        $ranking = array_map(static fn (array $row): array => array_intersect_key($row, array_flip(['class_name','attendance_percentage','has_attendance','class_photo_path','class_photo_updated_at'])), array_slice((array) ($source['ranking'] ?? []), 0, 10));
+        $events = array_map(static fn (array $event): array => array_intersect_key($event, array_flip(['title','description','location','type','start_date','end_date'])), $this->calendar->upcoming(24));
+        $notices = array_map(static fn (array $notice): array => ['banner_path' => (string) ($notice['banner_path'] ?? '')], $this->notices->activeForTvPanel(8));
+        $hall = $this->hallOfFame->build();
+        foreach ($hall as &$item) if (is_array($item)) $item = array_intersect_key($item, array_flip(['class_name','attendance_percentage','evolution_percentage','previous_percentage','current_percentage','attendance_days','class_photo_path','class_photo_updated_at']));
+        unset($item);
+        $data = [
+            'schoolName' => (string) ($source['schoolName'] ?? app_name()),
+            'totalStudents' => (int) ($source['totalStudents'] ?? 0),
+            'totalClasses' => (int) ($source['totalClasses'] ?? 0),
+            'schoolGoals' => ['frequency_goal' => (float) ($source['schoolGoals']['frequency_goal'] ?? 95)],
+            'schoolFrequencyToday' => array_intersect_key((array) ($source['schoolFrequencyToday'] ?? []), array_flip(['presentes','present','faltas','absent','justificadas','justified','atestados','medical','onibus','bus','percentage','attendance_percentage'])),
+            'ranking' => $ranking,
+            'executive' => array_intersect_key((array) ($source['executive'] ?? []), array_flip(['doneClasses','totalClasses'])),
+            'schoolCalendar' => ['upcoming' => $events],
+            'activeNotices' => $notices,
+            'activeNoticesCount' => count($notices),
+            'hallOfFame' => $hall,
+        ];
+        $content = $this->intelligentContent->build($data, $hall, $this->configuration());
+        unset($content['studentRecognition']);
+        $data['intelligentContent'] = $content;
+        return $data;
     }
 }

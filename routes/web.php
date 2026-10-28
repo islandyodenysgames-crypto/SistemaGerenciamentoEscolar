@@ -8,6 +8,7 @@ use App\Controllers\DashboardController;
 use App\Controllers\DataMaintenanceController;
 use App\Controllers\EnrollmentController;
 use App\Controllers\FavoriteController;
+use App\Controllers\FileAccessController;
 use App\Controllers\IntelligenceController;
 use App\Controllers\IntelligenceSettingsController;
 use App\Controllers\IntelligentContentController;
@@ -30,6 +31,8 @@ use App\Controllers\SubjectController;
 use App\Controllers\TvPanelController;
 
 /** @var \App\Core\Router $router */
+
+$router->get('/arquivos/visualizar', [FileAccessController::class, 'show']);
 
 // ======================================================
 // Dashboard
@@ -107,6 +110,7 @@ $router->post('/configuracoes/ano-letivo/assistente', [SchoolYearController::cla
 // ======================================================
 $router->get('/painel-tv', [TvPanelController::class, 'show']);
 $router->get('/painel-tv/dados', [TvPanelController::class, 'data']);
+$router->get('/painel-tv/autorizar', [TvPanelController::class, 'pair']);
 $router->get('/painel-tv/configuracoes', [TvPanelController::class, 'settings']);
 $router->post('/painel-tv/configuracoes', [TvPanelController::class, 'save']);
 $router->get('/configuracoes/conteudo-inteligente', [IntelligentContentController::class, 'index']);

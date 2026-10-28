@@ -6,6 +6,7 @@ namespace App\Services\Monitoring;
 
 use App\Repositories\Monitoring\StudentMonitoringActionAttachmentRepository;
 use InvalidArgumentException;
+use App\Services\FileSecurityService;
 
 final class StudentMonitoringActionAttachmentService
 {
@@ -30,19 +31,12 @@ final class StudentMonitoringActionAttachmentService
         $saved=[];
         foreach($items as $file){
             if(($file['error']??UPLOAD_ERR_NO_FILE)===UPLOAD_ERR_NO_FILE)continue;
-            if(($file['error']??UPLOAD_ERR_OK)!==UPLOAD_ERR_OK)throw new InvalidArgumentException('Um dos anexos não pôde ser enviado.');
-            $size=(int)($file['size']??0);
-            if($size<=0||$size>self::MAX_FILE_SIZE)throw new InvalidArgumentException('Cada arquivo deve possuir no máximo 25 MB.');
-            $original=trim(basename((string)($file['name']??'arquivo')));
-            $ext=strtolower(pathinfo($original,PATHINFO_EXTENSION));
-            if(!in_array($ext,self::ALLOWED,true))throw new InvalidArgumentException('Formato não permitido: '.($ext?:'sem extensão').'.');
-            $tmp=(string)($file['tmp_name']??'');
-            if($tmp===''||!is_uploaded_file($tmp))throw new InvalidArgumentException('Arquivo temporário inválido.');
-            $mime=(new \finfo(FILEINFO_MIME_TYPE))->file($tmp)?:'application/octet-stream';
+            $inspected=FileSecurityService::inspectUpload($file,self::ALLOWED,self::MAX_FILE_SIZE);
+            $size=$inspected['size_bytes'];$original=$inspected['original_name'];$ext=$inspected['extension'];$tmp=$inspected['tmp_name'];$mime=$inspected['mime_type'];
             $relativeDir='uploads/monitoring-actions/'.date('Y/m').'/'.$actionId;
             $dir=public_path($relativeDir);
             if(!is_dir($dir)&&!mkdir($dir,0775,true)&&!is_dir($dir))throw new InvalidArgumentException('Não foi possível preparar a pasta de anexos.');
-            $stored=bin2hex(random_bytes(16)).'.'.$ext;
+            $stored=FileSecurityService::randomName($ext,'anexo');
             if(!move_uploaded_file($tmp,$dir.DIRECTORY_SEPARATOR.$stored))throw new InvalidArgumentException('Não foi possível salvar o arquivo '.$original.'.');
             $saved[]=$this->repository->create(['action_id'=>$actionId,'original_name'=>$original,'stored_name'=>$stored,'relative_path'=>$relativeDir.'/'.$stored,'mime_type'=>$mime,'extension'=>$ext,'size_bytes'=>$size,'uploaded_by'=>$userId,'uploaded_by_name'=>$userName]);
         }
@@ -52,12 +46,12 @@ final class StudentMonitoringActionAttachmentService
     public function remove(int $id): bool
     {
         $item=$this->repository->find($id); if(!$item)return false;
-        $path=public_path((string)$item['relative_path']); if(is_file($path))@unlink($path);
+        FileSecurityService::deleteWithin(public_path(),(string)$item['relative_path']);
         return $this->repository->delete($id);
     }
     public function removeAll(int $actionId): void
     {
-        foreach($this->repository->byAction($actionId) as $item){$path=public_path((string)$item['relative_path']);if(is_file($path))@unlink($path);} $this->repository->deleteByAction($actionId);
+        foreach($this->repository->byAction($actionId) as $item){FileSecurityService::deleteWithin(public_path(),(string)$item['relative_path']);} $this->repository->deleteByAction($actionId);
     }
     private function normalize(array $files): array
     {

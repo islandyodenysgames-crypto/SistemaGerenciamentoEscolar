@@ -30,13 +30,14 @@ class NoticeMediaService
         if ($bytes === false || strlen($bytes) > 8 * 1024 * 1024) {
             throw new InvalidArgumentException('O banner deve ter no máximo 8 MB.');
         }
-        $ext = $m[1] === 'jpeg' ? 'jpg' : $m[1];
+        $image = FileSecurityService::inspectImageBytes($bytes, ['jpg', 'png', 'webp'], 8 * 1024 * 1024);
+        $ext = $image['extension'];
         $relativeDir = 'uploads/notices/' . date('Y/m') . '/' . $noticeId;
         $absoluteDir = dirname(__DIR__, 2) . '/public/' . $relativeDir;
         if (!is_dir($absoluteDir) && !mkdir($absoluteDir, 0775, true) && !is_dir($absoluteDir)) {
             throw new InvalidArgumentException('Não foi possível preparar a pasta do banner.');
         }
-        $name = 'banner-' . bin2hex(random_bytes(8)) . '.' . $ext;
+        $name = FileSecurityService::randomName($ext, 'banner');
         if (file_put_contents($absoluteDir . '/' . $name, $bytes) === false) {
             throw new InvalidArgumentException('Não foi possível salvar o banner.');
         }
@@ -52,20 +53,18 @@ class NoticeMediaService
         $allowed = ['pdf','jpg','jpeg','png','webp','doc','docx','xls','xlsx','txt','zip','mp3','wav','mp4','webm'];
         foreach ($normalized as $file) {
             if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) continue;
-            if (($file['error'] ?? 1) !== UPLOAD_ERR_OK) throw new InvalidArgumentException('Falha ao enviar um dos anexos.');
-            if ((int)$file['size'] > self::MAX_FILE) throw new InvalidArgumentException('Cada anexo deve ter no máximo 25 MB.');
-            $original = basename((string)$file['name']);
-            $ext = strtolower(pathinfo($original, PATHINFO_EXTENSION));
-            if (!in_array($ext, $allowed, true)) throw new InvalidArgumentException('Tipo de anexo não permitido: ' . $original);
+            $inspected = FileSecurityService::inspectUpload($file, $allowed, self::MAX_FILE);
+            $original = $inspected['original_name'];
+            $ext = $inspected['extension'];
             $relativeDir = 'uploads/notices/' . date('Y/m') . '/' . $noticeId . '/attachments';
             $absoluteDir = dirname(__DIR__, 2) . '/public/' . $relativeDir;
-            if (!is_dir($absoluteDir)) mkdir($absoluteDir, 0775, true);
-            $stored = bin2hex(random_bytes(12)) . '.' . $ext;
-            if (!move_uploaded_file((string)$file['tmp_name'], $absoluteDir . '/' . $stored)) throw new InvalidArgumentException('Não foi possível salvar o anexo ' . $original . '.');
-            $mime = function_exists('mime_content_type') ? (mime_content_type($absoluteDir . '/' . $stored) ?: 'application/octet-stream') : 'application/octet-stream';
+            if (!is_dir($absoluteDir) && !mkdir($absoluteDir, 0770, true) && !is_dir($absoluteDir)) throw new InvalidArgumentException('Não foi possível preparar a pasta de anexos.');
+            $stored = FileSecurityService::randomName($ext, 'anexo');
+            if (!move_uploaded_file($inspected['tmp_name'], $absoluteDir . '/' . $stored)) throw new InvalidArgumentException('Não foi possível salvar o anexo ' . $original . '.');
+            $mime = $inspected['mime_type'];
             $this->repository->create([
                 'notice_id'=>$noticeId,'original_name'=>$original,'stored_name'=>$stored,'relative_path'=>$relativeDir.'/'.$stored,
-                'mime_type'=>$mime,'extension'=>$ext,'size_bytes'=>(int)$file['size'],'uploaded_by'=>$userId,
+                'mime_type'=>$mime,'extension'=>$ext,'size_bytes'=>$inspected['size_bytes'],'uploaded_by'=>$userId,
             ]);
         }
     }
@@ -83,9 +82,9 @@ class NoticeMediaService
 
     private function removePublicFile(string $path): void
     {
-        $path = ltrim(str_replace(['..','\\'], ['', '/'], $path), '/');
-        $absolute = dirname(__DIR__, 2) . '/public/' . $path;
-        if (is_file($absolute)) @unlink($absolute);
+        $path = str_replace('\\', '/', ltrim($path, '/'));
+        if (!preg_match('#^uploads/notices/[0-9]{4}/[0-9]{2}/[0-9]+/(?:attachments/)?[A-Za-z0-9.-]+$#', $path)) return;
+        FileSecurityService::deleteWithin(dirname(__DIR__, 2) . '/public', $path);
     }
 
     private function normalizeFiles(array $files): array

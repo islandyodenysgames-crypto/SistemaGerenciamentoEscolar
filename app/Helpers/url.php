@@ -15,9 +15,23 @@ if (!function_exists('base_url')) {
             return $base;
         }
 
+        $normalizedPath = str_replace('\\', '/', ltrim($path, '/'));
+        if (is_private_upload_path($normalizedPath)) {
+            $path = 'arquivos/visualizar?path=' . rawurlencode($normalizedPath);
+        }
+
         return ($base === '/' ? '' : rtrim($base, '/')) . '/' . ltrim($path, '/');
     }
 
+}
+
+if (!function_exists('is_private_upload_path')) {
+    function is_private_upload_path(string $path): bool
+    {
+        $path = str_replace('\\', '/', ltrim($path, '/'));
+        if (preg_match('#^uploads/(students|users|occurrences|occurrence-actions|monitoring-actions)/#', $path)) return true;
+        return (bool) preg_match('#^uploads/notices/[0-9]{4}/[0-9]{2}/[0-9]+/attachments/#', $path);
+    }
 }
 
 if (!function_exists('redirect')) {
