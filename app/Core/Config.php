@@ -16,6 +16,23 @@ class Config
                 'url' => Env::get('APP_URL', '/SistemaFrequenciaEscolar/public'),
                 'timezone' => Env::get('APP_TIMEZONE', 'America/Fortaleza'),
                 'debug' => Env::get('APP_DEBUG', 'true'),
+                'environment' => Env::get('APP_ENV', 'local'),
+            ],
+
+            'session' => [
+                'name' => Env::get('SESSION_NAME', 'sge_session'),
+                'lifetime' => (int) Env::get('SESSION_LIFETIME', '1800'),
+                'regenerate_interval' => (int) Env::get('SESSION_REGENERATE_INTERVAL', '900'),
+                'revalidate_interval' => (int) Env::get('SESSION_REVALIDATE_INTERVAL', '300'),
+                'same_site' => Env::get('SESSION_SAME_SITE', 'Lax'),
+            ],
+
+            'security' => [
+                'trusted_proxies' => array_values(array_filter(array_map('trim', explode(',', (string) Env::get('TRUSTED_PROXIES', ''))))),
+                'login_identity_limit' => (int) Env::get('LOGIN_IDENTITY_LIMIT', '5'),
+                'login_origin_limit' => (int) Env::get('LOGIN_ORIGIN_LIMIT', '50'),
+                'login_window' => (int) Env::get('LOGIN_WINDOW', '900'),
+                'login_lockout' => (int) Env::get('LOGIN_LOCKOUT', '900'),
             ],
 
             'database' => [

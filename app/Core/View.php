@@ -19,6 +19,8 @@ class View
 
         $content = ob_get_clean();
 
+        ob_start();
         require dirname(__DIR__) . "/Views/layouts/{$layout}.php";
+        echo Csrf::injectIntoHtml((string) ob_get_clean());
     }
 }

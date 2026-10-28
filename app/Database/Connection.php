@@ -32,7 +32,7 @@ class Connection
                     ]
                 );
             } catch (PDOException $e) {
-                die('Erro ao conectar ao banco: ' . $e->getMessage());
+                throw new \RuntimeException('Não foi possível conectar ao banco de dados.', 0, $e);
             }
         }
 

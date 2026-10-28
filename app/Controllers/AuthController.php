@@ -9,11 +9,13 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
 use App\Services\AuthService;
+use App\Services\LoginThrottleService;
 
 class AuthController extends Controller
 {
     public function __construct(
-        private AuthService $service
+        private AuthService $service,
+        private LoginThrottleService $throttle
     ) {
     }
 
@@ -23,9 +25,10 @@ class AuthController extends Controller
             Response::redirect(base_url());
         }
 
-        $error = Session::get('login_error');
+        $error = Session::get('login_error') ?? Session::get('csrf_error');
 
         Session::remove('login_error');
+        Session::remove('csrf_error');
 
         $this->view('pages/auth/login', [
             'title' => 'Login - ' . app_name(),
@@ -37,38 +40,31 @@ class AuthController extends Controller
     {
         $email = trim((string) Request::post('email'));
         $password = (string) Request::post('password');
+        $origin = Request::clientIp();
+
+        if ($this->throttle->retryAfter($email, $origin) > 0) {
+            Session::set('login_error', 'Não foi possível entrar com os dados informados. Tente novamente.');
+            Response::redirect(base_url('login'));
+        }
 
         $user = $this->service->attempt($email, $password);
 
         if (!$user) {
-            Session::set('login_error', 'E-mail ou senha inválidos.');
+            $this->throttle->recordFailure($email, $origin);
+            Session::set('login_error', 'Não foi possível entrar com os dados informados. Tente novamente.');
 
             Response::redirect(base_url('login'));
         }
 
-        session_regenerate_id(true);
-        Session::set('user', $user);
+        $this->throttle->recordSuccess($email);
+        Session::authenticate($user);
+        \App\Core\Csrf::rotate();
 
         Response::redirect(base_url());
     }
 
     public function logout(): void
     {
-        $_SESSION = [];
-
-        if (ini_get('session.use_cookies')) {
-            $parameters = session_get_cookie_params();
-            setcookie(
-                session_name(),
-                '',
-                time() - 42000,
-                $parameters['path'],
-                $parameters['domain'],
-                $parameters['secure'],
-                $parameters['httponly']
-            );
-        }
-
         Session::destroy();
 
         Response::redirect(base_url('login'));

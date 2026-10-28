@@ -69,10 +69,12 @@ $menu = Menu::items();
             <span>Ajuda</span>
         </a>
 
-        <a href="<?= base_url('logout') ?>">
+        <form method="post" action="<?= base_url('logout') ?>" class="sidebar-logout-form">
+        <button type="submit" class="sidebar-logout-button">
             <i data-lucide="log-out"></i>
             <span>Sair</span>
-        </a>
+        </button>
+        </form>
 
     </div>
 
