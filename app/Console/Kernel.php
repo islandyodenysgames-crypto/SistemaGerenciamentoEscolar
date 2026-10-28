@@ -7,6 +7,7 @@ namespace App\Console;
 use App\Console\Commands\MigrateCommand;
 use App\Console\Commands\SeedCommand;
 use App\Console\Commands\IntelligenceSnapshotCommand;
+use App\Console\Commands\BackupCreateCommand;
 
 class Kernel
 {
@@ -27,6 +28,10 @@ class Kernel
                 (new IntelligenceSnapshotCommand())->handle($argv);
                 break;
 
+            case 'backup:create':
+                (new BackupCreateCommand())->handle();
+                break;
+
             default:
                 echo PHP_EOL;
                 echo "Sistema de Frequência Escolar" . PHP_EOL;
@@ -36,6 +41,7 @@ class Kernel
                 echo "php console.php seed" . PHP_EOL;
                 echo "php console.php intelligence:snapshot" . PHP_EOL;
                 echo "php console.php intelligence:snapshot --force" . PHP_EOL;
+                echo "php console.php backup:create" . PHP_EOL;
                 echo PHP_EOL;
         }
     }

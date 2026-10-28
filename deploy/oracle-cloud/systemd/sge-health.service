@@ -1,0 +1,12 @@
+[Unit]
+Description=Verificação operacional do SGE
+After=nginx.service php8.3-fpm.service mysql.service
+
+[Service]
+Type=oneshot
+Environment=APP_URL=https://escola.exemplo.br
+ExecStart=/var/www/sge/current/deploy/oracle-cloud/scripts/health-check.sh
+User=sge-deploy
+Group=www-data
+NoNewPrivileges=true
+PrivateTmp=true

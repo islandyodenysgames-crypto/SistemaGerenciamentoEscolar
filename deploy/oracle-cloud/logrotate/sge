@@ -1,0 +1,13 @@
+/var/www/sge/current/storage/logs/*.log /var/www/sge/current/storage/logs/*.ndjson /var/log/nginx/sge-*.log /var/log/php/sge-error.log {
+    daily
+    rotate 14
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 www-data www-data
+    sharedscripts
+    postrotate
+        systemctl reload nginx >/dev/null 2>&1 || true
+    endscript
+}
