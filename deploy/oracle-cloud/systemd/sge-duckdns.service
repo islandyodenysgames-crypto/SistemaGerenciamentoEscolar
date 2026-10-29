@@ -1,0 +1,14 @@
+[Unit]
+Description=Atualiza o DNS dinâmico do Sistema de Gerenciamento Escolar
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/sge-duckdns-update
+User=root
+Group=root
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict

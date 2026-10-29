@@ -183,6 +183,22 @@ sudo nginx -t
 sudo systemctl --failed
 ```
 
+### DNS dinâmico e endurecimento do acesso
+
+Quando a VM utiliza IPv4 público efêmero, o timer `sge-duckdns.timer` pode
+atualizar um subdomínio DuckDNS a cada cinco minutos. Copie o script para
+`/usr/local/sbin/sge-duckdns-update`, crie `/etc/sge/duckdns.env` com modo
+`0600` e mantenha o token somente na VM:
+
+```text
+DUCKDNS_DOMAIN=nome-do-subdominio
+DUCKDNS_TOKEN=segredo-fora-do-git
+```
+
+Os modelos em `deploy/oracle-cloud/ssh` e `deploy/oracle-cloud/fail2ban`
+desabilitam senha e root no SSH, reduzem tentativas e protegem SSH/Nginx.
+Valide uma segunda conexão por chave antes de encerrar a sessão administrativa.
+
 ## 9. Atualização e rollback
 
 Antes: confirme backup externo recente, espaço livre e commit/tag aprovado. Crie novo diretório de release, instale Composer, copie `.env` por vínculo seguro, aplique permissões e execute testes. Migrations devem ser compatíveis com a versão anterior ou ter plano explícito de banco.
