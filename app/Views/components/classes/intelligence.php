@@ -4,6 +4,7 @@ $risk = $intelligence['risk'] ?? ['score' => 0, 'level' => 'LOW'];
 $distribution = $intelligence['distribution'] ?? [];
 $attendance = $intelligence['attendance'] ?? [];
 $occurrences = $intelligence['occurrences'] ?? [];
+$attendanceResponse = $intelligence['attendance_response'] ?? [];
 $priorityStudents = $intelligence['priority_students'] ?? [];
 $recommendations = $intelligence['recommendations'] ?? [];
 $period = $intelligence['period'] ?? [];
@@ -129,6 +130,16 @@ $trendLabel = static function (array $trend): string {
             <div><strong><?= (int) ($occurrences['serious'] ?? 0) ?></strong><span>Ocorrências graves</span></div>
             <small><?= (int) ($occurrences['open'] ?? 0) ?> em aberto · Clique para conferir</small>
         </a>
+        <div class="class-intelligence__metric class-intelligence__metric--response" data-class-metric-tooltip="Alunos da turma com acompanhamento ativo voltado à frequência. O acompanhamento registra a resposta da escola, mas não apaga as faltas realizadas.">
+            <i data-lucide="heart-handshake"></i>
+            <div><strong><?= (int) ($attendanceResponse['students_with_followup'] ?? 0) ?></strong><span>Alunos acompanhados por frequência</span></div>
+            <small>Resposta ativa da escola ao sinal de infrequência</small>
+        </div>
+        <div class="class-intelligence__metric class-intelligence__metric--response" data-class-metric-tooltip="Providências registradas em acompanhamentos de frequência no período. Elas contam como resposta positiva da escola, sem alterar artificialmente a frequência do aluno.">
+            <i data-lucide="clipboard-check"></i>
+            <div><strong><?= (int) ($attendanceResponse['interventions'] ?? 0) ?></strong><span>Intervenções sobre frequência</span></div>
+            <small><?= (int) ($attendanceResponse['students_with_intervention'] ?? 0) ?> aluno(s) receberam providência no período</small>
+        </div>
     </div>
 
     <section class="class-predictive-intelligence" id="classPredictiveIntelligence">

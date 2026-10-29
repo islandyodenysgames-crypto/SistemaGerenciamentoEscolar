@@ -11,11 +11,11 @@ return new class extends Migration
     {
         Connection::getInstance()->exec(<<<'SQL'
 UPDATE student_occurrences
-SET severity = 'LOW',
+SET severity = 'NOT_APPLICABLE',
     status = 'RESOLVED',
     updated_at = NOW()
 WHERE type = 'PRAISE'
-  AND (severity <> 'LOW' OR status <> 'RESOLVED')
+  AND (severity <> 'NOT_APPLICABLE' OR status <> 'RESOLVED')
 SQL);
     }
 

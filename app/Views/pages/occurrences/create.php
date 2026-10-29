@@ -298,7 +298,11 @@ component('base/page-header', [
 
                                 <small>
 
-                                    <?php if (
+                                    <?php if ($value === 'NOT_APPLICABLE'): ?>
+
+                                        Reconhecimento positivo, sem classificação de gravidade.
+
+                                    <?php elseif (
                                         $value === 'LOW'
                                     ): ?>
 
@@ -569,13 +573,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updatePositiveRecordMode() {
         const isPraise = typeSelect?.value === 'PRAISE';
-        if (severityGroup) severityGroup.hidden = isPraise;
+        if (severityGroup) severityGroup.hidden = false;
         if (statusGroup) statusGroup.hidden = isPraise;
         if (positiveRecordNotice) positiveRecordNotice.hidden = !isPraise;
+        severityOptions.forEach((option) => {
+            const input = option.querySelector('input[name="severity"]');
+            option.hidden = isPraise ? input?.value !== 'NOT_APPLICABLE' : input?.value === 'NOT_APPLICABLE';
+        });
         if (isPraise) {
+            const notApplicable = document.querySelector('input[name="severity"][value="NOT_APPLICABLE"]');
+            if (notApplicable) notApplicable.checked = true;
+            if (statusSelect) statusSelect.value = 'RESOLVED';
+            updateSeveritySelection();
+        } else if (document.querySelector('input[name="severity"]:checked')?.value === 'NOT_APPLICABLE') {
             const low = document.querySelector('input[name="severity"][value="LOW"]');
             if (low) low.checked = true;
-            if (statusSelect) statusSelect.value = 'RESOLVED';
             updateSeveritySelection();
         }
     }

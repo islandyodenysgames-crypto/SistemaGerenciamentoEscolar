@@ -68,12 +68,13 @@ trait OccurrenceValidationOperations
                 )
             );
 
-            // Elogio é um reconhecimento positivo, não um evento adverso.
-            // Mantemos valores técnicos compatíveis com a tabela, mas ele não
-            // exige classificação de gravidade nem resolução posterior.
+            // Elogios são registros positivos: usam uma classificação neutra
+            // e já nascem concluídos, sem alimentar os indicadores adversos.
             if ($type === 'PRAISE') {
-                $severity = 'LOW';
+                $severity = \App\Services\Occurrence\SeverityService::NOT_APPLICABLE;
                 $status = 'RESOLVED';
+            } elseif ($severity === \App\Services\Occurrence\SeverityService::NOT_APPLICABLE) {
+                throw new InvalidArgumentException('A opção “Não se aplica” é exclusiva para elogios.');
             }
 
             /*

@@ -438,6 +438,48 @@ class IntelligenceRepository extends BaseRepository
         return $stmt->fetch() ?: [];
     }
 
+    public function classAttendanceResponse(int $classId, string $from, string $to): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT
+                COUNT(DISTINCT CASE
+                    WHEN sm.status = 'ACTIVE'
+                     AND sm.start_date <= :date_to_case
+                     AND sm.end_date >= :date_from_case
+                     AND EXISTS (
+                         SELECT 1 FROM student_monitoring_users smu
+                         WHERE smu.monitoring_id = sm.id
+                           AND smu.status = 'ACTIVE'
+                           AND smu.start_date <= :date_to_link
+                           AND smu.end_date >= :date_from_link
+                     )
+                    THEN sm.student_id
+                END) AS students_with_followup,
+                COUNT(DISTINCT CASE WHEN sma.id IS NOT NULL THEN sm.student_id END) AS students_with_intervention,
+                COUNT(DISTINCT sma.id) AS interventions
+            FROM enrollments e
+            INNER JOIN student_monitoring sm ON sm.student_id = e.student_id
+            LEFT JOIN student_monitoring_plans smp ON smp.monitoring_id = sm.id AND smp.status = 'ACTIVE'
+            LEFT JOIN student_monitoring_actions sma
+                ON sma.monitoring_id = sm.id
+               AND sma.deleted_at IS NULL
+               AND sma.action_date BETWEEN :date_from AND :date_to
+            WHERE e.school_class_id = :class_id
+              AND e.active = 1
+              AND (sm.problem_code = 'FREQUENCY' OR smp.target_metric = 'ATTENDANCE')
+        ");
+        $stmt->execute([
+            'class_id' => $classId,
+            'date_from' => $from,
+            'date_to' => $to,
+            'date_from_case' => $from,
+            'date_to_case' => $to,
+            'date_from_link' => $from,
+            'date_to_link' => $to,
+        ]);
+        return $stmt->fetch() ?: [];
+    }
+
     public function classOccurrenceTotals(int $classId, string $from, string $to): array
     {
         $stmt = $this->db->prepare("

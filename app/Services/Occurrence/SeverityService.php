@@ -8,6 +8,8 @@ use InvalidArgumentException;
 
 class SeverityService
 {
+    public const NOT_APPLICABLE = 'NOT_APPLICABLE';
+
     public const LOW = 'LOW';
 
     public const MEDIUM = 'MEDIUM';
@@ -17,6 +19,7 @@ class SeverityService
     public const CRITICAL = 'CRITICAL';
 
     private const LEVELS = [
+        self::NOT_APPLICABLE,
         self::LOW,
         self::MEDIUM,
         self::HIGH,
@@ -29,6 +32,7 @@ class SeverityService
     public function all(): array
     {
         return [
+            self::NOT_APPLICABLE => 'Não se aplica',
             self::LOW => 'Baixa',
             self::MEDIUM => 'Média',
             self::HIGH => 'Alta',
@@ -43,6 +47,7 @@ class SeverityService
     public function classes(): array
     {
         return [
+            self::NOT_APPLICABLE => 'severity-not-applicable',
             self::LOW => 'severity-low',
             self::MEDIUM => 'severity-medium',
             self::HIGH => 'severity-high',
@@ -56,6 +61,7 @@ class SeverityService
     public function icons(): array
     {
         return [
+            self::NOT_APPLICABLE => 'award',
             self::LOW => 'circle-check',
             self::MEDIUM => 'circle-alert',
             self::HIGH => 'triangle-alert',
@@ -71,6 +77,7 @@ class SeverityService
     public function weights(): array
     {
         return [
+            self::NOT_APPLICABLE => 0,
             self::LOW => 1,
             self::MEDIUM => 2,
             self::HIGH => 3,

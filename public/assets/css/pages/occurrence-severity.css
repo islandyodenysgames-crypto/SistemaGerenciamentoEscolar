@@ -121,6 +121,21 @@
    GRAVIDADE BAIXA
    ====================================================== */
 
+.occurrence-severity-option.severity-not-applicable .occurrence-severity-option-icon {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.occurrence-severity-option.severity-not-applicable:hover,
+.occurrence-severity-option.severity-not-applicable.is-selected {
+    border-color: #16a34a;
+    background: #f0fdf4;
+}
+
+.occurrence-severity-option.severity-not-applicable .occurrence-severity-option-check {
+    background: #16a34a;
+}
+
 .occurrence-severity-option.severity-low
 .occurrence-severity-option-icon {
     background: #dcfce7;
@@ -227,6 +242,12 @@
 }
 
 .occurrence-severity-badge.severity-low {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.occurrence-severity-badge.severity-not-applicable {
     border-color: #bbf7d0;
     background: #f0fdf4;
     color: #15803d;

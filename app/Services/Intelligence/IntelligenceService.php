@@ -792,6 +792,7 @@ class IntelligenceService
         $previousStart = date('Y-m-d', strtotime('-' . (($window * 2) - 1) . ' days'));
 
         $attendance = $this->repository->classAttendanceTotals($classId, $currentStart, $currentEnd);
+        $attendanceResponse = $this->repository->classAttendanceResponse($classId, $currentStart, $currentEnd);
         $attendancePrevious = $this->repository->classAttendanceTotals($classId, $previousStart, $previousEnd);
         $occurrences = $this->repository->classOccurrenceTotals($classId, $currentStart, $currentEnd);
         $occurrencesPrevious = $this->repository->classOccurrenceTotals($classId, $previousStart, $previousEnd);
@@ -864,6 +865,11 @@ class IntelligenceService
                 'attenuated_absences' => (int) ($attendance['attenuated_absences'] ?? 0),
                 'students_affected' => (int) ($attendance['students_with_unjustified_absence'] ?? 0),
                 'trend' => $attendanceTrend,
+            ],
+            'attendance_response' => [
+                'students_with_followup' => (int) ($attendanceResponse['students_with_followup'] ?? 0),
+                'students_with_intervention' => (int) ($attendanceResponse['students_with_intervention'] ?? 0),
+                'interventions' => (int) ($attendanceResponse['interventions'] ?? 0),
             ],
             'occurrences' => [
                 'total' => (int) ($occurrences['total_occurrences'] ?? 0),

@@ -128,7 +128,7 @@ trait OccurrenceHelpers
         ];
 
         if (strtoupper((string) $data['type']) === 'PRAISE') {
-            $data['severity'] = 'LOW';
+            $data['severity'] = 'NOT_APPLICABLE';
             $data['status'] = 'RESOLVED';
         }
 
