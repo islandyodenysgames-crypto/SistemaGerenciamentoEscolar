@@ -241,6 +241,11 @@ $assert(str_contains($searchService,'allowedGroups')&&str_contains($searchServic
 $assert(str_contains($favoriteService,'isAccessible'),'Favoritos devem rejeitar IDs inexistentes ou fora do escopo.');
 $assert(str_contains($fileController,'withinRecordScope')&&str_contains($fileController,"http_response_code(404)"),'Downloads privados devem validar escopo e ocultar existencia do arquivo.');
 
+$attendanceControllerSource=(string)file_get_contents($root.'/app/Controllers/AttendanceController.php');
+$attendanceCreateSource=(string)file_get_contents($root.'/app/Views/pages/attendance/create.php');
+$assert(str_contains($attendanceControllerSource,"'frequencia/novo?turma='")&&str_contains($attendanceControllerSource,"'&data=' . urlencode(\$date)"),'Salvar chamada deve retornar ao fluxo de nova chamada preservando turma e data.');
+$assert(str_contains($attendanceCreateSource,'Próxima turma pendente')&&str_contains($attendanceCreateSource,'completedClassIds'),'Nova chamada deve orientar a próxima turma e identificar as turmas já concluídas.');
+
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {
     foreach ($failures as $failure) fwrite(STDERR, "FALHA: {$failure}\n");

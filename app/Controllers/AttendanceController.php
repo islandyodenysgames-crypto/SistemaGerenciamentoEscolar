@@ -113,6 +113,59 @@ class AttendanceController extends BaseController
         $history = [];
         $existingAttendance = null;
         $existingStatuses = [];
+        $dailyClasses = $this->analyticsService
+            ->dailyRanking($today);
+        $completedClassIds = [];
+        $nextPendingClassId = null;
+
+        foreach ($dailyClasses as $dailyClass) {
+            $dailyClassId = (int) ($dailyClass['class_id'] ?? 0);
+
+            if ($dailyClassId <= 0) {
+                continue;
+            }
+
+            if ((int) ($dailyClass['has_attendance'] ?? 0) === 1) {
+                $completedClassIds[$dailyClassId] = true;
+            }
+        }
+
+        $orderedClasses = array_values(array_filter(
+            $this->classService->all(),
+            static fn (array $class): bool =>
+                (int) ($class['active'] ?? 0) === 1
+        ));
+        $pendingClassIds = [];
+
+        foreach ($orderedClasses as $class) {
+            $candidateId = (int) ($class['id'] ?? 0);
+
+            if ($candidateId > 0 && !isset($completedClassIds[$candidateId])) {
+                $pendingClassIds[] = $candidateId;
+            }
+        }
+
+        if ($pendingClassIds !== []) {
+            $nextPendingClassId = $pendingClassIds[0];
+
+            if ($classId > 0) {
+                $currentClassFound = false;
+
+                foreach ($orderedClasses as $class) {
+                    $candidateId = (int) ($class['id'] ?? 0);
+
+                    if ($candidateId === $classId) {
+                        $currentClassFound = true;
+                        continue;
+                    }
+
+                    if ($currentClassFound && in_array($candidateId, $pendingClassIds, true)) {
+                        $nextPendingClassId = $candidateId;
+                        break;
+                    }
+                }
+            }
+        }
 
         if ($classId > 0) {
             $students = $this->service
@@ -160,12 +213,17 @@ class AttendanceController extends BaseController
             'attendance_error'
         );
 
+        $attendanceSuccess = Session::get(
+            'attendance_success'
+        );
+
         Session::remove('attendance_error');
+        Session::remove('attendance_success');
 
         $this->view('pages/attendance/create', [
             'title' => 'Nova Chamada - ' . app_name(),
 
-            'classes' => $this->classService->all(),
+            'classes' => $orderedClasses,
 
             'classId' => $classId,
 
@@ -188,6 +246,21 @@ class AttendanceController extends BaseController
 
             'attendanceError' =>
                 $attendanceError,
+
+            'attendanceSuccess' =>
+                $attendanceSuccess,
+
+            'completedClassIds' =>
+                $completedClassIds,
+
+            'nextPendingClassId' =>
+                $nextPendingClassId,
+
+            'dailyDoneClasses' =>
+                count($completedClassIds),
+
+            'dailyTotalClasses' =>
+                count($dailyClasses),
         ]);
     }
 
@@ -228,7 +301,9 @@ class AttendanceController extends BaseController
             );
 
             Response::redirect(
-                base_url('frequencia/novo')
+                base_url(
+                    'frequencia/novo?data=' . urlencode($date)
+                )
             );
 
             return;
@@ -316,7 +391,11 @@ class AttendanceController extends BaseController
         );
 
         Response::redirect(
-            base_url('frequencia')
+            base_url(
+                'frequencia/novo?turma='
+                . $classId
+                . '&data=' . urlencode($date)
+            )
         );
     }
 

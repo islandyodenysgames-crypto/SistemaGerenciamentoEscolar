@@ -14,8 +14,56 @@ $statusLabels = [
 ];
 
 $existingStatuses = $existingStatuses ?? [];
+$completedClassIds = $completedClassIds ?? [];
 
 ?>
+
+<?php component('base/alert', [
+    'type' => 'success',
+    'message' => $attendanceSuccess ?? null,
+]); ?>
+
+<?php component('base/alert', [
+    'type' => 'danger',
+    'message' => $attendanceError ?? null,
+]); ?>
+
+<?php if (!empty($attendanceSuccess)): ?>
+    <section class="attendance-workflow-card" aria-live="polite">
+        <div class="attendance-workflow-copy">
+            <span class="attendance-workflow-icon"><i data-lucide="circle-check-big"></i></span>
+            <div>
+                <strong>Chamada salva. Continue na mesma data.</strong>
+                <p>
+                    <?= (int) ($dailyDoneClasses ?? 0) ?> de <?= (int) ($dailyTotalClasses ?? 0) ?> turmas concluídas em
+                    <?= date('d/m/Y', strtotime($today ?? date('Y-m-d'))) ?>.
+                </p>
+            </div>
+        </div>
+
+        <div class="attendance-workflow-actions">
+            <?php if (!empty($nextPendingClassId)): ?>
+                <a
+                    href="<?= base_url('frequencia/novo?turma=' . (int) $nextPendingClassId . '&data=' . urlencode((string) $today)) ?>"
+                    class="btn-primary"
+                    autofocus
+                >
+                    <i data-lucide="arrow-right"></i>
+                    Próxima turma pendente
+                </a>
+            <?php else: ?>
+                <span class="attendance-workflow-complete">
+                    <i data-lucide="party-popper"></i>
+                    Todas as turmas foram concluídas
+                </span>
+            <?php endif; ?>
+
+            <a href="<?= base_url('frequencia') ?>" class="btn-secondary">
+                Ver Central de Frequência
+            </a>
+        </div>
+    </section>
+<?php endif; ?>
 
 <div class="attendance-layout">
 
@@ -30,6 +78,7 @@ $existingStatuses = $existingStatuses ?? [];
                     <option value="">Selecione uma turma</option>
 
                     <?php foreach ($classes as $class): ?>
+                        <?php $classCompleted = isset($completedClassIds[(int) $class['id']]); ?>
                         <option
                             value="<?= $class['id'] ?>"
                             <?= (int) $classId === (int) $class['id'] ? 'selected' : '' ?>
@@ -37,6 +86,7 @@ $existingStatuses = $existingStatuses ?? [];
                             <?= e($class['name']) ?>
                             — <?= $class['year'] ?>
                             — <?= e($class['shift']) ?>
+                            <?= $classCompleted ? ' — ✓ Realizada' : ' — Pendente' ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
