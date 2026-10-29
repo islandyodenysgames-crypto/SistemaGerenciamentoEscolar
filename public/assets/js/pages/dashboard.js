@@ -21,13 +21,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            await window.AppExport.downloadPNG({
+            const downloaded = await window.AppExport.downloadPNG({
                 elementSelector: '#rankingShareCard',
                 fileName: 'ranking-diario'
             });
+            if (!downloaded) {
+                throw new Error('O download não foi iniciado.');
+            }
         } catch (error) {
             console.error(error);
-            alert('Erro ao gerar PNG.');
+            alert('Não foi possível baixar o Ranking Diário. Atualize a página e tente novamente.');
         }
 
         button.disabled = false;

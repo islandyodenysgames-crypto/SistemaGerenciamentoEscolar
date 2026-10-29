@@ -16,27 +16,49 @@ window.AppExport = {
 
         const hiddenElements = element.querySelectorAll('[data-export-hide]');
 
-        hiddenElements.forEach((item) => {
-            item.style.display = 'none';
-        });
+        const previousDisplays = Array.from(hiddenElements, (item) => item.style.display);
+        hiddenElements.forEach((item) => { item.style.display = 'none'; });
 
         try {
+            if (document.fonts?.ready) {
+                await document.fonts.ready;
+            }
+
+            const exportScale = window.matchMedia('(max-width: 768px)').matches ? 1.5 : 2;
             const canvas = await html2canvas(element, {
                 backgroundColor: '#ffffff',
-                scale: 2,
+                scale: exportScale,
                 useCORS: true,
+                allowTaint: false,
                 logging: false
             });
 
             const date = new Date().toISOString().slice(0, 10);
+            const blob = await new Promise((resolve, reject) => {
+                canvas.toBlob((result) => {
+                    if (result) resolve(result);
+                    else reject(new Error('O navegador não conseguiu preparar a imagem.'));
+                }, 'image/png');
+            });
+            const objectUrl = URL.createObjectURL(blob);
             const link = document.createElement('a');
 
             link.download = `${fileName}-${date}.png`;
-            link.href = canvas.toDataURL('image/png');
+            link.href = objectUrl;
+            link.rel = 'noopener';
+            link.style.display = 'none';
+            document.body.appendChild(link);
             link.click();
+            link.remove();
+
+            // O URL precisa permanecer vivo tempo suficiente para o Chrome
+            // Android transferir o arquivo ao gerenciador de downloads.
+            window.setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
+
+            return true;
         } finally {
-            hiddenElements.forEach((item) => {
-                item.style.display = '';
+            hiddenElements.forEach((item, index) => {
+                item.style.display = previousDisplays[index] || '';
             });
         }
     }

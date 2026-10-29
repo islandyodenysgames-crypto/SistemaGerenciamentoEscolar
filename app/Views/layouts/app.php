@@ -107,11 +107,8 @@
 
     <script src="<?= asset('assets/js/vendor/lucide-local.js') ?>"></script>
 
-    <!-- ======================================================
-         HTML2CANVAS
-    ======================================================= -->
-
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <!-- HTML2CANVAS local: exportacoes continuam funcionando mesmo sem CDN. -->
+    <script src="<?= asset('assets/js/vendor/html2canvas-1.4.1.min.js') ?>"></script>
 
     <!-- ======================================================
          JAVASCRIPT GLOBAL
