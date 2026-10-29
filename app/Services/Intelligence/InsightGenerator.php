@@ -103,16 +103,42 @@ final class InsightGenerator
 
         $attentionClasses = (int) ($summary['classes_in_attention'] ?? 0);
         if ($attentionClasses > 0) {
-            $topClass = $classes[0] ?? null;
+            $topClass = null;
+            foreach ($classes as $class) {
+                if (
+                    $topClass === null
+                    || (int) ($class['risk_score'] ?? 0) > (int) ($topClass['risk_score'] ?? 0)
+                ) {
+                    $topClass = $class;
+                }
+            }
+            $topScore = (int) ($topClass['risk_score'] ?? 0);
+            $topRiskLevel = strtoupper((string) ($topClass['risk_level'] ?? 'MODERATE'));
+            $topRiskLabel = match ($topRiskLevel) {
+                'CRITICAL' => 'crítico',
+                'HIGH' => 'alto',
+                'MODERATE' => 'atenção',
+                default => 'baixo',
+            };
+            $insightPriority = $topRiskLevel === 'CRITICAL'
+                ? InsightPriority::CRITICAL
+                : InsightPriority::ATTENTION;
             $description = $topClass
-                ? 'A turma ' . (string) ($topClass['name'] ?? '') . ' aparece entre as maiores prioridades do período.'
+                ? 'A turma ' . (string) ($topClass['name'] ?? '')
+                    . ' possui a maior pontuação do período: ' . $topScore
+                    . ' pontos, em nível ' . $topRiskLabel . '.'
                 : 'Existem turmas com concentração relevante de faltas e ocorrências.';
             $insights[] = $this->formatter->make(
-                'school.attention_classes', InsightPriority::ATTENTION, 'CLASS',
+                'school.attention_classes', $insightPriority, 'CLASS',
                 $attentionClasses . ' turma(s) em atenção', $description,
                 'Use a comparação entre turmas para definir a ordem de acompanhamento da equipe.',
                 'school', 'inteligencia/casos?tipo=attention_classes', $period,
-                ['count' => $attentionClasses]
+                [
+                    'count' => $attentionClasses,
+                    'top_class' => (string) ($topClass['name'] ?? ''),
+                    'top_score' => $topScore,
+                    'top_risk_level' => $topRiskLevel,
+                ]
             );
         }
 

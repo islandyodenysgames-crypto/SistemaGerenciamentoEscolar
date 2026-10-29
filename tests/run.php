@@ -15,6 +15,9 @@ require_once $root . '/app/Services/AuthService.php';
 require_once $root . '/app/Services/FileSecurityService.php';
 require_once $root . '/app/Services/TvPanelAccessService.php';
 require_once $root . '/app/Services/SchoolDataMaintenanceService.php';
+require_once $root . '/app/Services/Intelligence/InsightPriority.php';
+require_once $root . '/app/Services/Intelligence/InsightFormatter.php';
+require_once $root . '/app/Services/Intelligence/InsightGenerator.php';
 require_once $root . '/app/Helpers/url.php';
 
 use App\Auth\Permissions;
@@ -28,6 +31,8 @@ use App\Services\AuthService;
 use App\Services\FileSecurityService;
 use App\Services\TvPanelAccessService;
 use App\Services\SchoolDataMaintenanceService;
+use App\Services\Intelligence\InsightFormatter;
+use App\Services\Intelligence\InsightGenerator;
 
 $tests = 0;
 $failures = [];
@@ -245,6 +250,18 @@ $attendanceControllerSource=(string)file_get_contents($root.'/app/Controllers/At
 $attendanceCreateSource=(string)file_get_contents($root.'/app/Views/pages/attendance/create.php');
 $assert(str_contains($attendanceControllerSource,"'frequencia/novo?turma='")&&str_contains($attendanceControllerSource,"'&data=' . urlencode(\$date)"),'Salvar chamada deve retornar ao fluxo de nova chamada preservando turma e data.');
 $assert(str_contains($attendanceCreateSource,'Próxima turma pendente')&&str_contains($attendanceCreateSource,'completedClassIds'),'Nova chamada deve orientar a próxima turma e identificar as turmas já concluídas.');
+
+$classInsightGenerator = new InsightGenerator(new InsightFormatter());
+$classInsights = $classInsightGenerator->school([
+    'summary' => ['classes_in_attention' => 2],
+    'classes' => [
+        ['name' => '1º ano B', 'risk_score' => 30, 'risk_level' => 'MODERATE'],
+        ['name' => '3º ano D', 'risk_score' => 99, 'risk_level' => 'CRITICAL'],
+    ],
+    'period' => ['days' => 30],
+]);
+$classInsight = current(array_filter($classInsights, static fn(array $item): bool => ($item['key'] ?? '') === 'school.attention_classes')) ?: [];
+$assert(str_contains((string) ($classInsight['description'] ?? ''), '3º ano D') && ($classInsight['level'] ?? '') === 'CRITICAL','Insight de turmas deve destacar a maior pontuação de risco, independentemente da ordem alfabética.');
 
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {

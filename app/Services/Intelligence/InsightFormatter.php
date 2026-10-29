@@ -100,6 +100,12 @@ final class InsightFormatter
         if (isset($context['percentage'])) {
             $items[] = 'A variação calculada foi de ' . rtrim(rtrim(number_format(abs((float) $context['percentage']), 1, ',', '.'), '0'), ',') . '% em relação ao período anterior.';
         }
+        if (isset($context['top_class'], $context['top_score'])) {
+            $items[] = 'Maior prioridade encontrada: '
+                . (string) $context['top_class']
+                . ', com ' . (int) $context['top_score']
+                . ' ponto(s) de risco.';
+        }
 
         $days = (int) ($period['days'] ?? $period['window_days'] ?? 0);
         if ($days > 0) {

@@ -45,6 +45,19 @@ class IntelligenceService
             $predictiveClasses,
             static fn(array $class): bool => ($class['risk_level'] ?? 'LOW') !== 'LOW'
         ));
+        usort($classes, static function (array $a, array $b): int {
+            return [
+                (int) ($b['risk_score'] ?? 0),
+                (int) ($b['serious_occurrences'] ?? 0),
+                (int) ($b['unjustified_absences'] ?? 0),
+                (string) ($a['name'] ?? ''),
+            ] <=> [
+                (int) ($a['risk_score'] ?? 0),
+                (int) ($a['serious_occurrences'] ?? 0),
+                (int) ($a['unjustified_absences'] ?? 0),
+                (string) ($b['name'] ?? ''),
+            ];
+        });
         $improvingClasses = array_values(array_filter($predictiveClasses, static fn(array $class): bool => (($class['historical_trends']['overall_status'] ?? '') === 'IMPROVING')));
         usort($improvingClasses, static fn(array $a, array $b): int => ((float) ($b['historical_trends']['evolution_score'] ?? 0)) <=> ((float) ($a['historical_trends']['evolution_score'] ?? 0)));
 
@@ -132,6 +145,19 @@ class IntelligenceService
         if ($type === 'attention_classes') {
             $kind = 'classes';
             $items = array_map([$this, 'decorateClass'], $this->repository->classSignals($start, $end, 200));
+            usort($items, static function (array $a, array $b): int {
+                return [
+                    (int) ($b['risk_score'] ?? 0),
+                    (int) ($b['serious_occurrences'] ?? 0),
+                    (int) ($b['unjustified_absences'] ?? 0),
+                    (string) ($a['name'] ?? ''),
+                ] <=> [
+                    (int) ($a['risk_score'] ?? 0),
+                    (int) ($a['serious_occurrences'] ?? 0),
+                    (int) ($a['unjustified_absences'] ?? 0),
+                    (string) ($b['name'] ?? ''),
+                ];
+            });
         } elseif ($type === 'stale_critical_occurrences') {
             $kind = 'occurrences';
             $staleDays = max(1, (int) $this->settings->get('intelligence.stale_critical_days', 7));
