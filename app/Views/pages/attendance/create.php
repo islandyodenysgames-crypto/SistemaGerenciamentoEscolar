@@ -19,11 +19,6 @@ $completedClassIds = $completedClassIds ?? [];
 ?>
 
 <?php component('base/alert', [
-    'type' => 'success',
-    'message' => $attendanceSuccess ?? null,
-]); ?>
-
-<?php component('base/alert', [
     'type' => 'danger',
     'message' => $attendanceError ?? null,
 ]); ?>
