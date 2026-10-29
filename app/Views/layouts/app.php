@@ -44,8 +44,8 @@
     ======================================================= -->
 
     <link rel="stylesheet" href="<?= asset('assets/css/design-system/index.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/core/index.css?v=7') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/components/index.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/core/index.css?v=8') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/components/index.css?v=2') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/components/staged-file-upload.css') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/components/profile-photo-uploader.css?v=1') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/dashboard/index.css') ?>">

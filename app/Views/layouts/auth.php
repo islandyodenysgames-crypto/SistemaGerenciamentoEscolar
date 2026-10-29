@@ -24,8 +24,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= asset('assets/css/design-system/index.css') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/core/index.css?v=7') ?>">
-    <link rel="stylesheet" href="<?= asset('assets/css/pages/auth.css?v=7') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/core/index.css?v=8') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/pages/auth.css?v=8') ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/core/dark-audit.css?v=2') ?>">
 </head>
 <body class="auth-body">

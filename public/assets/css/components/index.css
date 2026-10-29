@@ -7,12 +7,12 @@
 @import url("card/card.css");
 @import url("content/content.css");
 @import url("form/form.css");
-@import url("header/header.css");
+@import url("header/header.css?v=20261029");
 @import url("metric/metric.css");
 @import url("page-header/page-header.css");
 @import url("panel/panel.css");
 @import url("progress/progress.css");
-@import url("sidebar/sidebar.css");
+@import url("sidebar/sidebar.css?v=20261029");
 @import url("stat-card/stat-card.css");
 @import url("table/table.css");
 @import url("visual-audit.css");
