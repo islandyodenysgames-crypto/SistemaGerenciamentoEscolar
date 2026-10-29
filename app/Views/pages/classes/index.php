@@ -8,7 +8,7 @@ $classError = \App\Core\Session::get('class_error');
 
 component('base/page-header', [
     'title' => 'Turmas',
-    'subtitle' => 'Gerencie as turmas cadastradas no Sistema de Frequência Escolar'
+    'subtitle' => 'Gerencie as turmas cadastradas no Sistema de Gerenciamento Escolar'
 ]);
 
 component('classes/page', [

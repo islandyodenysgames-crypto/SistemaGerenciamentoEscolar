@@ -6,7 +6,7 @@ if (!function_exists('app_name')) {
 
     function app_name(): string
     {
-        return 'Sistema de Frequência Escolar';
+        return 'Sistema de Gerenciamento Escolar';
     }
 
 }

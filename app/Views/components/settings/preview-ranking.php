@@ -17,7 +17,7 @@
 
             <div>
                 <strong id="schoolNameRankingPreview">
-                    <?= e($name ?? 'Sistema de Frequência Escolar') ?>
+                    <?= e($name ?? 'Sistema de Gerenciamento Escolar') ?>
                 </strong>
 
                 <span><?= date('d/m/Y') ?></span>

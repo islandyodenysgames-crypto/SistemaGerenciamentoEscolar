@@ -21,7 +21,7 @@
                 </strong>
 
                 <small id="schoolNamePreview">
-                    <?= e($name ?? 'Sistema de Frequência Escolar') ?>
+                    <?= e($name ?? 'Sistema de Gerenciamento Escolar') ?>
                 </small>
             </div>
 

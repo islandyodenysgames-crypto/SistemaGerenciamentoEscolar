@@ -17,7 +17,7 @@
 
             <div>
                 <strong id="schoolNameReportPreview">
-                    <?= e($name ?? 'Sistema de Frequência Escolar') ?>
+                    <?= e($name ?? 'Sistema de Gerenciamento Escolar') ?>
                 </strong>
 
                 <span>Relatório de Frequência Escolar</span>

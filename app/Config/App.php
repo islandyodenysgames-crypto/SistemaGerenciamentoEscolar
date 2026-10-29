@@ -6,7 +6,7 @@ namespace App\Config;
 
 class App
 {
-    public const NAME = 'Sistema de Frequência Escolar';
+    public const NAME = 'Sistema de Gerenciamento Escolar';
 
     public const VERSION = '0.1.0';
 

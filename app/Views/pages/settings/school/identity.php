@@ -5,7 +5,7 @@ component('base/page-header', [
     'subtitle' => 'Configure os dados institucionais utilizados em todo o sistema'
 ]);
 
-$schoolName = $school['name'] ?? 'Sistema de Frequência Escolar';
+$schoolName = $school['name'] ?? 'Sistema de Gerenciamento Escolar';
 $schoolShortName = $school['short_name'] ?? 'SFE';
 $schoolLogo = $school['logo_path'] ?? null;
 

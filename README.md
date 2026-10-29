@@ -1,4 +1,4 @@
-# Sistema de Frequência Escolar
+# Sistema de Gerenciamento Escolar
 
 Sistema desenvolvido em PHP para gerenciamento de frequência escolar.
 

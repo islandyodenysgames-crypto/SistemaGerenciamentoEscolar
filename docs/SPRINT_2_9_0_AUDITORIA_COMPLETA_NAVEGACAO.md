@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Revisar a navegação do Sistema de Frequência Escolar de forma transversal, verificando rotas, menus, links internos, ações, filtros, destinos contextuais e prevenção de regressões.
+Revisar a navegação do Sistema de Gerenciamento Escolar de forma transversal, verificando rotas, menus, links internos, ações, filtros, destinos contextuais e prevenção de regressões.
 
 ## Escopo auditado
 

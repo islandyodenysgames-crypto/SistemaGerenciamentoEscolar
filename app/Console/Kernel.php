@@ -34,7 +34,7 @@ class Kernel
 
             default:
                 echo PHP_EOL;
-                echo "Sistema de Frequência Escolar" . PHP_EOL;
+                echo "Sistema de Gerenciamento Escolar" . PHP_EOL;
                 echo PHP_EOL;
                 echo "Comandos disponíveis:" . PHP_EOL;
                 echo "php console.php migrate" . PHP_EOL;

@@ -23,7 +23,7 @@ class SchoolService
         $current = $this->repository->first();
 
         $payload = [
-            'name' => $data['name'] ?? 'Sistema de Frequência Escolar',
+            'name' => $data['name'] ?? 'Sistema de Gerenciamento Escolar',
             'short_name' => $data['short_name'] ?? 'SFE',
             'inep_code' => $data['inep_code'] ?? null,
             'principal' => $data['principal'] ?? null,
@@ -56,7 +56,7 @@ class SchoolService
         return [
             'id' => null,
             'active' => 1,
-            'name' => 'Sistema de Frequência Escolar',
+            'name' => 'Sistema de Gerenciamento Escolar',
             'short_name' => 'SFE',
             'inep_code' => null,
             'principal' => null,
