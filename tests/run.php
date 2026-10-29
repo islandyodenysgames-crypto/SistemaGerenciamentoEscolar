@@ -280,6 +280,34 @@ $zeroBaselineInsights = $classInsightGenerator->school([
 $zeroBaselineInsight = current(array_filter($zeroBaselineInsights, static fn(array $item): bool => ($item['key'] ?? '') === 'school.attendance_worsening')) ?: [];
 $assert(str_contains((string) ($zeroBaselineInsight['title'] ?? ''), '7 falta(s)') && !str_contains((string) ($zeroBaselineInsight['title'] ?? ''), '100%'),'Tendência sem base anterior não deve apresentar variação percentual enganosa.');
 
+$attendanceAnalyticsSource = (string) file_get_contents($root . '/app/Services/AttendanceAnalyticsService.php');
+$attendanceChartSource = (string) file_get_contents($root . '/app/Views/components/dashboard/attendance-chart-pro.php');
+$executivePanelSource = (string) file_get_contents($root . '/app/Views/components/dashboard/executive-panel.php');
+$schoolIndexSource = (string) file_get_contents($root . '/app/Services/SchoolGeneralIndexService.php');
+$assert(str_contains($attendanceAnalyticsSource, 'AS total_records') && str_contains($attendanceAnalyticsSource, 'AS presents'),'Série de frequência deve fornecer os pesos usados na média consolidada.');
+$assert(str_contains($attendanceChartSource, '$totalPresents / $totalRecords') && str_contains($attendanceChartSource, "'Estável'"),'Gráfico deve usar média ponderada e distinguir estabilidade de crescimento.');
+$assert(str_contains($executivePanelSource, '$studentsInAlert / $totalStudents') && !str_contains($executivePanelSource, '$studentsInAlert * 10'),'Progresso de alunos em alerta deve representar proporção real dos alunos ativos.');
+$assert(str_contains($schoolIndexSource, '$distance <= $tolerance'),'Comparações históricas do índice não devem reutilizar snapshots distantes da data-alvo.');
+$assert(str_contains($schoolIndexSource, '$priorityStudents === 0 ? 10.0'),'Índice geral não deve penalizar acompanhamento quando não existem alunos prioritários.');
+$dashboardServiceSource = (string) file_get_contents($root . '/app/Services/DashboardService.php');
+$assert(str_contains($dashboardServiceSource, '$frequencyForIndex') && str_contains($dashboardServiceSource, 'schoolFrequencyMonth'),'Índice geral deve usar frequência consolidada quando ainda não há chamadas no dia.');
+$assert(str_contains($attendanceAnalyticsSource, 'activeSchoolYearRange'),'Indicador anual de frequência deve respeitar o ano letivo ativo.');
+$tvControllerSource = (string) file_get_contents($root . '/app/Controllers/TvPanelController.php');
+$tvViewSource = (string) file_get_contents($root . '/app/Views/pages/tv-panel/show.php');
+$assert(str_contains($tvControllerSource, "'ife_score'") && str_contains($tvViewSource, 'IFE do ranking'),'Painel TV deve exibir o mesmo IFE que determina a ordem do ranking diário.');
+$assert(!str_contains($tvViewSource, '<h2>Turmas com maior evolução</h2>'),'Painel TV não deve chamar o ranking diário de evolução histórica.');
+
+$dashboardIndicatorsSource = (string) file_get_contents($root . '/app/Views/components/dashboard/indicators.php');
+$occurrenceIndicatorSource = (string) file_get_contents($root . '/app/Services/Occurrence/OccurrenceIndicatorService.php');
+$reportServiceSource = (string) file_get_contents($root . '/app/Services/ReportService.php');
+$monitoringRepositorySource = (string) file_get_contents($root . '/app/Repositories/Monitoring/StudentMonitoringRepository.php');
+$assert(str_contains($dashboardIndicatorsSource, '$hasRecords') && str_contains($dashboardIndicatorsSource, "'Sem registros'"),'Indicadores de frequência sem chamadas não devem exibir 0% como resultado crítico real.');
+$assert(str_contains($occurrenceIndicatorSource, "'Sem ocorrências no mês para calcular a taxa'"),'Taxa de resolução sem ocorrências deve ser apresentada como indisponível.');
+$assert(str_contains($reportServiceSource, "SUM(o.status IN ('OPEN','IN_PROGRESS')) open_count") && str_contains($reportServiceSource, "SUM(o.status IN ('RESOLVED','CLOSED')) resolved_count"),'Relatórios devem separar ocorrências abertas/em andamento das resolvidas/encerradas.');
+$assert(str_contains($monitoringRepositorySource, "SUM(status IN ('OPEN','IN_PROGRESS')) open_total"),'Métricas do acompanhamento não devem classificar ocorrência encerrada como aberta.');
+$classIntelligenceViewSource = (string) file_get_contents($root . '/app/Views/components/classes/intelligence.php');
+$assert(str_contains($classIntelligenceViewSource, "'baseline_available'") && str_contains($classIntelligenceViewSource, 'Sem base anterior'),'Inteligência da turma não deve exibir 100% de variação quando o período anterior não possui base.');
+
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {
     foreach ($failures as $failure) fwrite(STDERR, "FALHA: {$failure}\n");

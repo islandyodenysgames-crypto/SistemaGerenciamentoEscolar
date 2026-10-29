@@ -5,6 +5,8 @@ $doneClasses = (int) ($doneClasses ?? 0);
 $pendingClasses = (int) ($pendingClasses ?? 0);
 $totalClasses = (int) ($totalClasses ?? 0);
 $studentsInAlert = (int) ($studentsInAlert ?? 0);
+$totalStudents = (int) ($totalStudents ?? 0);
+$attendanceRecords = (int) ($attendanceRecords ?? 0);
 
 $donePercentage = $totalClasses > 0
     ? round(($doneClasses / $totalClasses) * 100, 1)
@@ -13,6 +15,10 @@ $donePercentage = $totalClasses > 0
 $pendingPercentage = $totalClasses > 0
     ? round(($pendingClasses / $totalClasses) * 100, 1)
     : 0;
+$studentsInAlertPercentage = $totalStudents > 0
+    ? round(($studentsInAlert / $totalStudents) * 100, 1)
+    : 0;
+$hasAttendanceData = $attendanceRecords > 0;
 
 $schoolGoals = $schoolGoals ?? \App\Config\SchoolGoals::defaults();
 
@@ -48,13 +54,15 @@ $attentionThreshold = max(0, $frequencyGoal - 5);
             'title' => 'Frequência Geral',
             'tooltip' => 'Percentual geral de frequência registrado nas chamadas do dia.',
             'percentage' => $generalPercentage,
-            'value' => number_format($generalPercentage, 1, ',', '.') . '%',
+            'value' => $hasAttendanceData ? number_format($generalPercentage, 1, ',', '.') . '%' : '—',
             'progressLabel' => 'Hoje',
             'progressColor' => 'var(--success)',
-            'status' => $generalPercentage >= $frequencyGoal
+            'status' => !$hasAttendanceData
+                ? 'Aguardando chamadas'
+                : ($generalPercentage >= $frequencyGoal
                 ? 'Excelente'
-                : ($generalPercentage >= $attentionThreshold ? 'Atenção' : 'Crítico'),
-            'meta' => 'Meta da escola: ≥ ' . number_format($frequencyGoal, 0, ',', '.') . '%',
+                : ($generalPercentage >= $attentionThreshold ? 'Atenção' : 'Crítico')),
+            'meta' => $hasAttendanceData ? 'Meta da escola: ≥ ' . number_format($frequencyGoal, 0, ',', '.') . '%' : 'Nenhuma chamada registrada hoje',
             'actionIcon' => 'file-text',
             'actionLabel' => 'Ver relatório',
         ]); ?>
@@ -66,10 +74,10 @@ $attentionThreshold = max(0, $frequencyGoal - 5);
             'color' => 'red',
             'icon' => 'triangle-alert',
             'title' => 'Alunos em Alerta',
-            'tooltip' => 'Quantidade de alunos com frequência abaixo da meta de <?= number_format($frequencyGoal, 1, ',', '.') ?>%.',
-            'percentage' => min(100, $studentsInAlert * 10),
+            'tooltip' => 'Quantidade de alunos com frequência acumulada abaixo da meta de ' . number_format($frequencyGoal, 1, ',', '.') . '%.',
+            'percentage' => $studentsInAlertPercentage,
             'value' => (string) $studentsInAlert,
-            'progressLabel' => 'Alunos',
+            'progressLabel' => number_format($studentsInAlertPercentage, 1, ',', '.') . '% dos ativos',
             'progressColor' => 'var(--danger)',
             'status' => $studentsInAlert === 0
                 ? 'Estável'

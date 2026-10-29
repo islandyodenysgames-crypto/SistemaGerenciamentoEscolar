@@ -68,21 +68,19 @@ final class OccurrenceIndicatorService
             [
                 'key' => 'resolution_rate',
                 'label' => 'Taxa de resolução',
-                'value' => $this->formatNumber($resolutionRate),
-                'suffix' => '%',
-                'description' => sprintf(
-                    '%d de %d ocorrências do mês resolvidas',
-                    $resolved,
-                    $current
-                ),
+                'value' => $current > 0 ? $this->formatNumber($resolutionRate) : '—',
+                'suffix' => $current > 0 ? '%' : '',
+                'description' => $current > 0
+                    ? sprintf('%d de %d ocorrências do mês resolvidas', $resolved, $current)
+                    : 'Sem ocorrências no mês para calcular a taxa',
                 'icon' => 'badge-check',
                 'tone' => $this->resolutionTone($resolutionRate, $current),
             ],
             [
                 'key' => 'monthly_variation',
                 'label' => 'Variação mensal',
-                'value' => $this->formatNumber(abs($variation['percentage'])),
-                'suffix' => '%',
+                'value' => $variation['display_value'] ?? $this->formatNumber(abs($variation['percentage'])),
+                'suffix' => $variation['display_suffix'] ?? '%',
                 'description' => $variation['description'],
                 'icon' => $variation['icon'],
                 'tone' => $variation['tone'],
@@ -115,6 +113,8 @@ final class OccurrenceIndicatorService
 
             return [
                 'percentage' => 100.0,
+                'display_value' => (string) $current,
+                'display_suffix' => ' novo(s)',
                 'description' => sprintf(
                     'Mês anterior sem registros; mês atual com %d',
                     $current

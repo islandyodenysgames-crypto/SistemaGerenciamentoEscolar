@@ -33,7 +33,7 @@ trait OccurrenceCalendarQueries
 
                 SUM(
                     CASE
-                        WHEN status = 'OPEN'
+                        WHEN status IN ('OPEN', 'IN_PROGRESS')
                         THEN 1
                         ELSE 0
                     END
@@ -41,7 +41,7 @@ trait OccurrenceCalendarQueries
 
                 SUM(
                     CASE
-                        WHEN status = 'RESOLVED'
+                        WHEN status IN ('RESOLVED', 'CLOSED')
                         THEN 1
                         ELSE 0
                     END

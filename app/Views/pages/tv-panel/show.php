@@ -72,9 +72,9 @@ $svgIcon = static function (string $name): string {
     <div class="slide-heading"><div class="slide-icon"><?= $svgIcon('trophy') ?></div><div><span>DESEMPENHO DO DIA</span><h1>Ranking diário de frequência por turma</h1><p>Qual é a turma de hoje? Presença faz a diferença!</p></div></div>
     <div class="ranking-layout">
         <div class="ranking-board">
-            <div class="ranking-head"><span>Posição</span><span>Turma</span><span>Índice de presença</span><span>Situação</span></div>
+            <div class="ranking-head"><span>Posição</span><span>Turma</span><span>IFE do ranking</span><span>Situação</span></div>
             <?php if ($ranking === []): ?><div class="tv-empty">Ainda não há chamadas registradas para formar o ranking de hoje.</div><?php endif; ?>
-            <?php foreach ($ranking as $i => $item): $has = (int)($item['has_attendance'] ?? 0) === 1; $pct = $has ? (float)($item['attendance_percentage'] ?? 0) : 0; $label = !$has ? 'Pendente' : ($pct >= 95 ? 'Excelente' : ($pct >= 85 ? 'Bom' : 'Atenção')); ?>
+            <?php foreach ($ranking as $i => $item): $has = (int)($item['has_attendance'] ?? 0) === 1; $pct = $has ? (float)($item['ife_score'] ?? $item['attendance_percentage'] ?? 0) : 0; $label = !$has ? 'Pendente' : ($pct >= 95 ? 'Excelente' : ($pct >= 85 ? 'Bom' : 'Atenção')); ?>
                 <div class="ranking-row"><strong class="rank-medal"><?= $i < 3 ? ['🥇','🥈','🥉'][$i] : ($i + 1) . 'º' ?></strong><strong><?= e((string)($item['class_name'] ?? 'Turma')) ?></strong><div class="rank-progress"><span data-tv-bar style="--bar-width:<?= max(0, min(100, $pct)) ?>%"></span><b><?= number_format($pct, 0, ',', '.') ?>%</b></div><em class="rank-status rank-status-<?= e(strtolower($label)) ?>"><?= e($label) ?></em></div>
             <?php endforeach; ?>
         </div>
@@ -94,7 +94,7 @@ $svgIcon = static function (string $name): string {
                 <div class="big-trophy">🏆</div>
             <?php endif; ?>
             <h2><?= e((string)($winner['class_name'] ?? 'Nossa escola')) ?></h2>
-            <?php if ($winner !== []): ?><strong class="winner-percentage"><?= number_format((float)($winner['attendance_percentage'] ?? 0), 1, ',', '.') ?>% de presença</strong><?php endif; ?>
+            <?php if ($winner !== []): ?><strong class="winner-percentage"><?= number_format((float)($winner['ife_score'] ?? $winner['attendance_percentage'] ?? 0), 1, ',', '.') ?>% no IFE <small>(<?= number_format((float)($winner['attendance_percentage'] ?? 0), 1, ',', '.') ?>% de presença)</small></strong><?php endif; ?>
             <p><?= e((string)(($smartEnabled && !empty($tvConfig['autoHighlightMessage'])) ? ($smart['highlightMessage'] ?? $smart['automaticMessage'] ?? 'Parabéns pelo compromisso com a presença e com a aprendizagem!') : 'Parabéns pelo compromisso com a presença e com a aprendizagem!')) ?></p>
             <div class="motivation-box"><?= e($footerSlogan) ?></div>
         </aside>
@@ -138,19 +138,19 @@ $svgIcon = static function (string $name): string {
     <div class="slide-heading"><div class="slide-icon"><?= $svgIcon('star') ?></div><div><span>ORGULHO DE SER ESCOLA</span><h1>Nossa escola em destaque</h1><p>Juntos, fazemos a diferença todos os dias.</p></div></div>
     <div class="highlight-grid highlight-grid-featured">
         <article class="evolution-card evolution-card-full">
-            <header class="evolution-header"><div><?= $svgIcon('chart') ?></div><span><h2>Turmas com maior evolução</h2><p>Desempenho em relação ao período analisado</p></span></header>
+            <header class="evolution-header"><div><?= $svgIcon('chart') ?></div><span><h2>Desempenho das turmas hoje</h2><p>Classificação pelo IFE do ranking diário</p></span></header>
             <div class="evolution-list">
                 <?php if ($ranking === []): ?><div class="tv-empty">Ainda não há dados suficientes para destacar a evolução das turmas.</div><?php endif; ?>
-                <?php foreach (array_slice($ranking, 0, 6) as $index => $item): $pct = (float)($item['attendance_percentage'] ?? 0); ?>
+                <?php foreach (array_slice($ranking, 0, 6) as $index => $item): $pct = (float)($item['ife_score'] ?? $item['attendance_percentage'] ?? 0); ?>
                     <div class="evolution-row <?= $index === 0 ? 'is-leader' : '' ?>">
                         <span class="evolution-position"><?= $index === 0 ? '🏅' : ($index + 1) . 'º' ?></span>
                         <b><?= e((string)($item['class_name'] ?? 'Turma')) ?></b>
                         <span class="evolution-progress"><i data-tv-bar style="--bar-width:<?= max(5, min(100, $pct)) ?>%"></i></span>
-                        <strong>+<?= number_format($pct, 0, ',', '.') ?>%</strong>
+                        <strong><?= number_format($pct, 0, ',', '.') ?>%</strong>
                     </div>
                 <?php endforeach; ?>
             </div>
-            <footer>Evolução e desempenho das turmas em destaque</footer>
+            <footer>IFE: faltas justificadas, atestados e transporte não penalizam a turma</footer>
         </article>
         <div class="highlight-side-column">
             <?php if ($tipBannerUrl !== ''): ?>

@@ -39,7 +39,7 @@ trait OccurrenceStudentQueries
             FROM student_occurrences
 
             WHERE student_id = :student_id
-              AND status = 'OPEN'
+              AND status IN ('OPEN', 'IN_PROGRESS')
         ");
 
         $stmt->execute([
@@ -61,7 +61,7 @@ trait OccurrenceStudentQueries
             FROM student_occurrences
 
             WHERE student_id = :student_id
-              AND status = 'RESOLVED'
+              AND status IN ('RESOLVED', 'CLOSED')
         ");
 
         $stmt->execute([

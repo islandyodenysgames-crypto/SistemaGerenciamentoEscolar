@@ -48,7 +48,7 @@ trait OccurrenceStatisticsQueries
 
             FROM student_occurrences
 
-            WHERE status = 'RESOLVED'
+            WHERE status IN ('RESOLVED', 'CLOSED')
         ");
 
         return (int) $stmt->fetchColumn();
@@ -284,7 +284,7 @@ trait OccurrenceStatisticsQueries
                     CASE
                         WHEN YEAR(occurrence_date) = YEAR(CURDATE())
                          AND MONTH(occurrence_date) = MONTH(CURDATE())
-                         AND status = 'RESOLVED'
+                         AND status IN ('RESOLVED', 'CLOSED')
                         THEN 1 ELSE 0
                     END
                 ) AS current_month_resolved,

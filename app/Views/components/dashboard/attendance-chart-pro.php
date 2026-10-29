@@ -24,9 +24,11 @@ $values = array_map(
 
 $count = count($items);
 
-$average = $count > 0
-    ? array_sum($values) / $count
-    : 0;
+$totalRecords = array_sum(array_map(static fn(array $item): int => (int) ($item['total_records'] ?? 0), $items));
+$totalPresents = array_sum(array_map(static fn(array $item): int => (int) ($item['presents'] ?? 0), $items));
+$average = $totalRecords > 0
+    ? ($totalPresents / $totalRecords) * 100
+    : ($count > 0 ? array_sum($values) / $count : 0);
 
 $best = $count > 0
     ? max($values)
@@ -39,17 +41,9 @@ $worst = $count > 0
 $first = $values[0] ?? 0;
 $last = $values[$count - 1] ?? 0;
 
-$trend = $last >= $first
-    ? 'Crescimento'
-    : 'Queda';
-
-$trendIcon = $last >= $first
-    ? 'trending-up'
-    : 'trending-down';
-
-$trendClass = $last >= $first
-    ? 'success'
-    : 'danger';
+$trend = $last > $first ? 'Crescimento' : ($last < $first ? 'Queda' : 'Estável');
+$trendIcon = $last > $first ? 'trending-up' : ($last < $first ? 'trending-down' : 'minus');
+$trendClass = $last > $first ? 'success' : ($last < $first ? 'danger' : 'neutral');
 
 $svgWidth = 900;
 $svgHeight = 420;

@@ -37,8 +37,19 @@ class DashboardService
         $attentionThreshold = max(0.0, $frequencyGoal - 5.0);
 
         $intelligence = $this->intelligenceService->dashboard();
+        $frequencyForIndex = (array) ($central['summary'] ?? []);
+        $frequencyContextLabel = 'nas chamadas de hoje';
+        if ((int) ($frequencyForIndex['total_students'] ?? 0) === 0) {
+            $frequencyForIndex = $this->analyticsService->schoolFrequencyMonth();
+            $frequencyContextLabel = 'no mês atual';
+        }
+        if ((int) ($frequencyForIndex['total_students'] ?? 0) === 0) {
+            $frequencyForIndex = $this->analyticsService->schoolFrequencyYear();
+            $frequencyContextLabel = 'no ano letivo ativo';
+        }
         $schoolIndex = $this->schoolGeneralIndexService->build([
-            'frequency' => (float) ($central['generalPercentage'] ?? 0),
+            'frequency' => (float) ($frequencyForIndex['percentage'] ?? 0),
+            'frequency_context_label' => $frequencyContextLabel,
             'frequency_goal' => $frequencyGoal,
             'active_students' => $this->studentService->countActive(),
             'total_classes' => $this->schoolClassService->countActive(),
@@ -111,6 +122,8 @@ class DashboardService
 
                 'studentsInAlert' => $this->studentService
                     ->countInAlert($frequencyGoal),
+                'totalStudents' => $this->studentService->countActive(),
+                'attendanceRecords' => (int) ($central['summary']['total_students'] ?? 0),
                 'frequencyGoal' => $frequencyGoal,
                 'attentionThreshold' => $attentionThreshold,
             ],

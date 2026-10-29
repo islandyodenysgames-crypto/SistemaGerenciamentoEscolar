@@ -408,7 +408,7 @@ final class StudentMonitoringRepository extends BaseRepository
         $stmt->execute(['student_id'=>$studentId,'start_date'=>$start,'end_date'=>$end]);
         $row = $stmt->fetch() ?: [];
         $records=(int)($row['total_records']??0); $present=(int)($row['total_presentes']??0);
-        $occ=$this->db->prepare("SELECT COUNT(*) total, SUM(status <> 'RESOLVED') open_total FROM student_occurrences WHERE student_id=:student_id AND occurrence_date BETWEEN :start_date AND :end_date");
+        $occ=$this->db->prepare("SELECT COUNT(*) total, SUM(status IN ('OPEN','IN_PROGRESS')) open_total FROM student_occurrences WHERE student_id=:student_id AND occurrence_date BETWEEN :start_date AND :end_date");
         $occ->execute(['student_id'=>$studentId,'start_date'=>$start,'end_date'=>$end]);
         $orow=$occ->fetch()?:[];
         $resolved=max(0,(int)($orow['total']??0)-(int)($orow['open_total']??0));

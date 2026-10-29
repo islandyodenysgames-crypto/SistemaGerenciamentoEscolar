@@ -31,6 +31,9 @@ $levelLabels = [
 ];
 $level = (string) ($risk['level'] ?? 'LOW');
 $trendLabel = static function (array $trend): string {
+    if (($trend['baseline_available'] ?? true) === false) {
+        return 'Sem base anterior (atual: ' . (int) ($trend['current'] ?? 0) . ')';
+    }
     $status = (string) ($trend['status'] ?? 'STABLE');
     $percentage = abs((float) ($trend['percentage'] ?? 0));
     return match ($status) {

@@ -296,7 +296,7 @@ final class TvPanelController extends BaseController
     private function publicDashboardData(): array
     {
         $source = $this->dashboard->data();
-        $ranking = array_map(static fn (array $row): array => array_intersect_key($row, array_flip(['class_name','attendance_percentage','has_attendance','class_photo_path','class_photo_updated_at'])), array_slice((array) ($source['ranking'] ?? []), 0, 10));
+        $ranking = array_map(static fn (array $row): array => array_intersect_key($row, array_flip(['class_name','attendance_percentage','ife_score','has_attendance','class_photo_path','class_photo_updated_at'])), array_slice((array) ($source['ranking'] ?? []), 0, 10));
         $events = array_map(static fn (array $event): array => array_intersect_key($event, array_flip(['title','description','location','type','start_date','end_date'])), $this->calendar->upcoming(24));
         $notices = array_map(static fn (array $notice): array => ['banner_path' => (string) ($notice['banner_path'] ?? '')], $this->notices->activeForTvPanel(8));
         $hall = $this->hallOfFame->build();

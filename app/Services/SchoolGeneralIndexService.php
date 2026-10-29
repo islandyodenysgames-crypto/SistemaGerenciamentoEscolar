@@ -24,22 +24,25 @@ final class SchoolGeneralIndexService
         $serious = max(0, (int)($context['serious_occurrences'] ?? 0));
         $open = max(0, (int)($context['open_occurrences'] ?? 0));
         $coverage = max(0.0, min(100.0, (float)($context['monitoring_coverage'] ?? 0)));
+        $frequencyContextLabel = trim((string) ($context['frequency_context_label'] ?? 'no período analisado'));
 
         $frequencyScore = round(min(1, $frequency / $goal) * 40, 1);
         $occurrencePressure = min(1, (($occurrences / $activeStudents) * .45) + (($serious / $activeStudents) * 1.8) + (($open / $activeStudents) * .35));
         $occurrenceScore = round(25 * (1 - $occurrencePressure), 1);
         $riskPressure = min(1, (($priorityStudents / $activeStudents) * .7) + (($criticalStudents / $activeStudents) * 2.2));
         $riskScore = round(20 * (1 - $riskPressure), 1);
-        $monitoringScore = round(($coverage / 100) * 10, 1);
+        $monitoringScore = $priorityStudents === 0 ? 10.0 : round(($coverage / 100) * 10, 1);
         $classesScore = round(5 * (1 - min(1, $attentionClasses / $totalClasses)), 1);
         $score = (int)round($frequencyScore + $occurrenceScore + $riskScore + $monitoringScore + $classesScore);
         $score = max(0, min(100, $score));
 
         $details = [
-            ['key'=>'frequency','label'=>'Frequência','score'=>$frequencyScore,'max'=>40,'description'=>number_format($frequency,1,',','.') . '% frente à meta de ' . number_format($goal,1,',','.') . '%.'],
+            ['key'=>'frequency','label'=>'Frequência','score'=>$frequencyScore,'max'=>40,'description'=>number_format($frequency,1,',','.') . '% ' . $frequencyContextLabel . ', frente à meta de ' . number_format($goal,1,',','.') . '%.'],
             ['key'=>'occurrences','label'=>'Ocorrências','score'=>$occurrenceScore,'max'=>25,'description'=>$occurrences . ' registro(s), ' . $serious . ' grave(s) e ' . $open . ' aberto(s).'],
             ['key'=>'risk','label'=>'Risco dos alunos','score'=>$riskScore,'max'=>20,'description'=>$priorityStudents . ' aluno(s) em atenção, sendo ' . $criticalStudents . ' crítico(s).'],
-            ['key'=>'monitoring','label'=>'Acompanhamentos','score'=>$monitoringScore,'max'=>10,'description'=>number_format($coverage,0,',','.') . '% dos casos prioritários estão cobertos.'],
+            ['key'=>'monitoring','label'=>'Acompanhamentos','score'=>$monitoringScore,'max'=>10,'description'=>$priorityStudents === 0
+                ? 'Não há alunos prioritários aguardando cobertura.'
+                : number_format($coverage,0,',','.') . '% dos alunos prioritários estão cobertos.'],
             ['key'=>'classes','label'=>'Turmas','score'=>$classesScore,'max'=>5,'description'=>$attentionClasses . ' de ' . $totalClasses . ' turma(s) em atenção.'],
         ];
 
@@ -76,7 +79,8 @@ final class SchoolGeneralIndexService
         $find = static function(array $rows, int $days): ?int {
             $target = strtotime('-'.$days.' days'); $best = null; $distance = PHP_INT_MAX;
             foreach ($rows as $row) { $time = strtotime((string)($row['snapshot_date'] ?? '')); if (!$time) continue; $d=abs($time-$target); if($d<$distance){$distance=$d;$best=(int)$row['score'];} }
-            return $best;
+            $tolerance = max(3, (int) ceil($days * .15)) * 86400;
+            return $distance <= $tolerance ? $best : null;
         };
         $result=[];
         foreach ([7=>'Há 7 dias',30=>'Há 30 dias',90=>'Há 90 dias'] as $days=>$label) {

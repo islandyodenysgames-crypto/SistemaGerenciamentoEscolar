@@ -47,7 +47,9 @@
 
             $percentage = (float) ($data['percentage'] ?? 0);
 
-            $color = match (true) {
+            $hasRecords = (int) ($data['total_students'] ?? 0) > 0;
+
+            $color = !$hasRecords ? 'var(--muted)' : match (true) {
 
                 $percentage >= $goalPercentage => 'var(--success)',
 
@@ -81,8 +83,8 @@
 
                 <?php component('base/progress', [
                     'percentage' => $percentage,
-                    'value' => number_format($percentage, 1, ',', '.') . '%',
-                    'label' => 'Frequência',
+                    'value' => $hasRecords ? number_format($percentage, 1, ',', '.') . '%' : '—',
+                    'label' => $hasRecords ? 'Frequência' : 'Sem registros',
                     'size' => 120,
                     'color' => $color
                 ]); ?>

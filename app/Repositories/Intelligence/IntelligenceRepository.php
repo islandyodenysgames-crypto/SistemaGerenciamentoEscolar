@@ -362,7 +362,7 @@ class IntelligenceRepository extends BaseRepository
                 COUNT(*) AS total_occurrences,
                 SUM(CASE WHEN severity IN ('HIGH','CRITICAL') THEN 1 ELSE 0 END) AS serious_occurrences,
                 SUM(CASE WHEN status = 'OPEN' THEN 1 ELSE 0 END) AS open_occurrences,
-                SUM(CASE WHEN status = 'RESOLVED' THEN 1 ELSE 0 END) AS resolved_occurrences
+                SUM(CASE WHEN status IN ('RESOLVED','CLOSED') THEN 1 ELSE 0 END) AS resolved_occurrences
             FROM student_occurrences
             WHERE student_id = :student_id
               AND occurrence_date BETWEEN :date_from AND :date_to
@@ -442,7 +442,7 @@ class IntelligenceRepository extends BaseRepository
                 COUNT(DISTINCT student_occurrences.id) AS total_occurrences,
                 SUM(CASE WHEN student_occurrences.severity IN ('HIGH','CRITICAL') THEN 1 ELSE 0 END) AS serious_occurrences,
                 SUM(CASE WHEN student_occurrences.status = 'OPEN' THEN 1 ELSE 0 END) AS open_occurrences,
-                SUM(CASE WHEN student_occurrences.status = 'RESOLVED' THEN 1 ELSE 0 END) AS resolved_occurrences,
+                SUM(CASE WHEN student_occurrences.status IN ('RESOLVED','CLOSED') THEN 1 ELSE 0 END) AS resolved_occurrences,
                 COUNT(DISTINCT student_occurrences.student_id) AS students_with_occurrences
             FROM enrollments
             INNER JOIN student_occurrences ON student_occurrences.student_id = enrollments.student_id

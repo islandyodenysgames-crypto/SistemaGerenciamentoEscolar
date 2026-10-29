@@ -329,8 +329,8 @@ class ReportService
             $params['class_id'] = $classId;
         }
         $stmt = Connection::getInstance()->prepare("SELECT COUNT(*) total,
-            SUM(o.status='OPEN') open_count,
-            SUM(o.status<>'OPEN') resolved_count,
+            SUM(o.status IN ('OPEN','IN_PROGRESS')) open_count,
+            SUM(o.status IN ('RESOLVED','CLOSED')) resolved_count,
             SUM(o.severity IN ('HIGH','CRITICAL')) serious_count,
             COUNT(DISTINCT o.student_id) affected_students
             FROM student_occurrences o {$joins}

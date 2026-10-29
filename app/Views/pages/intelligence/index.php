@@ -101,8 +101,8 @@ component('base/page-header', [
         </header>
         <div class="intelligence-coverage" tabindex="0" data-intelligence-tooltip="Percentual de alunos prioritários que possuem pelo menos um acompanhante ativo. A existência de um acompanhamento sem professor vinculado não conta como cobertura.">
             <div class="intelligence-coverage__main">
-                <div class="intelligence-coverage__value"><?= (int) ($monitoring['coverage_percentage'] ?? 0) ?>%</div>
-                <div><strong>Cobertura dos casos prioritários</strong><p><?= (int) ($monitoring['covered_cases'] ?? 0) ?> de <?= (int) ($monitoring['priority_students'] ?? 0) ?> alunos possuem ao menos um acompanhante ativo.</p></div>
+                <div class="intelligence-coverage__value"><?= (int) ($monitoring['priority_students'] ?? 0) > 0 ? (int) ($monitoring['coverage_percentage'] ?? 0) . '%' : 'N/A' ?></div>
+                <div><strong>Cobertura dos casos prioritários</strong><p><?= (int) ($monitoring['priority_students'] ?? 0) > 0 ? (int) ($monitoring['covered_cases'] ?? 0) . ' de ' . (int) ($monitoring['priority_students'] ?? 0) . ' alunos possuem ao menos um acompanhante ativo.' : 'Não há alunos prioritários que exijam acompanhamento no período.' ?></p></div>
             </div>
             <div class="intelligence-coverage__bar" aria-label="Cobertura dos acompanhamentos"><span style="width: <?= max(0, min(100, (int) ($monitoring['coverage_percentage'] ?? 0))) ?>%"></span></div>
         </div>

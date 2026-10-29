@@ -131,7 +131,7 @@ final class OccurrenceAnalysisContextFactory
             $byType[$type] = ($byType[$type] ?? 0) + 1;
             $bySeverity[$severity] = ($bySeverity[$severity] ?? 0) + 1;
 
-            if ($status === 'RESOLVED') {
+            if (in_array($status, ['RESOLVED', 'CLOSED'], true)) {
                 $resolved++;
             } else {
                 $open++;

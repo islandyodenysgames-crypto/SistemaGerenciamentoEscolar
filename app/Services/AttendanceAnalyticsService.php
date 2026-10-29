@@ -158,9 +158,10 @@ class AttendanceAnalyticsService
 
     public function schoolFrequencyYear(): array
     {
-        return $this->frequencyBySqlCondition("
-            YEAR(attendance.attendance_date) = YEAR(CURDATE())
-        ");
+        $range = $this->activeSchoolYearRange();
+        return $range !== null
+            ? $this->frequencyByPeriod($range['start_date'], min($range['end_date'], date('Y-m-d')))
+            : $this->frequencyBySqlCondition('YEAR(attendance.attendance_date) = YEAR(CURDATE())');
     }
 
     public function schoolFrequencyByPreset(string $preset): array
@@ -191,7 +192,9 @@ class AttendanceAnalyticsService
                 date('Y') . (date('n') <= 6 ? '-01-01' : '-07-01'),
                 date('Y-m-d')
             ),
-            'year' => $this->schoolFrequencyByRange(date('Y-01-01'), date('Y-m-d')),
+            'year' => ($range = $this->activeSchoolYearRange()) !== null
+                ? $this->schoolFrequencyByRange($range['start_date'], min($range['end_date'], date('Y-m-d')))
+                : $this->schoolFrequencyByRange(date('Y-01-01'), date('Y-m-d')),
             default => $this->schoolFrequencyByRange(date('Y-m-d', strtotime('-29 days')), date('Y-m-d')),
         };
     }
@@ -201,6 +204,8 @@ class AttendanceAnalyticsService
         $db = Connection::getInstance();
         $stmt = $db->prepare("
             SELECT attendance.attendance_date,
+                   COUNT(attendance_items.id) AS total_records,
+                   SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) AS presents,
                    ROUND((SUM(CASE WHEN attendance_items.status = 'P' THEN 1 ELSE 0 END) / COUNT(attendance_items.id)) * 100, 1) AS percentage
             FROM attendance
             INNER JOIN attendance_items ON attendance_items.attendance_id = attendance.id
@@ -405,5 +410,16 @@ class AttendanceAnalyticsService
         }
 
         return $data;
+    }
+
+    private function activeSchoolYearRange(): ?array
+    {
+        try {
+            $row = Connection::getInstance()->query("SELECT start_date,end_date FROM school_years WHERE is_active=1 ORDER BY id DESC LIMIT 1")->fetch();
+            if (!$row || empty($row['start_date']) || empty($row['end_date'])) return null;
+            return ['start_date' => (string) $row['start_date'], 'end_date' => (string) $row['end_date']];
+        } catch (\PDOException) {
+            return null;
+        }
     }
 }
