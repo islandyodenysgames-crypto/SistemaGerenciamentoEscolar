@@ -526,7 +526,15 @@ class IntelligenceService
     {
         return match ($type) {
             'low_attendance' => ['title' => 'Alunos com frequência abaixo da meta', 'subtitle' => 'Alunos ativos cuja frequência acumulada está abaixo da meta institucional configurada.', 'icon' => 'triangle-alert', 'tone' => 'danger'],
-            'unjustified_absences' => ['title' => 'Alunos com faltas sem justificativa', 'subtitle' => 'Alunos que receberam ao menos uma falta F no período analisado.', 'icon' => 'user-x', 'tone' => 'danger'],
+            'unjustified_absences' => [
+                'title' => 'Alunos com faltas sem justificativa',
+                'subtitle' => 'Alunos que receberam ao menos uma falta F no período analisado.',
+                'icon' => 'user-x',
+                'tone' => 'danger',
+                'explanation' => 'Uma falta sem justificativa é cada registro de frequência com status F. O total de faltas e o total de alunos são medidas diferentes: um mesmo aluno pode acumular várias faltas. FJ, atestado médico (AM) e falta de transporte (FO) não entram nesta contagem.',
+                'impact' => 'O indicador sinaliza perda de participação escolar e ajuda a localizar concentração ou recorrência. No risco da turma, cada falta F acrescenta 3 pontos; ocorrências acrescentam 4 pontos e ocorrências graves acrescentam mais 12, até o limite de 100. É uma prioridade de triagem, não uma nota de desempenho, e não comprova sozinho evasão ou negligência.',
+                'guidance' => 'Confira primeiro se os registros e justificativas estão corretos. Depois identifique alunos com repetição, converse com o estudante e a família, verifique causas de acesso ou saúde e registre um acompanhamento quando houver recorrência. Uma falta só deve ser reclassificada quando existir justificativa válida.',
+            ],
             'occurrences_period' => ['title' => 'Alunos com ocorrências no período', 'subtitle' => 'Alunos da turma que possuem ao menos uma ocorrência no período analisado.', 'icon' => 'clipboard-alert', 'tone' => 'warning'],
             'serious_occurrences' => ['title' => 'Alunos com ocorrências graves', 'subtitle' => 'Alunos da turma com ocorrências de gravidade alta ou crítica no período analisado.', 'icon' => 'shield-alert', 'tone' => 'danger'],
             'critical_students' => ['title' => 'Alunos em risco crítico', 'subtitle' => 'Casos que atingiram o nível crítico no período analisado.', 'icon' => 'siren', 'tone' => 'danger'],
@@ -565,6 +573,14 @@ class IntelligenceService
         }
 
         if ($kind === 'students') {
+            if ($type === 'unjustified_absences') {
+                return [
+                    ['label' => 'Alunos afetados', 'value' => count($items), 'icon' => 'users-round'],
+                    ['label' => 'Total de faltas F', 'value' => array_sum(array_map(static fn(array $i): int => (int) ($i['unjustified_absences'] ?? 0), $items)), 'icon' => 'calendar-x'],
+                    ['label' => 'Já acompanhados', 'value' => count(array_filter($items, static fn(array $i): bool => (int) ($i['active_followers'] ?? 0) > 0)), 'icon' => 'user-round-check'],
+                    ['label' => 'Críticos', 'value' => count(array_filter($items, static fn(array $i): bool => ($i['risk_level'] ?? '') === 'CRITICAL')), 'icon' => 'siren'],
+                ];
+            }
             return [
                 ['label' => 'Total de casos', 'value' => count($items), 'icon' => 'list-filter'],
                 ['label' => 'Já acompanhados', 'value' => count(array_filter($items, static fn(array $i): bool => (int) ($i['active_followers'] ?? 0) > 0)), 'icon' => 'user-round-check'],

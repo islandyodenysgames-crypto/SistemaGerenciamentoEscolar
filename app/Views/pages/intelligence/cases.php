@@ -33,6 +33,23 @@ $queryBase = ['tipo' => $type, 'q' => $filters['q'] ?? '', 'risco' => $filters['
         </div>
     </section>
 
+    <?php if (!empty($meta['explanation'])): ?>
+        <section class="intelligence-indicator-explanation" aria-label="Explicação do indicador">
+            <div>
+                <span><i data-lucide="circle-help"></i></span>
+                <div><h3>O que este indicador significa</h3><p><?= e((string) $meta['explanation']) ?></p></div>
+            </div>
+            <div>
+                <span><i data-lucide="chart-no-axes-combined"></i></span>
+                <div><h3>Como afeta a análise</h3><p><?= e((string) ($meta['impact'] ?? '')) ?></p></div>
+            </div>
+            <div>
+                <span><i data-lucide="list-checks"></i></span>
+                <div><h3>O que a escola pode fazer</h3><p><?= e((string) ($meta['guidance'] ?? '')) ?></p></div>
+            </div>
+        </section>
+    <?php endif; ?>
+
     <section class="intelligence-case-summary">
         <?php foreach ($summary as $card): ?>
             <article class="intelligence-case-summary__card">

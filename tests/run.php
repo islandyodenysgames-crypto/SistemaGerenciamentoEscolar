@@ -307,6 +307,10 @@ $assert(str_contains($reportServiceSource, "SUM(o.status IN ('OPEN','IN_PROGRESS
 $assert(str_contains($monitoringRepositorySource, "SUM(status IN ('OPEN','IN_PROGRESS')) open_total"),'Métricas do acompanhamento não devem classificar ocorrência encerrada como aberta.');
 $classIntelligenceViewSource = (string) file_get_contents($root . '/app/Views/components/classes/intelligence.php');
 $assert(str_contains($classIntelligenceViewSource, "'baseline_available'") && str_contains($classIntelligenceViewSource, 'Sem base anterior'),'Inteligência da turma não deve exibir 100% de variação quando o período anterior não possui base.');
+$intelligenceServiceSource = (string) file_get_contents($root . '/app/Services/Intelligence/IntelligenceService.php');
+$intelligenceCasesSource = (string) file_get_contents($root . '/app/Views/pages/intelligence/cases.php');
+$assert(str_contains($intelligenceServiceSource, "'label' => 'Alunos afetados'") && str_contains($intelligenceServiceSource, "'label' => 'Total de faltas F'"),'Detalhamento de faltas deve distinguir alunos únicos do total de registros F.');
+$assert(str_contains($intelligenceCasesSource, 'O que este indicador significa') && str_contains($intelligenceCasesSource, 'O que a escola pode fazer'),'Tela de casos deve explicar significado, impacto e ação recomendada para indicadores que exigem contexto.');
 
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {
