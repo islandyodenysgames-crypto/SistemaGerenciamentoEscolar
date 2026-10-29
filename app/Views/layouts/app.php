@@ -81,6 +81,14 @@
 
     <?php require __DIR__ . '/../partials/sidebar.php'; ?>
 
+    <button
+        class="sidebar-backdrop"
+        type="button"
+        data-sidebar-dismiss
+        aria-label="Fechar menu"
+        tabindex="-1"
+    ></button>
+
     <div class="app">
 
         <?php require __DIR__ . '/../partials/header.php'; ?>

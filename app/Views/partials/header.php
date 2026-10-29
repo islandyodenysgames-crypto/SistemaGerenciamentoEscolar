@@ -164,11 +164,15 @@ if ($userInitials === '') {
             $headerPhotoUrl = '';
 
             if ($hasHeaderPhoto) {
-                $headerPhotoUrl = base_url($headerPhotoPath);
+                // `asset()` conhece tanto arquivos publicos quanto fotos protegidas
+                // pela rota /arquivos/visualizar. Ele tambem acrescenta a versao
+                // usando `&` quando a URL ja possui query string.
+                $headerPhotoUrl = asset($headerPhotoPath);
                 $photoVersion = trim((string) ($loggedUser['photo_updated_at'] ?? ''));
 
                 if ($photoVersion !== '') {
-                    $headerPhotoUrl .= '?v=' . rawurlencode($photoVersion);
+                    $separator = str_contains($headerPhotoUrl, '?') ? '&' : '?';
+                    $headerPhotoUrl .= $separator . 'updated=' . rawurlencode($photoVersion);
                 }
             }
             ?>
