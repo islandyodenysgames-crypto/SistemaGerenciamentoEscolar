@@ -1,47 +1,5 @@
 'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
-    const button = document.getElementById('shareRankingBtn');
-
-    if (!button) {
-        return;
-    }
-
-    button.addEventListener('click', async () => {
-        if (!window.AppExport) {
-            alert('AppExport não foi carregado.');
-            return;
-        }
-
-        button.disabled = true;
-        button.innerHTML = '<i data-lucide="loader-circle"></i>';
-
-        if (window.lucide) {
-            lucide.createIcons();
-        }
-
-        try {
-            const downloaded = await window.AppExport.downloadPNG({
-                elementSelector: '#rankingShareCard',
-                fileName: 'ranking-diario'
-            });
-            if (!downloaded) {
-                throw new Error('O download não foi iniciado.');
-            }
-        } catch (error) {
-            console.error(error);
-            alert('Não foi possível baixar o Ranking Diário. Atualize a página e tente novamente.');
-        }
-
-        button.disabled = false;
-        button.innerHTML = '<i data-lucide="image-down"></i>';
-
-        if (window.lucide) {
-            lucide.createIcons();
-        }
-    });
-});
-
 /**
  * Atualização assíncrona do painel de evolução da frequência.
  * O painel inteiro é substituído para manter gráfico, selo, indicadores

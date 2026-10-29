@@ -10,16 +10,16 @@
             'badgeClass' => 'badge-success',
         ]); ?>
 
-        <button
-            type="button"
+        <a
             class="ranking-action"
-            id="shareRankingBtn"
-            title="Exportar Ranking em PNG"
-            aria-label="Exportar Ranking em PNG"
+            href="<?= base_url('dashboard/ranking-diario.png') ?>"
+            download
+            title="Baixar Ranking Diário em PNG"
+            aria-label="Baixar Ranking Diário em PNG"
             data-export-hide
         >
-            <i data-lucide="image-down"></i>
-        </button>
+            <i data-lucide="download"></i>
+        </a>
 
     </div>
 
@@ -201,11 +201,3 @@ $attentionThreshold = max(0, $goalPercentage - 5);
     <?php endif; ?>
 
 </div>
-
-<?php component('export/ranking-share', [
-    'ranking' => $ranking ?? [],
-    'generalPercentage' => $generalPercentage ?? 0,
-    'presentes' => $presentes ?? 0,
-    'faltas' => $faltas ?? 0,
-    'totalClasses' => $totalClasses ?? 0,
-]); ?>

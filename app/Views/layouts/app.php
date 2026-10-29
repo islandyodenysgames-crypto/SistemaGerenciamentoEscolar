@@ -107,16 +107,12 @@
 
     <script src="<?= asset('assets/js/vendor/lucide-local.js') ?>"></script>
 
-    <!-- HTML2CANVAS local: exportacoes continuam funcionando mesmo sem CDN. -->
-    <script src="<?= asset('assets/js/vendor/html2canvas-1.4.1.min.js') ?>"></script>
-
     <!-- ======================================================
          JAVASCRIPT GLOBAL
     ======================================================= -->
 
     <script src="<?= asset('assets/js/core/app.js') ?>"></script>
     <script src="<?= asset('assets/js/core/csrf.js?v=1') ?>"></script>
-    <script src="<?= asset('assets/js/core/export.js') ?>"></script>
     <script src="<?= asset('assets/js/layout/sidebar.js') ?>"></script>
     <script src="<?= asset('assets/js/core/theme-manager.js') ?>"></script>
     <script src="<?= asset('assets/js/core/theme.js?v=3') ?>"></script>

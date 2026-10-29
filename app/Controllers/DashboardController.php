@@ -9,6 +9,7 @@ use App\Core\Response;
 use App\Core\Session;
 use App\Services\DashboardService;
 use App\Services\AttendanceAnalyticsService;
+use App\Services\DashboardRankingExportService;
 use App\Core\Settings\SettingManager;
 
 class DashboardController extends BaseController
@@ -16,11 +17,28 @@ class DashboardController extends BaseController
     public function __construct(
         private DashboardService $service,
         private AttendanceAnalyticsService $analyticsService,
-        private SettingManager $settings
+        private SettingManager $settings,
+        private DashboardRankingExportService $rankingExport
     ) {
     }
 
     private function allowDashboard(): bool { return $this->guard() && $this->authorize(Permissions::DASHBOARD_VIEW); }
+
+    public function downloadDailyRanking(): void
+    {
+        if (!$this->allowDashboard()) return;
+
+        $today = date('Y-m-d');
+        $central = $this->analyticsService->dailyCentral($today);
+        $ranking = $this->analyticsService->dailyRanking($today);
+        $summary = (array) ($central['summary'] ?? []);
+        $this->rankingExport->outputPng($ranking, [
+            'generalPercentage' => (float) ($central['generalPercentage'] ?? 0),
+            'presentes' => (int) ($summary['presentes'] ?? 0),
+            'faltas' => (int) ($summary['faltas'] ?? 0),
+            'totalClasses' => (int) ($central['totalClasses'] ?? count($ranking)),
+        ]);
+    }
 
     public function frequencyEvolution(): void
     {

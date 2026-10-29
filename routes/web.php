@@ -54,6 +54,11 @@ $router->get(
 );
 
 $router->get(
+    '/dashboard/ranking-diario.png',
+    [DashboardController::class, 'downloadDailyRanking']
+);
+
+$router->get(
     '/inteligencia',
     [IntelligenceController::class, 'index']
 );
