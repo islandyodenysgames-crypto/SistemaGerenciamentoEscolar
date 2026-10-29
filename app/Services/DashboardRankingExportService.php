@@ -69,6 +69,7 @@ final class DashboardRankingExportService
 
                 $hasAttendance = (int) ($item['has_attendance'] ?? 0) === 1;
                 $percentage = $hasAttendance ? (float) ($item['attendance_percentage'] ?? 0) : 0.0;
+                $ife = $hasAttendance ? (float) ($item['ife_score'] ?? 0) : 0.0;
                 $position = ($index + 1) . 'º';
                 $className = $this->truncate((string) ($item['class_name'] ?? 'Turma'), 34);
                 $details = trim((string) ($item['year'] ?? '') . ' • ' . (string) ($item['shift'] ?? ''));
@@ -76,9 +77,10 @@ final class DashboardRankingExportService
                 $this->textCenter($image, $position, 22, 88, $y + 54, $green, $bold);
                 $this->text($image, $className, 20, 132, $y + 40, $ink, $bold);
                 $this->text($image, $details, 12, 132, $y + 68, $muted, $regular);
-                $this->metric($image, 'Presentes', (string) (int) ($item['presentes'] ?? 0), 560, $y, $ink, $muted, $bold, $regular);
-                $this->metric($image, 'Faltas', (string) (int) ($item['ranking_absences'] ?? 0), 750, $y, $ink, $muted, $bold, $regular);
-                $this->metric($image, 'Frequência', $hasAttendance ? number_format($percentage, 0, ',', '.') . '%' : 'Pendente', 940, $y, $green, $muted, $bold, $regular);
+                $this->metric($image, 'Presentes', (string) (int) ($item['presentes'] ?? 0), 510, $y, $ink, $muted, $bold, $regular);
+                $this->metric($image, 'Faltas', (string) (int) ($item['ranking_absences'] ?? 0), 680, $y, $ink, $muted, $bold, $regular);
+                $this->metric($image, 'Frequência', $hasAttendance ? number_format($percentage, 0, ',', '.') . '%' : 'Pendente', 850, $y, $green, $muted, $bold, $regular);
+                $this->metric($image, 'IFE', $hasAttendance ? number_format($ife, 0, ',', '.') . '%' : 'Pendente', 1020, $y, $green, $muted, $bold, $regular);
                 $y += $rowHeight;
             }
         }

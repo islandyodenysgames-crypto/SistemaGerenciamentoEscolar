@@ -5,7 +5,7 @@
         <?php component('dashboard/panel-header', [
             'icon' => 'trophy',
             'title' => 'Ranking diário',
-            'subtitle' => 'Melhores desempenhos da escola hoje',
+            'subtitle' => 'Ordenado pelo IFE: faltas justificadas, atestados e transporte não penalizam o índice',
             'badge' => count($ranking ?? []) . ' turma(s)',
             'badgeClass' => 'badge-success',
         ]); ?>
@@ -161,6 +161,18 @@ $attentionThreshold = max(0, $goalPercentage - 5);
                                     </strong>
 
                                     <small>Frequência</small>
+
+                                </div>
+
+                                <div class="ranking-metric ranking-metric-ife">
+
+                                    <span>🎯</span>
+
+                                    <strong>
+                                        <?= number_format((float) ($item['ife_score'] ?? 0), 0, ',', '.') ?>%
+                                    </strong>
+
+                                    <small>IFE do ranking</small>
 
                                 </div>
 

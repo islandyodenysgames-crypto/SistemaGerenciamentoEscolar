@@ -85,7 +85,8 @@ final class IntelligenceTimeline
     {
         $status = strtoupper((string) ($trend['status'] ?? 'STABLE'));
         $percentage = abs((float) ($trend['percentage'] ?? 0));
-        if ($status === 'STABLE' || $percentage <= 0) {
+        $hasBaseline = (bool) ($trend['baseline_available'] ?? ((int) ($trend['previous'] ?? 0) > 0));
+        if ($status === 'STABLE' || ($percentage <= 0 && $hasBaseline)) {
             return;
         }
 
@@ -93,8 +94,12 @@ final class IntelligenceTimeline
         $events[] = $this->event(
             $improving ? 'POSITIVE' : 'ATTENTION',
             $improving ? 'trending-down' : 'trending-up',
-            $label . ($improving ? ' reduziram ' : ' aumentaram ') . $this->percentage($percentage),
-            'Comparação realizada com a janela imediatamente anterior de mesma duração.',
+            $hasBaseline
+                ? $label . ($improving ? ' reduziram ' : ' aumentaram ') . $this->percentage($percentage)
+                : $label . ': ' . (int) ($trend['current'] ?? 0) . ' registro(s) no período',
+            $hasBaseline
+                ? 'Comparação realizada com a janela imediatamente anterior de mesma duração.'
+                : 'O período anterior não possuía registros; não há variação percentual válida.',
             $target,
             $period
         );

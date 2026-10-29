@@ -97,7 +97,9 @@ final class InsightFormatter
         if (isset($context['count'])) {
             $items[] = 'Foram identificados ' . (int) $context['count'] . ' registro(s) ou caso(s) relacionado(s).';
         }
-        if (isset($context['percentage'])) {
+        if (($context['baseline_available'] ?? true) === false) {
+            $items[] = 'O período anterior não possuía registros; o valor atual é ' . (int) ($context['current'] ?? 0) . '.';
+        } elseif (isset($context['percentage'])) {
             $items[] = 'A variação calculada foi de ' . rtrim(rtrim(number_format(abs((float) $context['percentage']), 1, ',', '.'), '0'), ',') . '% em relação ao período anterior.';
         }
         if (isset($context['top_class'], $context['top_score'])) {

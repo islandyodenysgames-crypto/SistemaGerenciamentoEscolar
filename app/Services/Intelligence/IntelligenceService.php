@@ -637,8 +637,9 @@ class IntelligenceService
 
         $count = count($classes);
         $averageRisk = $count > 0 ? round(array_sum(array_column($classes, 'risk_score')) / $count, 1) : 0.0;
-        $frequencyValues = array_values(array_filter(array_column($classes, 'frequency_percentage'), static fn($value): bool => $value !== null));
-        $averageFrequency = $frequencyValues !== [] ? round(array_sum($frequencyValues) / count($frequencyValues), 1) : null;
+        $frequencyRecords = array_sum(array_column($classes, 'total_records'));
+        $frequencyPresences = array_sum(array_column($classes, 'presences'));
+        $averageFrequency = $frequencyRecords > 0 ? round(($frequencyPresences / $frequencyRecords) * 100, 1) : null;
 
         return [
             'period' => ['start' => $currentStart, 'end' => $currentEnd, 'days' => $window],
@@ -951,6 +952,7 @@ class IntelligenceService
             'current' => $current,
             'previous' => $previous,
             'percentage' => round($percentage, 1),
+            'baseline_available' => $previous > 0,
             'direction' => $percentage > 0 ? 'UP' : ($percentage < 0 ? 'DOWN' : 'STABLE'),
             'status' => abs($percentage) < $stableMargin ? 'STABLE' : ($improved ? 'IMPROVING' : 'WORSENING'),
         ];
@@ -989,13 +991,20 @@ class IntelligenceService
             $items[] = ['level' => 'HIGH', 'icon' => 'clock-alert', 'title' => 'Ocorrências críticas sem resolução', 'text' => $staleCritical . ' ocorrência(s) crítica(s) permanecem abertas há mais de 7 dias.'];
         }
         if (($attendanceTrend['status'] ?? '') === 'WORSENING') {
-            $items[] = ['level' => 'HIGH', 'icon' => 'trending-up', 'title' => 'Piora nas faltas sem justificativa', 'text' => 'As faltas sem justificativa cresceram ' . abs((float) $attendanceTrend['percentage']) . '% em relação aos 30 dias anteriores.'];
+            $items[] = ['level' => 'HIGH', 'icon' => 'trending-up', 'title' => 'Piora nas faltas sem justificativa', 'text' => ($attendanceTrend['baseline_available'] ?? true)
+                ? 'As faltas sem justificativa cresceram ' . abs((float) $attendanceTrend['percentage']) . '% em relação aos 30 dias anteriores.'
+                : 'Foram registradas ' . (int) ($attendanceTrend['current'] ?? 0) . ' faltas sem justificativa; o período anterior não possuía registros.'];
         }
         if (($occurrenceTrend['status'] ?? '') === 'WORSENING') {
-            $items[] = ['level' => 'MODERATE', 'icon' => 'triangle-alert', 'title' => 'Crescimento de ocorrências', 'text' => 'O total de ocorrências cresceu ' . abs((float) $occurrenceTrend['percentage']) . '% no período analisado.'];
+            $items[] = ['level' => 'MODERATE', 'icon' => 'triangle-alert', 'title' => 'Crescimento de ocorrências', 'text' => ($occurrenceTrend['baseline_available'] ?? true)
+                ? 'O total de ocorrências cresceu ' . abs((float) $occurrenceTrend['percentage']) . '% no período analisado.'
+                : 'Foram registradas ' . (int) ($occurrenceTrend['current'] ?? 0) . ' ocorrências; o período anterior não possuía registros.'];
         }
         if ($classes !== []) {
-            $top = $this->decorateClass($classes[0]);
+            $top = array_reduce($classes, function (?array $best, array $class): array {
+                $decorated = $this->decorateClass($class);
+                return $best === null || (int) $decorated['risk_score'] > (int) $best['risk_score'] ? $decorated : $best;
+            }, null);
             $items[] = ['level' => $top['risk_level'], 'icon' => 'school', 'title' => 'Turma que exige acompanhamento', 'text' => $top['name'] . ' concentra os sinais mais relevantes do período: ' . (int) $top['unjustified_absences'] . ' faltas sem justificativa e ' . (int) $top['total_occurrences'] . ' ocorrências.'];
         }
         if ($items === []) {

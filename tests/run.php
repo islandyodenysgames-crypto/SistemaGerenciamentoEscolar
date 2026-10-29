@@ -263,6 +263,23 @@ $classInsights = $classInsightGenerator->school([
 $classInsight = current(array_filter($classInsights, static fn(array $item): bool => ($item['key'] ?? '') === 'school.attention_classes')) ?: [];
 $assert(str_contains((string) ($classInsight['description'] ?? ''), '3º ano D') && ($classInsight['level'] ?? '') === 'CRITICAL','Insight de turmas deve destacar a maior pontuação de risco, independentemente da ordem alfabética.');
 
+$trendInsights = $classInsightGenerator->school([
+    'summary' => [],
+    'attendance' => ['trend' => ['status' => 'WORSENING', 'percentage' => 25.0, 'current' => 10, 'previous' => 8, 'baseline_available' => true]],
+    'occurrences' => ['trend' => ['status' => 'IMPROVING', 'percentage' => -50.0, 'current' => 2, 'previous' => 4, 'baseline_available' => true]],
+    'period' => ['days' => 30],
+]);
+$assert(count(array_filter($trendInsights, static fn(array $item): bool => ($item['key'] ?? '') === 'school.attendance_worsening')) === 1,'Insight deve reconhecer status de tendência em maiúsculas.');
+$assert(count(array_filter($trendInsights, static fn(array $item): bool => ($item['key'] ?? '') === 'school.occurrences_improving')) === 1,'Insight positivo de ocorrências deve reconhecer status padronizado.');
+
+$zeroBaselineInsights = $classInsightGenerator->school([
+    'summary' => [],
+    'attendance' => ['trend' => ['status' => 'WORSENING', 'percentage' => 100.0, 'current' => 7, 'previous' => 0, 'baseline_available' => false]],
+    'period' => ['days' => 30],
+]);
+$zeroBaselineInsight = current(array_filter($zeroBaselineInsights, static fn(array $item): bool => ($item['key'] ?? '') === 'school.attendance_worsening')) ?: [];
+$assert(str_contains((string) ($zeroBaselineInsight['title'] ?? ''), '7 falta(s)') && !str_contains((string) ($zeroBaselineInsight['title'] ?? ''), '100%'),'Tendência sem base anterior não deve apresentar variação percentual enganosa.');
+
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {
     foreach ($failures as $failure) fwrite(STDERR, "FALHA: {$failure}\n");

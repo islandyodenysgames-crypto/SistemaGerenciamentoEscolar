@@ -20,6 +20,9 @@ $riskLabels = [
 ];
 
 $trendText = static function (array $trend): string {
+    if (($trend['baseline_available'] ?? true) === false) {
+        return 'Sem base anterior (atual: ' . (int) ($trend['current'] ?? 0) . ')';
+    }
     $percentage = (float) ($trend['percentage'] ?? 0);
     if (abs($percentage) < 0.1) {
         return 'Estável em relação ao período anterior';

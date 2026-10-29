@@ -56,18 +56,23 @@ final class InsightGenerator
         }
 
         $attendanceTrend = $attendance['trend'] ?? [];
-        $attendanceStatus = (string) ($attendanceTrend['status'] ?? 'stable');
+        $attendanceStatus = strtoupper((string) ($attendanceTrend['status'] ?? 'STABLE'));
         $attendancePercentage = abs((float) ($attendanceTrend['percentage'] ?? 0));
-        if ($attendanceStatus === 'worsening' && $attendancePercentage > 0) {
+        $attendanceHasBaseline = (bool) ($attendanceTrend['baseline_available'] ?? ((int) ($attendanceTrend['previous'] ?? 0) > 0));
+        if ($attendanceStatus === 'WORSENING' && ($attendancePercentage > 0 || !$attendanceHasBaseline)) {
             $insights[] = $this->formatter->make(
                 'school.attendance_worsening', InsightPriority::ATTENTION, 'ATTENDANCE',
-                'Faltas sem justificativa aumentaram ' . $this->percentage($attendancePercentage),
-                'O período atual apresenta piora em comparação com o período anterior de mesma duração.',
+                $attendanceHasBaseline
+                    ? 'Faltas sem justificativa aumentaram ' . $this->percentage($attendancePercentage)
+                    : (int) ($attendanceTrend['current'] ?? 0) . ' falta(s) sem justificativa no período',
+                $attendanceHasBaseline
+                    ? 'O período atual apresenta piora em comparação com o período anterior de mesma duração.'
+                    : 'Não havia faltas sem justificativa no período anterior; por isso não existe uma variação percentual válida.',
                 'Verifique as turmas mais afetadas e procure padrões por aluno e por período.',
                 'trending-up', 'inteligencia/casos?tipo=students_attention', $period,
-                ['percentage' => $attendancePercentage]
+                ['percentage' => $attendancePercentage, 'baseline_available' => $attendanceHasBaseline, 'current' => (int) ($attendanceTrend['current'] ?? 0)]
             );
-        } elseif ($attendanceStatus === 'improving' && $attendancePercentage > 0) {
+        } elseif ($attendanceStatus === 'IMPROVING' && $attendancePercentage > 0) {
             $insights[] = $this->formatter->make(
                 'school.attendance_improving', InsightPriority::POSITIVE, 'ATTENDANCE',
                 'Faltas sem justificativa reduziram ' . $this->percentage($attendancePercentage),
@@ -79,18 +84,23 @@ final class InsightGenerator
         }
 
         $occurrenceTrend = $occurrences['trend'] ?? [];
-        $occurrenceStatus = (string) ($occurrenceTrend['status'] ?? 'stable');
+        $occurrenceStatus = strtoupper((string) ($occurrenceTrend['status'] ?? 'STABLE'));
         $occurrencePercentage = abs((float) ($occurrenceTrend['percentage'] ?? 0));
-        if ($occurrenceStatus === 'worsening' && $occurrencePercentage > 0) {
+        $occurrenceHasBaseline = (bool) ($occurrenceTrend['baseline_available'] ?? ((int) ($occurrenceTrend['previous'] ?? 0) > 0));
+        if ($occurrenceStatus === 'WORSENING' && ($occurrencePercentage > 0 || !$occurrenceHasBaseline)) {
             $insights[] = $this->formatter->make(
                 'school.occurrences_worsening', InsightPriority::ATTENTION, 'OCCURRENCE',
-                'Ocorrências aumentaram ' . $this->percentage($occurrencePercentage),
-                'O volume de ocorrências cresceu em relação ao período anterior de mesma duração.',
+                $occurrenceHasBaseline
+                    ? 'Ocorrências aumentaram ' . $this->percentage($occurrencePercentage)
+                    : (int) ($occurrenceTrend['current'] ?? 0) . ' ocorrência(s) no período',
+                $occurrenceHasBaseline
+                    ? 'O volume de ocorrências cresceu em relação ao período anterior de mesma duração.'
+                    : 'Não havia ocorrências no período anterior; por isso não existe uma variação percentual válida.',
                 'Compare as turmas e concentre a intervenção onde houver maior gravidade ou reincidência.',
                 'triangle-alert', 'inteligencia/comparacoes', $period,
-                ['percentage' => $occurrencePercentage]
+                ['percentage' => $occurrencePercentage, 'baseline_available' => $occurrenceHasBaseline, 'current' => (int) ($occurrenceTrend['current'] ?? 0)]
             );
-        } elseif ($occurrenceStatus === 'improving' && $occurrencePercentage > 0) {
+        } elseif ($occurrenceStatus === 'IMPROVING' && $occurrencePercentage > 0) {
             $insights[] = $this->formatter->make(
                 'school.occurrences_improving', InsightPriority::POSITIVE, 'OCCURRENCE',
                 'Ocorrências reduziram ' . $this->percentage($occurrencePercentage),

@@ -116,7 +116,7 @@ final class IntelligenceDailySnapshotRepository extends BaseRepository
                 class_id,
                 MAX(class_name) AS class_name,
                 COUNT(*) AS active_students,
-                ROUND(AVG(attendance_percentage), 2) AS attendance_percentage,
+                ROUND(100 * SUM(presences) / NULLIF(SUM(attendance_records), 0), 2) AS attendance_percentage,
                 SUM(unjustified_absences) AS unjustified_absences,
                 SUM(total_occurrences) AS total_occurrences,
                 SUM(serious_occurrences) AS serious_occurrences,
