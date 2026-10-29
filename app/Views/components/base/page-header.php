@@ -3,7 +3,7 @@
     <div class="page-header-content">
 
         <span class="page-header-eyebrow">
-            Sistema de Frequência Escolar
+            Sistema de Gerenciamento Escolar
         </span>
 
         <h1 class="page-header-title">

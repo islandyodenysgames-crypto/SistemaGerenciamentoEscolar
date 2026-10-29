@@ -12,7 +12,7 @@ class Config
     {
         self::$config = [
             'app' => [
-                'name' => Env::get('APP_NAME', 'Sistema de Frequência Escolar'),
+                'name' => Env::get('APP_NAME', 'Sistema de Gerenciamento Escolar'),
                 'url' => Env::get('APP_URL', '/SistemaFrequenciaEscolar/public'),
                 'timezone' => Env::get('APP_TIMEZONE', 'America/Fortaleza'),
                 'debug' => Env::get('APP_DEBUG', 'true'),

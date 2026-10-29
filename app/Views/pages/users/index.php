@@ -8,7 +8,7 @@ $userError = \App\Core\Session::get('user_error');
 
 component('base/page-header', [
     'title' => 'Usuários',
-    'subtitle' => 'Gerencie os usuários do Sistema de Frequência Escolar'
+    'subtitle' => 'Gerencie os usuários do Sistema de Gerenciamento Escolar'
 ]);
 
 component('users/page', [

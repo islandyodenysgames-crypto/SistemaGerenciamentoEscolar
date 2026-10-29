@@ -666,7 +666,7 @@ component('base/page-header', [
         </strong>
 
         <span>
-            Documento gerado automaticamente pelo Sistema de Frequência Escolar.
+            Documento gerado automaticamente pelo Sistema de Gerenciamento Escolar.
         </span>
 
     </footer>

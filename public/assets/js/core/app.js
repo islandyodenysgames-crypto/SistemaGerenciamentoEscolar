@@ -12,5 +12,5 @@ document.addEventListener('DOMContentLoaded', () => {
         link.setAttribute('rel', Array.from(rel).join(' '));
     });
 
-    console.log('Sistema de Frequência Escolar iniciado.');
+    console.log('Sistema de Gerenciamento Escolar iniciado.');
 });

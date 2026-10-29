@@ -1,4 +1,4 @@
-<h1>Bem-vindo ao Sistema de Frequência Escolar 👋</h1>
+<h1>Bem-vindo ao Sistema de Gerenciamento Escolar 👋</h1>
 
 <p>
 

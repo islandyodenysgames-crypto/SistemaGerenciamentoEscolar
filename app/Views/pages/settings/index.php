@@ -2,7 +2,7 @@
 
 component('base/page-header', [
     'title' => 'Configurações',
-    'subtitle' => 'Central administrativa do Sistema de Frequência Escolar'
+    'subtitle' => 'Central administrativa do Sistema de Gerenciamento Escolar'
 ]);
 
 $schoolName = school('name', app_name());

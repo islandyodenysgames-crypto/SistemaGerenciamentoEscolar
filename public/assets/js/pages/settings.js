@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const schoolName =
             nameInput?.value.trim() ||
-            'Sistema de Frequência Escolar';
+            'Sistema de Gerenciamento Escolar';
 
         const shortName =
             shortNameInput?.value.trim() ||

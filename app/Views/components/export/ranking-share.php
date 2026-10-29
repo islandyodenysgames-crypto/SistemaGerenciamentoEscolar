@@ -127,7 +127,7 @@
         <strong><?= e(school('name', app_name())) ?></strong>
 
         <small>
-            Gerado automaticamente pelo Sistema de Frequência Escolar
+            Gerado automaticamente pelo Sistema de Gerenciamento Escolar
         </small>
 
     </div>
