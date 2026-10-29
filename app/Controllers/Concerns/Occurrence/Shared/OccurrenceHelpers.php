@@ -63,7 +63,7 @@ trait OccurrenceHelpers
      */
     private function requestData(): array
     {
-        return [
+        $data = [
             'occurrence_date' => trim(
                 (string) Request::post(
                     'occurrence_date',
@@ -126,6 +126,13 @@ trait OccurrenceHelpers
                 )
             ),
         ];
+
+        if (strtoupper((string) $data['type']) === 'PRAISE') {
+            $data['severity'] = 'LOW';
+            $data['status'] = 'RESOLVED';
+        }
+
+        return $data;
     }
 
     /**

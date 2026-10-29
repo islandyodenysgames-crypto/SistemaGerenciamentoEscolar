@@ -103,6 +103,7 @@ class IntelligenceRepository extends BaseRepository
             )
             WHERE student_occurrences.occurrence_date BETWEEN :date_from AND :date_to
               AND students.active = 1
+              AND student_occurrences.type <> 'PRAISE'
             GROUP BY students.id, students.name, students.registration, school_classes.name
             ORDER BY serious_occurrences DESC, total_occurrences DESC, open_occurrences DESC, students.name ASC
             LIMIT {$limit}
@@ -301,6 +302,7 @@ class IntelligenceRepository extends BaseRepository
                 COUNT(DISTINCT student_id) AS students_with_occurrences
             FROM student_occurrences
             WHERE occurrence_date BETWEEN :date_from AND :date_to
+              AND type <> 'PRAISE'
         ");
         $stmt->execute(['date_from' => $from, 'date_to' => $to]);
         return $stmt->fetch() ?: [];
@@ -320,7 +322,7 @@ class IntelligenceRepository extends BaseRepository
             LEFT JOIN enrollments ON enrollments.school_class_id = school_classes.id AND enrollments.active = 1
             LEFT JOIN attendance ON attendance.school_class_id = school_classes.id AND attendance.attendance_date BETWEEN :att_from AND :att_to
             LEFT JOIN attendance_items ON attendance_items.attendance_id = attendance.id AND attendance_items.student_id = enrollments.student_id
-            LEFT JOIN student_occurrences ON student_occurrences.student_id = enrollments.student_id AND student_occurrences.occurrence_date BETWEEN :occ_from AND :occ_to
+            LEFT JOIN student_occurrences ON student_occurrences.student_id = enrollments.student_id AND student_occurrences.occurrence_date BETWEEN :occ_from AND :occ_to AND student_occurrences.type <> 'PRAISE'
             WHERE school_classes.active = 1
             GROUP BY school_classes.id, school_classes.name
             HAVING unjustified_absences > 0 OR total_occurrences > 0
@@ -366,6 +368,7 @@ class IntelligenceRepository extends BaseRepository
             FROM student_occurrences
             WHERE student_id = :student_id
               AND occurrence_date BETWEEN :date_from AND :date_to
+              AND type <> 'PRAISE'
         ");
         $stmt->execute([
             'student_id' => $studentId,
@@ -449,6 +452,7 @@ class IntelligenceRepository extends BaseRepository
             WHERE enrollments.school_class_id = :class_id
               AND enrollments.active = 1
               AND student_occurrences.occurrence_date BETWEEN :date_from AND :date_to
+              AND student_occurrences.type <> 'PRAISE'
         ");
         $stmt->execute([
             'class_id' => $classId,
@@ -505,6 +509,7 @@ class IntelligenceRepository extends BaseRepository
             INNER JOIN school_classes ON school_classes.id = enrollments.school_class_id
             LEFT JOIN student_occurrences ON student_occurrences.student_id = students.id
                 AND student_occurrences.occurrence_date BETWEEN :date_from AND :date_to
+                AND student_occurrences.type <> 'PRAISE'
             WHERE enrollments.school_class_id = :class_id
               AND enrollments.active = 1
               AND students.active = 1
@@ -565,6 +570,7 @@ class IntelligenceRepository extends BaseRepository
                 INNER JOIN student_occurrences ON student_occurrences.student_id = enrollments.student_id
                 WHERE enrollments.active = 1
                   AND student_occurrences.occurrence_date BETWEEN :occ_from AND :occ_to
+                  AND student_occurrences.type <> 'PRAISE'
                 GROUP BY enrollments.school_class_id
             ) occurrence_data ON occurrence_data.school_class_id = school_classes.id
             WHERE school_classes.active = 1

@@ -17,6 +17,7 @@ trait OccurrenceStatisticsQueries
             FROM student_occurrences
 
             WHERE occurrence_date = CURDATE()
+              AND type <> 'PRAISE'
         ");
 
         return (int) $stmt->fetchColumn();
@@ -33,6 +34,7 @@ trait OccurrenceStatisticsQueries
             FROM student_occurrences
 
             WHERE status = 'OPEN'
+              AND type <> 'PRAISE'
         ");
 
         return (int) $stmt->fetchColumn();
@@ -49,6 +51,7 @@ trait OccurrenceStatisticsQueries
             FROM student_occurrences
 
             WHERE status IN ('RESOLVED', 'CLOSED')
+              AND type <> 'PRAISE'
         ");
 
         return (int) $stmt->fetchColumn();
@@ -69,6 +72,7 @@ trait OccurrenceStatisticsQueries
 
               AND MONTH(occurrence_date) =
                 MONTH(CURDATE())
+              AND type <> 'PRAISE'
         ");
 
         return (int) $stmt->fetchColumn();
@@ -85,6 +89,8 @@ trait OccurrenceStatisticsQueries
                 COUNT(*) AS total
 
             FROM student_occurrences
+
+            WHERE type <> 'PRAISE'
 
             GROUP BY severity
         ");
@@ -111,6 +117,7 @@ trait OccurrenceStatisticsQueries
 
               AND MONTH(occurrence_date) =
                 MONTH(CURDATE())
+              AND type <> 'PRAISE'
 
             GROUP BY severity
         ");
@@ -132,6 +139,7 @@ trait OccurrenceStatisticsQueries
 
             WHERE severity = 'CRITICAL'
               AND status = 'OPEN'
+              AND type <> 'PRAISE'
         ");
 
         return (int) $stmt->fetchColumn();
@@ -262,6 +270,7 @@ trait OccurrenceStatisticsQueries
                     CASE
                         WHEN YEAR(occurrence_date) = YEAR(CURDATE())
                          AND MONTH(occurrence_date) = MONTH(CURDATE())
+                         AND type <> 'PRAISE'
                         THEN 1 ELSE 0
                     END
                 ) AS current_month_total,
@@ -276,6 +285,7 @@ trait OccurrenceStatisticsQueries
                             CURDATE(),
                             '%Y-%m-01'
                         )
+                         AND type <> 'PRAISE'
                         THEN 1 ELSE 0
                     END
                 ) AS previous_month_total,
@@ -285,6 +295,7 @@ trait OccurrenceStatisticsQueries
                         WHEN YEAR(occurrence_date) = YEAR(CURDATE())
                          AND MONTH(occurrence_date) = MONTH(CURDATE())
                          AND status IN ('RESOLVED', 'CLOSED')
+                         AND type <> 'PRAISE'
                         THEN 1 ELSE 0
                     END
                 ) AS current_month_resolved,
@@ -294,6 +305,7 @@ trait OccurrenceStatisticsQueries
                         WHEN YEAR(occurrence_date) = YEAR(CURDATE())
                          AND MONTH(occurrence_date) = MONTH(CURDATE())
                          AND severity IN ('HIGH', 'CRITICAL')
+                         AND type <> 'PRAISE'
                         THEN 1 ELSE 0
                     END
                 ) AS high_critical_current_month,
@@ -302,6 +314,7 @@ trait OccurrenceStatisticsQueries
                     CASE
                         WHEN severity = 'CRITICAL'
                          AND status = 'OPEN'
+                         AND type <> 'PRAISE'
                         THEN 1 ELSE 0
                     END
                 ) AS critical_open
@@ -341,6 +354,7 @@ trait OccurrenceStatisticsQueries
                     CURDATE(),
                     INTERVAL 29 DAY
                 )
+                  AND type <> 'PRAISE'
 
                 GROUP BY student_id
 

@@ -165,6 +165,7 @@ final class RecurrenceIntelligenceService
             LEFT JOIN enrollments e ON e.student_id = s.id AND e.active = 1
             LEFT JOIN school_classes sc ON sc.id = e.school_class_id
             WHERE so.occurrence_date BETWEEN :start_date AND :end_date
+              AND so.type <> 'PRAISE'
         ";
         $params = ['start_date' => $startDate, 'end_date' => $endDate];
         if ($studentId !== null) {

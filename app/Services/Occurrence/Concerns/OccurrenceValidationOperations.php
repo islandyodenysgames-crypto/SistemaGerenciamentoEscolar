@@ -68,6 +68,14 @@ trait OccurrenceValidationOperations
                 )
             );
 
+            // Elogio é um reconhecimento positivo, não um evento adverso.
+            // Mantemos valores técnicos compatíveis com a tabela, mas ele não
+            // exige classificação de gravidade nem resolução posterior.
+            if ($type === 'PRAISE') {
+                $severity = 'LOW';
+                $status = 'RESOLVED';
+            }
+
             /*
              * Dados de autoria.
              */

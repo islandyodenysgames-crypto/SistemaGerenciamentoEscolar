@@ -311,6 +311,16 @@ $intelligenceServiceSource = (string) file_get_contents($root . '/app/Services/I
 $intelligenceCasesSource = (string) file_get_contents($root . '/app/Views/pages/intelligence/cases.php');
 $assert(str_contains($intelligenceServiceSource, "'label' => 'Alunos afetados'") && str_contains($intelligenceServiceSource, "'label' => 'Total de faltas F'"),'Detalhamento de faltas deve distinguir alunos únicos do total de registros F.');
 $assert(str_contains($intelligenceCasesSource, 'O que este indicador significa') && str_contains($intelligenceCasesSource, 'O que a escola pode fazer'),'Tela de casos deve explicar significado, impacto e ação recomendada para indicadores que exigem contexto.');
+$occurrenceValidationSource = (string) file_get_contents($root . '/app/Services/Occurrence/Concerns/OccurrenceValidationOperations.php');
+$intelligenceRepositorySource = (string) file_get_contents($root . '/app/Repositories/Intelligence/IntelligenceRepository.php');
+$recurrenceSource = (string) file_get_contents($root . '/app/Services/RecurrenceIntelligenceService.php');
+$occurrenceCreateSource = (string) file_get_contents($root . '/app/Views/pages/occurrences/create.php');
+$classPageSource = (string) file_get_contents($root . '/app/Views/pages/students/class.php');
+$assert(str_contains($occurrenceValidationSource, "if (\$type === 'PRAISE')") && str_contains($occurrenceValidationSource, "\$status = 'RESOLVED'"),'Elogio deve ser normalizado como registro positivo concluído e sem gravidade adversa.');
+$assert(substr_count($intelligenceRepositorySource, "type <> 'PRAISE'") >= 7,'Elogios devem ser excluídos das consultas de risco de alunos e turmas.');
+$assert(str_contains($recurrenceSource, "so.type <> 'PRAISE'"),'Elogios não devem gerar reincidência negativa.');
+$assert(str_contains($occurrenceCreateSource, 'Elogios são registros positivos') && str_contains($occurrenceCreateSource, 'updatePositiveRecordMode'),'Formulário deve ocultar gravidade e situação ao registrar elogio.');
+$assert(str_contains($classPageSource, "'ocorrencias/nova?aluno='") && str_contains($classPageSource, 'Intervenção'),'Painel da turma deve oferecer intervenção individual para cada aluno autorizado.');
 
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {

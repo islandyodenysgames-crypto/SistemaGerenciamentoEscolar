@@ -84,7 +84,7 @@ trait OccurrenceCreateActions
         Session::remove('occurrence_old_input');
 
         $this->view('pages/occurrences/create', [
-            'title' => 'Nova Ocorrência - '
+            'title' => 'Nova Intervenção - '
                 . app_name(),
 
             'student' => $student,

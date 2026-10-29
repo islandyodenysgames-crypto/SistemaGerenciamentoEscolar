@@ -73,7 +73,7 @@ $studentIds = array_values(
 );
 
 component('base/page-header', [
-    'title' => 'Ocorrência múltipla',
+    'title' => 'Intervenção para vários alunos',
 
     'subtitle' =>
         count($students)
@@ -274,7 +274,7 @@ component('base/page-header', [
 
             </div>
 
-            <div class="form-group form-group-full">
+            <div class="form-group form-group-full" id="occurrenceSeverityGroup">
 
                 <label>
                     Gravidade da ocorrência
@@ -395,7 +395,7 @@ component('base/page-header', [
 
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="occurrenceStatusGroup">
 
                 <label for="status">
                     Situação
@@ -426,6 +426,10 @@ component('base/page-header', [
 
                 </select>
 
+            </div>
+
+            <div class="alert alert-success form-group-full" id="positiveRecordNotice" hidden>
+                Elogios são registros positivos: não possuem gravidade, são concluídos automaticamente e não aumentam o risco dos alunos ou das turmas.
             </div>
 
             <div class="form-group form-group-full">
@@ -563,6 +567,11 @@ document.addEventListener('DOMContentLoaded', () => {
             'input[name="severity"]'
         );
 
+    const statusSelect = document.getElementById('status');
+    const severityGroup = document.getElementById('occurrenceSeverityGroup');
+    const statusGroup = document.getElementById('occurrenceStatusGroup');
+    const positiveRecordNotice = document.getElementById('positiveRecordNotice');
+
     const suggestions = <?= json_encode(
         $titleSuggestions,
         JSON_UNESCAPED_UNICODE
@@ -619,9 +628,22 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 
+    function updatePositiveRecordMode() {
+        const isPraise = typeSelect?.value === 'PRAISE';
+        if (severityGroup) severityGroup.hidden = isPraise;
+        if (statusGroup) statusGroup.hidden = isPraise;
+        if (positiveRecordNotice) positiveRecordNotice.hidden = !isPraise;
+        if (isPraise) {
+            const low = document.querySelector('input[name="severity"][value="LOW"]');
+            if (low) low.checked = true;
+            if (statusSelect) statusSelect.value = 'RESOLVED';
+            updateSeveritySelection();
+        }
+    }
+
     typeSelect?.addEventListener(
         'change',
-        updateTitleSuggestions
+        () => { updateTitleSuggestions(); updatePositiveRecordMode(); }
     );
 
     severityInputs.forEach((input) => {
@@ -640,6 +662,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateTitleSuggestions();
     updateSeveritySelection();
+    updatePositiveRecordMode();
 
     if (
         window.lucide

@@ -744,6 +744,22 @@ component('favorites/page-toggle', [
 
                     <div class="student-profile-actions">
 
+                        <?php if ($canCreateOccurrences): ?>
+
+                            <a
+                                href="<?= base_url(
+                                    'ocorrencias/nova?aluno='
+                                    . $studentId
+                                    . '&turma='
+                                    . $classId
+                                ) ?>"
+                                class="btn-secondary"
+                            >
+                                Intervenção
+                            </a>
+
+                        <?php endif; ?>
+
                         <a
                             href="<?= base_url(
                                 'alunos/perfil?id='
@@ -831,7 +847,7 @@ component('favorites/page-toggle', [
                 disabled
             >
                 <i data-lucide="clipboard-pen-line"></i>
-                Registrar ocorrência
+                Registrar intervenção
             </button>
 
         </div>

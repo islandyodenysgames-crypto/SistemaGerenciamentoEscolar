@@ -192,7 +192,7 @@ foreach ($occurrences as $occurrence) {
                 class="btn-primary"
             >
                 <i data-lucide="plus"></i>
-                Nova ocorrência
+                Nova intervenção
             </a>
 
         <?php endif; ?>
