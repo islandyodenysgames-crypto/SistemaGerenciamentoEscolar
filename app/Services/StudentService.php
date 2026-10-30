@@ -298,6 +298,11 @@ class StudentService
             ->attendanceHistory($studentId);
     }
 
+    public function attendanceSummaryByYear(int $studentId, int $year): array
+    {
+        return $this->repository->attendanceSummaryByYear($studentId, $year);
+    }
+
     public function calendar(
         int $studentId,
         int $year,

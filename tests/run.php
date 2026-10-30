@@ -342,6 +342,13 @@ $assert(str_contains($dashboardPositiveViewSource, 'Respostas e sinais positivos
 $assert(str_contains($intelligenceCasesSource, 'Resposta pontual') && str_contains($intelligenceServiceSource, "'label' => 'Com resposta pontual'"),'Visão analítica de infrequência deve informar e permitir registrar respostas pontuais.');
 $assert(str_contains($classPageSource, "'ocorrencias/nova?aluno='") && str_contains($classPageSource, 'Intervenção'),'Painel da turma deve oferecer intervenção individual para cada aluno autorizado.');
 
+$studentRepositorySource = file_get_contents(__DIR__ . '/../app/Repositories/StudentRepository.php');
+$studentReportSource = file_get_contents(__DIR__ . '/../app/Views/pages/students/report.php');
+$studentProfileActionsSource = file_get_contents(__DIR__ . '/../app/Controllers/Concerns/Student/StudentProfileActions.php');
+$assert(str_contains($studentRepositorySource, 'attendanceSummaryByYear') && str_contains($studentRepositorySource, 'total_atestados_medicos') && str_contains($studentRepositorySource, 'total_faltas_onibus'), 'Relatório individual deve consolidar todos os estados de frequência por ano.');
+$assert(str_contains($studentReportSource, 'Totais de frequência') && !str_contains($studentReportSource, '<h2>Histórico de frequência</h2>'), 'Relatório individual não deve listar cada data do histórico de frequência.');
+$assert(str_contains($studentProfileActionsSource, 'attendanceSummaryByYear($id, $year)'), 'Relatório individual deve usar totais limitados ao ano selecionado.');
+
 $occurrenceActionControllerSource = (string) file_get_contents($root . '/app/Controllers/Concerns/Occurrence/Actions/OccurrenceActionActions.php');
 $occurrenceHelperSource = (string) file_get_contents($root . '/app/Controllers/Concerns/Occurrence/Shared/OccurrenceHelpers.php');
 $occurrenceActionRepositorySource = (string) file_get_contents($root . '/app/Repositories/Occurrence/ActionRepository.php');

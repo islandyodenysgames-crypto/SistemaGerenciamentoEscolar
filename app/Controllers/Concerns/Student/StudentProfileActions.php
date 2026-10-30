@@ -282,10 +282,7 @@ trait StudentProfileActions
             'student' => $student,
 
             'statistics' => $this->service
-                ->statistics($id),
-
-            'attendanceHistory' => $this->service
-                ->attendanceHistory($id),
+                ->attendanceSummaryByYear($id, $year),
 
             'attendanceEvolution' => $this->service
                 ->attendanceEvolutionMonthly($id),

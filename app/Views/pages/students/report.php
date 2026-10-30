@@ -2,7 +2,6 @@
 
 $student = $student ?? [];
 $statistics = $statistics ?? [];
-$attendanceHistory = $attendanceHistory ?? [];
 $attendanceEvolution = $attendanceEvolution ?? [];
 $occurrences = $occurrences ?? [];
 $occurrenceTypes = $occurrenceTypes ?? [];
@@ -29,6 +28,18 @@ $totalJustificadas = (int) (
     $statistics['total_justificadas'] ?? 0
 );
 
+$totalFaltasJustificadas = (int) (
+    $statistics['total_faltas_justificadas'] ?? 0
+);
+
+$totalAtestadosMedicos = (int) (
+    $statistics['total_atestados_medicos'] ?? 0
+);
+
+$totalFaltasOnibus = (int) (
+    $statistics['total_faltas_onibus'] ?? 0
+);
+
 $statusLabels = [
     'P' => 'Presença',
     'F' => 'Falta',
@@ -51,27 +62,6 @@ $monthLabels = [
     11 => 'Novembro',
     12 => 'Dezembro',
 ];
-
-$filteredHistory = array_values(
-    array_filter(
-        $attendanceHistory,
-        static function (array $item) use ($reportYear): bool {
-            if (empty($item['attendance_date'])) {
-                return false;
-            }
-
-            $timestamp = strtotime(
-                (string) $item['attendance_date']
-            );
-
-            if ($timestamp === false) {
-                return false;
-            }
-
-            return (int) date('Y', $timestamp) === $reportYear;
-        }
-    )
-);
 
 $filteredEvolution = array_values(
     array_filter(
@@ -393,16 +383,15 @@ component('base/page-header', [
 
         <div class="student-report-section-title">
 
-            <h2>Histórico de frequência</h2>
+            <h2>Totais de frequência</h2>
 
             <p>
-                Registros referentes ao ano de
-                <?= $reportYear ?>.
+                Quantidade de registros por situação no ano de <?= $reportYear ?>.
             </p>
 
         </div>
 
-        <?php if (empty($filteredHistory)): ?>
+        <?php if ($totalRecords === 0): ?>
 
             <div class="student-report-empty">
                 Nenhum registro de frequência encontrado para o ano selecionado.
@@ -416,58 +405,28 @@ component('base/page-header', [
 
                     <thead>
                         <tr>
-                            <th>Data</th>
                             <th>Situação</th>
-                            <th>Turma</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
 
                     <tbody>
 
-                        <?php foreach ($filteredHistory as $item): ?>
-
-                            <?php
-
-                            $statusCode = (string) (
-                                $item['status'] ?? ''
-                            );
-
-                            $statusLabel = $statusLabels[$statusCode]
-                                ?? ($statusCode !== ''
-                                    ? $statusCode
-                                    : 'Não informado'
-                                );
-
-                            ?>
-
+                        <?php foreach ([
+                            'P' => $totalPresentes,
+                            'F' => $totalFaltas,
+                            'FJ' => $totalFaltasJustificadas,
+                            'AM' => $totalAtestadosMedicos,
+                            'FO' => $totalFaltasOnibus,
+                        ] as $statusCode => $statusTotal): ?>
                             <tr>
                                 <td>
-                                    <?= !empty(
-                                        $item['attendance_date']
-                                    )
-                                        ? date(
-                                            'd/m/Y',
-                                            strtotime(
-                                                (string) $item[
-                                                    'attendance_date'
-                                                ]
-                                            )
-                                        )
-                                        : '-'
-                                    ?>
+                                    <?= e($statusLabels[$statusCode] ?? $statusCode) ?>
                                 </td>
-
                                 <td>
-                                    <?= e($statusLabel) ?>
-                                </td>
-
-                                <td>
-                                    <?= e(
-                                        $item['class_name'] ?? 'Turma'
-                                    ) ?>
+                                    <strong><?= (int) $statusTotal ?></strong>
                                 </td>
                             </tr>
-
                         <?php endforeach; ?>
 
                     </tbody>

@@ -535,6 +535,47 @@ class StudentRepository extends BaseRepository
         return $stmt->fetchAll();
     }
 
+    public function attendanceSummaryByYear(int $studentId, int $year): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT
+                COUNT(ai.id) AS total_records,
+                COALESCE(SUM(ai.status = 'P'), 0) AS total_presentes,
+                COALESCE(SUM(ai.status = 'F'), 0) AS total_faltas,
+                COALESCE(SUM(ai.status = 'FJ'), 0) AS total_faltas_justificadas,
+                COALESCE(SUM(ai.status = 'AM'), 0) AS total_atestados_medicos,
+                COALESCE(SUM(ai.status = 'FO'), 0) AS total_faltas_onibus
+            FROM attendance_items ai
+            INNER JOIN attendance a ON a.id = ai.attendance_id
+            WHERE ai.student_id = :student_id
+              AND YEAR(a.attendance_date) = :report_year
+        ");
+        $stmt->execute([
+            'student_id' => $studentId,
+            'report_year' => $year,
+        ]);
+
+        $summary = $stmt->fetch() ?: [];
+        foreach ([
+            'total_records',
+            'total_presentes',
+            'total_faltas',
+            'total_faltas_justificadas',
+            'total_atestados_medicos',
+            'total_faltas_onibus',
+        ] as $key) {
+            $summary[$key] = (int) ($summary[$key] ?? 0);
+        }
+        $summary['total_justificadas'] = $summary['total_faltas_justificadas']
+            + $summary['total_atestados_medicos']
+            + $summary['total_faltas_onibus'];
+        $summary['attendance_percentage'] = $summary['total_records'] > 0
+            ? round(($summary['total_presentes'] / $summary['total_records']) * 100, 1)
+            : 0.0;
+
+        return $summary;
+    }
+
     public function calendar(
         int $studentId,
         int $year,
