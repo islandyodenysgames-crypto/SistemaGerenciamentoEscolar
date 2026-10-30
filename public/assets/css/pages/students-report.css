@@ -275,6 +275,46 @@
     gap:22px;
 }
 
+.student-report-occurrence-summary{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.student-report-occurrence-summary > div{
+    padding:14px 16px;
+    border:1px solid #dbe3ec;
+    border-radius:12px;
+    background:#f8fafc;
+}
+
+.student-report-occurrence-summary strong,
+.student-report-occurrence-summary span{
+    display:block;
+}
+
+.student-report-occurrence-summary strong{
+    color:#0f172a;
+    font-size:20px;
+}
+
+.student-report-occurrence-summary span{
+    margin-top:3px;
+    color:#64748b;
+    font-size:11px;
+    font-weight:800;
+}
+
+.student-report-occurrence-summary .positive{
+    border-color:#bbf7d0;
+    background:#f0fdf4;
+}
+
+.student-report-occurrence-summary .positive strong{
+    color:#166534;
+}
+
 .student-report-occurrence{
 
     position:relative;
@@ -435,6 +475,28 @@
     line-height:1.65;
 }
 
+.student-report-occurrence-context{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:14px;
+}
+
+.student-report-occurrence-context span{
+    padding:7px 10px;
+    border:1px solid #e2e8f0;
+    border-radius:9px;
+    background:#f8fafc;
+    color:#475569;
+    font-size:11px;
+    font-weight:700;
+}
+
+.student-report-occurrence-context strong{
+    margin-right:4px;
+    color:#0f172a;
+}
+
 .student-report-occurrence-actions{
 
     margin-top:14px;
@@ -477,6 +539,10 @@
 }
 
 @media(max-width:700px){
+
+    .student-report-occurrence-summary{
+        grid-template-columns:1fr;
+    }
 
     .student-report-occurrence-header{
 

@@ -72,6 +72,24 @@ $filteredOccurrences = array_values(
     )
 );
 
+$occurrenceSummary = [
+    'adverse' => 0,
+    'responses' => 0,
+    'positive' => 0,
+];
+
+foreach ($filteredOccurrences as $occurrence) {
+    $nature = strtoupper((string) ($occurrence['nature'] ?? 'ADVERSE'));
+
+    if ($nature === 'POSITIVE' || strtoupper((string) ($occurrence['type'] ?? '')) === 'PRAISE') {
+        $occurrenceSummary['positive']++;
+    } elseif ($nature === 'RESPONSE') {
+        $occurrenceSummary['responses']++;
+    } else {
+        $occurrenceSummary['adverse']++;
+    }
+}
+
 component('base/page-header', [
     'title' => 'Relatório Individual do Aluno',
     'subtitle' => 'Relatório de frequência escolar',
@@ -367,11 +385,11 @@ component('base/page-header', [
 
         <div class="student-report-section-title">
 
-            <h2>Ocorrências escolares</h2>
+            <h2>Intervenções e registros escolares</h2>
 
             <p>
-                Registros cadastrados no ano de
-                <?= $reportYear ?>.
+                Situações que exigem atenção, respostas pedagógicas e
+                reconhecimentos positivos cadastrados em <?= $reportYear ?>.
             </p>
 
         </div>
@@ -384,6 +402,21 @@ component('base/page-header', [
 
         <?php else: ?>
 
+            <div class="student-report-occurrence-summary">
+                <div>
+                    <strong><?= $occurrenceSummary['adverse'] ?></strong>
+                    <span>Situações de atenção</span>
+                </div>
+                <div>
+                    <strong><?= $occurrenceSummary['responses'] ?></strong>
+                    <span>Respostas pedagógicas</span>
+                </div>
+                <div class="positive">
+                    <strong><?= $occurrenceSummary['positive'] ?></strong>
+                    <span>Reconhecimentos positivos</span>
+                </div>
+            </div>
+
             <div class="student-report-occurrences">
 
                 <?php foreach ($filteredOccurrences as $occurrence): ?>
@@ -394,7 +427,14 @@ component('base/page-header', [
                         $occurrence['type'] ?? 'OTHER'
                     );
 
-                    $typeClass = match ($type) {
+                    $nature = strtoupper((string) (
+                        $occurrence['nature'] ?? 'ADVERSE'
+                    ));
+
+                    $typeClass = match ($nature) {
+                        'POSITIVE' => 'praise',
+                        'RESPONSE' => 'referral',
+                        default => match ($type) {
                         'OBSERVATION' => 'observation',
                         
                         'WARNING' => 'warning',
@@ -406,14 +446,17 @@ component('base/page-header', [
                         'PRAISE' => 'praise',
                         
                         default => 'other',
+                        },
                     };
 
                     $status = (string) (
                         $occurrence['status'] ?? 'OPEN'
                     );
 
-                    $typeLabel = $occurrenceTypes[$type]
-                        ?? 'Outro';
+                    $typeLabel = (string) (
+                        $occurrence['type_label']
+                        ?? ($occurrenceTypes[$type] ?? 'Outro')
+                    );
 
                     $statusLabel = $status === 'RESOLVED'
                         ? 'Resolvida'
@@ -469,6 +512,27 @@ component('base/page-header', [
 
                             </div>
 
+                        </div>
+
+                        <div class="student-report-occurrence-context">
+                            <span>
+                                <strong>Disciplina</strong>
+                                <?= e((string) ($occurrence['subject_name'] ?? 'Não informada')) ?>
+                            </span>
+                            <span>
+                                <strong>Finalidade</strong>
+                                <?= e(match ($nature) {
+                                    'POSITIVE' => 'Reconhecimento positivo',
+                                    'RESPONSE' => 'Resposta pedagógica pontual',
+                                    default => 'Situação que exige atenção',
+                                }) ?>
+                            </span>
+                            <?php if (!empty($occurrence['focus_area_label'])): ?>
+                                <span>
+                                    <strong>Área relacionada</strong>
+                                    <?= e((string) $occurrence['focus_area_label']) ?>
+                                </span>
+                            <?php endif; ?>
                         </div>
 
                         <p class="student-report-occurrence-description">
