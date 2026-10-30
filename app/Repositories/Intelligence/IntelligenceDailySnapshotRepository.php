@@ -99,10 +99,17 @@ final class IntelligenceDailySnapshotRepository extends BaseRepository
         $this->db->prepare($sql)->execute($data);
     }
 
-    public function recentStudentSnapshots(int $studentId, int $limit = 90): array
+    public function recentStudentSnapshots(int $studentId, int $days = 90): array
     {
-        $limit = max(1, min(365, $limit));
-        $stmt = $this->db->prepare("SELECT * FROM student_intelligence_daily_snapshots WHERE student_id=:student_id ORDER BY snapshot_date DESC LIMIT {$limit}");
+        $days = max(2, min(365, $days));
+        $interval = $days - 1;
+        $stmt = $this->db->prepare("
+            SELECT *
+            FROM student_intelligence_daily_snapshots
+            WHERE student_id = :student_id
+              AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL {$interval} DAY)
+            ORDER BY snapshot_date ASC
+        ");
         $stmt->execute(['student_id' => $studentId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
@@ -110,10 +117,12 @@ final class IntelligenceDailySnapshotRepository extends BaseRepository
     public function recentClassSnapshots(int $classId, int $days = 90): array
     {
         $days = max(2, min(365, $days));
+        $interval = $days - 1;
         $stmt = $this->db->prepare("
             SELECT
                 snapshot_date,
                 class_id,
+                analysis_window_days,
                 MAX(class_name) AS class_name,
                 COUNT(*) AS active_students,
                 ROUND(100 * SUM(presences) / NULLIF(SUM(attendance_records), 0), 2) AS attendance_percentage,
@@ -124,12 +133,17 @@ final class IntelligenceDailySnapshotRepository extends BaseRepository
                 ROUND(AVG(risk_score), 2) AS average_risk_score,
                 SUM(CASE WHEN risk_level IN ('MODERATE','HIGH','CRITICAL') THEN 1 ELSE 0 END) AS priority_students,
                 SUM(CASE WHEN risk_level = 'CRITICAL' THEN 1 ELSE 0 END) AS critical_students,
-                SUM(CASE WHEN has_active_monitoring = 1 AND active_followers > 0 THEN 1 ELSE 0 END) AS covered_students,
+                SUM(CASE
+                    WHEN risk_level IN ('MODERATE','HIGH','CRITICAL')
+                     AND has_active_monitoring = 1
+                     AND active_followers > 0
+                    THEN 1 ELSE 0
+                END) AS covered_students,
                 SUM(pending_recommendations) AS pending_recommendations
             FROM student_intelligence_daily_snapshots
             WHERE class_id = :class_id
-              AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL {$days} DAY)
-            GROUP BY snapshot_date, class_id
+              AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL {$interval} DAY)
+            GROUP BY snapshot_date, class_id, analysis_window_days
             ORDER BY snapshot_date ASC
         ");
         $stmt->execute(['class_id' => $classId]);

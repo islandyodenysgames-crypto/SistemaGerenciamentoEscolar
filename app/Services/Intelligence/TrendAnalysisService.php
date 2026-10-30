@@ -15,7 +15,7 @@ final class TrendAnalysisService
 
     public function student(int $studentId, int $days = 30): array
     {
-        $rows = $this->snapshots->recentStudentSnapshots($studentId, max(2, min(90, $days + 1)));
+        $rows = $this->snapshots->recentStudentSnapshots($studentId, max(2, min(90, $days)));
         return $this->fromSnapshots($rows)->toArray();
     }
 
@@ -34,6 +34,15 @@ final class TrendAnalysisService
     {
         $rows = array_values(array_filter($rows, static fn(array $row): bool => !empty($row['snapshot_date'])));
         usort($rows, static fn(array $a, array $b): int => strcmp((string) $a['snapshot_date'], (string) $b['snapshot_date']));
+        if ($rows !== []) {
+            $latestWindow = (int) (end($rows)['analysis_window_days'] ?? 0);
+            if ($latestWindow > 0) {
+                $rows = array_values(array_filter(
+                    $rows,
+                    static fn(array $row): bool => (int) ($row['analysis_window_days'] ?? 0) === $latestWindow
+                ));
+            }
+        }
 
         $samples = count($rows);
         $spanDays = $samples >= 2
@@ -41,7 +50,7 @@ final class TrendAnalysisService
             : 0;
         $confidence = $this->confidence($samples, $spanDays);
 
-        if ($samples < 2) {
+        if ($samples < 2 || $spanDays < 1) {
             $insufficient = $this->indicator('INSUFFICIENT', 'Dados insuficientes', 'minus', null, 'São necessários pelo menos dois snapshots em dias diferentes para calcular esta tendência.');
             return new StudentTrend(
                 $insufficient,

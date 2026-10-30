@@ -38,12 +38,30 @@ $worst = $count > 0
     ? min($values)
     : 0;
 
-$first = $values[0] ?? 0;
-$last = $values[$count - 1] ?? 0;
+$trendSegmentSize = max(1, (int) floor($count / 3));
+$trendWeightedAverage = static function (array $segment): ?float {
+    $records = array_sum(array_map(static fn(array $item): int => (int) ($item['total_records'] ?? 0), $segment));
+    if ($records > 0) {
+        $presents = array_sum(array_map(static fn(array $item): int => (int) ($item['presents'] ?? 0), $segment));
+        return ($presents / $records) * 100;
+    }
+    if ($segment === []) return null;
+    return array_sum(array_map(static fn(array $item): float => (float) ($item['percentage'] ?? 0), $segment)) / count($segment);
+};
+$trendInitial = $count >= 2 ? $trendWeightedAverage(array_slice($items, 0, $trendSegmentSize)) : null;
+$trendRecent = $count >= 2 ? $trendWeightedAverage(array_slice($items, -$trendSegmentSize)) : null;
+$trendDifference = $trendInitial !== null && $trendRecent !== null ? $trendRecent - $trendInitial : null;
+$trendMargin = 0.5;
 
-$trend = $last > $first ? 'Crescimento' : ($last < $first ? 'Queda' : 'Estável');
-$trendIcon = $last > $first ? 'trending-up' : ($last < $first ? 'trending-down' : 'minus');
-$trendClass = $last > $first ? 'success' : ($last < $first ? 'danger' : 'neutral');
+$trend = $trendDifference === null
+    ? 'Dados insuficientes'
+    : (abs($trendDifference) < $trendMargin ? 'Estável' : ($trendDifference > 0 ? 'Crescimento' : 'Queda'));
+$trendIcon = $trendDifference === null || abs($trendDifference) < $trendMargin
+    ? 'minus'
+    : ($trendDifference > 0 ? 'trending-up' : 'trending-down');
+$trendClass = $trendDifference === null || abs($trendDifference) < $trendMargin
+    ? 'neutral'
+    : ($trendDifference > 0 ? 'success' : 'danger');
 
 $svgWidth = 900;
 $svgHeight = 420;

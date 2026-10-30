@@ -18,7 +18,7 @@ final class PredictiveAnalysisService
 
     public function student(int $studentId, int $days = 30, int $horizonDays = 14): array
     {
-        $rows = $this->snapshots->recentStudentSnapshots($studentId, max(2, min(90, $days + 1)));
+        $rows = $this->snapshots->recentStudentSnapshots($studentId, max(2, min(90, $days)));
         $trend = $this->trends->fromSnapshots($rows)->toArray();
         return $this->fromSnapshots($rows, $trend, $horizonDays)->toArray();
     }

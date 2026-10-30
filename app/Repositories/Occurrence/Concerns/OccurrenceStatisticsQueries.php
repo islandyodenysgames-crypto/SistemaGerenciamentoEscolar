@@ -274,6 +274,7 @@ trait OccurrenceStatisticsQueries
                     CASE
                         WHEN YEAR(occurrence_date) = YEAR(CURDATE())
                          AND MONTH(occurrence_date) = MONTH(CURDATE())
+                         AND occurrence_date <= CURDATE()
                          AND nature = 'ADVERSE'
                         THEN 1 ELSE 0
                     END
@@ -285,9 +286,12 @@ trait OccurrenceStatisticsQueries
                             DATE_SUB(CURDATE(), INTERVAL 1 MONTH),
                             '%Y-%m-01'
                         )
-                         AND occurrence_date < DATE_FORMAT(
-                            CURDATE(),
-                            '%Y-%m-01'
+                         AND occurrence_date <= DATE_ADD(
+                            DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01'),
+                            INTERVAL LEAST(
+                                DAY(CURDATE()),
+                                DAY(LAST_DAY(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)))
+                            ) - 1 DAY
                         )
                          AND nature = 'ADVERSE'
                         THEN 1 ELSE 0
@@ -298,6 +302,7 @@ trait OccurrenceStatisticsQueries
                     CASE
                         WHEN YEAR(occurrence_date) = YEAR(CURDATE())
                          AND MONTH(occurrence_date) = MONTH(CURDATE())
+                         AND occurrence_date <= CURDATE()
                          AND status IN ('RESOLVED', 'CLOSED')
                          AND nature = 'ADVERSE'
                         THEN 1 ELSE 0
@@ -308,6 +313,7 @@ trait OccurrenceStatisticsQueries
                     CASE
                         WHEN YEAR(occurrence_date) = YEAR(CURDATE())
                          AND MONTH(occurrence_date) = MONTH(CURDATE())
+                         AND occurrence_date <= CURDATE()
                          AND severity IN ('HIGH', 'CRITICAL')
                          AND nature = 'ADVERSE'
                         THEN 1 ELSE 0

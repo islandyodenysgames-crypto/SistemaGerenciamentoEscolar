@@ -95,6 +95,9 @@ final class SchoolGeneralIndexService
         $points=[];
         foreach($rows as $row){$points[]=['date'=>date('d/m',strtotime((string)$row['snapshot_date'])),'score'=>(int)$row['score']];}
         if ($points === [] || end($points)['date'] !== date('d/m')) $points[]=['date'=>date('d/m'),'score'=>$current];
+        if (count($points) < 2) {
+            return ['status'=>'Dados insuficientes','difference'=>null,'points'=>$points];
+        }
         $first=(int)($points[0]['score']??$current); $difference=$current-$first;
         return ['status'=>$difference>1?'Crescimento':($difference<-1?'Redução':'Estável'),'difference'=>$difference,'points'=>$points];
     }

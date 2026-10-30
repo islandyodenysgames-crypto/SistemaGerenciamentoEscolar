@@ -27,6 +27,16 @@ final class ClassTrendAnalysisService
     public function fromSnapshots(array $rows): array
     {
         $rows = array_values(array_filter($rows, static fn(array $row): bool => !empty($row['snapshot_date'])));
+        usort($rows, static fn(array $a, array $b): int => strcmp((string) $a['snapshot_date'], (string) $b['snapshot_date']));
+        if ($rows !== []) {
+            $latestWindow = (int) (end($rows)['analysis_window_days'] ?? 0);
+            if ($latestWindow > 0) {
+                $rows = array_values(array_filter(
+                    $rows,
+                    static fn(array $row): bool => (int) ($row['analysis_window_days'] ?? 0) === $latestWindow
+                ));
+            }
+        }
         $samples = count($rows);
         $spanDays = $samples >= 2 ? (int) (new \DateTimeImmutable((string) end($rows)['snapshot_date']))->diff(new \DateTimeImmutable((string) $rows[0]['snapshot_date']))->days : 0;
         $confidence = $samples >= 14 && $spanDays >= 21 ? 'HIGH' : (($samples >= 5 && $spanDays >= 7) ? 'MEDIUM' : 'LOW');
@@ -39,8 +49,10 @@ final class ClassTrendAnalysisService
         $occurrences = $this->trend($rows, 'total_occurrences', 1.0, true, 'Ocorrências', 'ocorrência(s)');
         $risk = $this->trend($rows, 'average_risk_score', 3.0, true, 'Risco médio', 'ponto(s)');
         $coverageRows = array_map(static function(array $row): array {
-            $total=max(1,(int)($row['priority_students']??0));
-            $row['coverage_percentage']=round(((int)($row['covered_students']??0)/$total)*100,2);
+            $total = max(0, (int) ($row['priority_students'] ?? 0));
+            $row['coverage_percentage'] = $total > 0
+                ? round(((int) ($row['covered_students'] ?? 0) / $total) * 100, 2)
+                : null;
             return $row;
         }, $rows);
         $coverage = $this->trend($coverageRows, 'coverage_percentage', 5.0, false, 'Cobertura dos acompanhamentos', 'ponto(s) percentual(is)');
@@ -49,8 +61,9 @@ final class ClassTrendAnalysisService
         $items=[$frequency,$occurrences,$risk,$coverage,$recommendations];
         $w=count(array_filter($items,static fn(array $i):bool=>($i['status']??'')==='WORSENING'));
         $i=count(array_filter($items,static fn(array $i):bool=>($i['status']??'')==='IMPROVING'));
-        $overall=$w>=2?'WORSENING':($i>=2?'IMPROVING':'STABLE');
-        $summary=match($overall){'WORSENING'=>'A turma apresenta agravamento consistente em mais de um indicador histórico.','IMPROVING'=>'A turma apresenta melhora consistente em mais de um indicador histórico.',default=>'A turma permanece estável, sem mudança coletiva consistente.'};
+        $comparable=count(array_filter($items,static fn(array $item):bool=>in_array(($item['status']??''),['STABLE','WORSENING','IMPROVING'],true)));
+        $overall=$comparable===0?'INSUFFICIENT':($w>=2?'WORSENING':($i>=2?'IMPROVING':'STABLE'));
+        $summary=match($overall){'WORSENING'=>'A turma apresenta agravamento consistente em mais de um indicador histórico.','IMPROVING'=>'A turma apresenta melhora consistente em mais de um indicador histórico.','INSUFFICIENT'=>'Não há indicadores históricos comparáveis suficientes para definir uma tendência coletiva.',default=>'A turma permanece estável, sem mudança coletiva consistente.'};
         $score=round(($i*2)-($w*2)+$this->directionScore($frequency)+$this->directionScore($risk),1);
         return ['frequency'=>$frequency,'occurrences'=>$occurrences,'risk'=>$risk,'coverage'=>$coverage,'recommendations'=>$recommendations,'overall_status'=>$overall,'summary'=>$summary,'confidence'=>$confidence,'samples'=>$samples,'span_days'=>$spanDays,'evolution_score'=>$score];
     }

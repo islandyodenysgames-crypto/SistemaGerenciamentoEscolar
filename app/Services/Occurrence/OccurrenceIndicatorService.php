@@ -116,7 +116,7 @@ final class OccurrenceIndicatorService
                 'display_value' => (string) $current,
                 'display_suffix' => ' novo(s)',
                 'description' => sprintf(
-                    'Mês anterior sem registros; mês atual com %d',
+                    'Período equivalente do mês anterior sem registros; mês atual com %d',
                     $current
                 ),
                 'icon' => 'trending-up',
@@ -133,7 +133,7 @@ final class OccurrenceIndicatorService
             return [
                 'percentage' => $percentage,
                 'description' => sprintf(
-                    'Aumento em relação ao mês anterior (%d → %d)',
+                    'Aumento em relação ao mesmo intervalo do mês anterior (%d → %d)',
                     $previous,
                     $current
                 ),
@@ -146,7 +146,7 @@ final class OccurrenceIndicatorService
             return [
                 'percentage' => $percentage,
                 'description' => sprintf(
-                    'Redução em relação ao mês anterior (%d → %d)',
+                    'Redução em relação ao mesmo intervalo do mês anterior (%d → %d)',
                     $previous,
                     $current
                 ),
@@ -158,7 +158,7 @@ final class OccurrenceIndicatorService
         return [
             'percentage' => 0.0,
             'description' => sprintf(
-                'Mesmo total do mês anterior (%d)',
+                'Mesmo total no intervalo equivalente do mês anterior (%d)',
                 $current
             ),
             'icon' => 'minus',

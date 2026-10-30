@@ -975,15 +975,21 @@ class IntelligenceService
         } else {
             $percentage = (($current - $previous) / $previous) * 100;
         }
+        // Dois períodos zerados formam uma estabilidade válida. Somente o
+        // surgimento de registros após uma base zerada não admite percentual.
+        $hasBaseline = $previous > 0 || ($previous === 0 && $current === 0);
         $improved = $lowerIsBetter ? $percentage < 0 : $percentage > 0;
         $stableMargin = max(0, (float) $this->settings->get('intelligence.trend_stable_margin', 5));
+        $status = !$hasBaseline && $current > 0
+            ? 'NEW_SIGNAL'
+            : (abs($percentage) < $stableMargin ? 'STABLE' : ($improved ? 'IMPROVING' : 'WORSENING'));
         return [
             'current' => $current,
             'previous' => $previous,
             'percentage' => round($percentage, 1),
-            'baseline_available' => $previous > 0,
+            'baseline_available' => $hasBaseline,
             'direction' => $percentage > 0 ? 'UP' : ($percentage < 0 ? 'DOWN' : 'STABLE'),
-            'status' => abs($percentage) < $stableMargin ? 'STABLE' : ($improved ? 'IMPROVING' : 'WORSENING'),
+            'status' => $status,
         ];
     }
 
@@ -1019,12 +1025,12 @@ class IntelligenceService
         if ($staleCritical > 0) {
             $items[] = ['level' => 'HIGH', 'icon' => 'clock-alert', 'title' => 'Ocorrências críticas sem resolução', 'text' => $staleCritical . ' ocorrência(s) crítica(s) permanecem abertas há mais de 7 dias.'];
         }
-        if (($attendanceTrend['status'] ?? '') === 'WORSENING') {
+        if (in_array(($attendanceTrend['status'] ?? ''), ['WORSENING', 'NEW_SIGNAL'], true)) {
             $items[] = ['level' => 'HIGH', 'icon' => 'trending-up', 'title' => 'Piora nas faltas sem justificativa', 'text' => ($attendanceTrend['baseline_available'] ?? true)
                 ? 'As faltas sem justificativa cresceram ' . abs((float) $attendanceTrend['percentage']) . '% em relação aos 30 dias anteriores.'
                 : 'Foram registradas ' . (int) ($attendanceTrend['current'] ?? 0) . ' faltas sem justificativa; o período anterior não possuía registros.'];
         }
-        if (($occurrenceTrend['status'] ?? '') === 'WORSENING') {
+        if (in_array(($occurrenceTrend['status'] ?? ''), ['WORSENING', 'NEW_SIGNAL'], true)) {
             $items[] = ['level' => 'MODERATE', 'icon' => 'triangle-alert', 'title' => 'Crescimento de ocorrências', 'text' => ($occurrenceTrend['baseline_available'] ?? true)
                 ? 'O total de ocorrências cresceu ' . abs((float) $occurrenceTrend['percentage']) . '% no período analisado.'
                 : 'Foram registradas ' . (int) ($occurrenceTrend['current'] ?? 0) . ' ocorrências; o período anterior não possuía registros.'];

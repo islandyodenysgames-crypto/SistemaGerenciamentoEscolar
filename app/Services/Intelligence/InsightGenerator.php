@@ -59,7 +59,7 @@ final class InsightGenerator
         $attendanceStatus = strtoupper((string) ($attendanceTrend['status'] ?? 'STABLE'));
         $attendancePercentage = abs((float) ($attendanceTrend['percentage'] ?? 0));
         $attendanceHasBaseline = (bool) ($attendanceTrend['baseline_available'] ?? ((int) ($attendanceTrend['previous'] ?? 0) > 0));
-        if ($attendanceStatus === 'WORSENING' && ($attendancePercentage > 0 || !$attendanceHasBaseline)) {
+        if (in_array($attendanceStatus, ['WORSENING', 'NEW_SIGNAL'], true) && ($attendancePercentage > 0 || !$attendanceHasBaseline)) {
             $insights[] = $this->formatter->make(
                 'school.attendance_worsening', InsightPriority::ATTENTION, 'ATTENDANCE',
                 $attendanceHasBaseline
@@ -87,7 +87,7 @@ final class InsightGenerator
         $occurrenceStatus = strtoupper((string) ($occurrenceTrend['status'] ?? 'STABLE'));
         $occurrencePercentage = abs((float) ($occurrenceTrend['percentage'] ?? 0));
         $occurrenceHasBaseline = (bool) ($occurrenceTrend['baseline_available'] ?? ((int) ($occurrenceTrend['previous'] ?? 0) > 0));
-        if ($occurrenceStatus === 'WORSENING' && ($occurrencePercentage > 0 || !$occurrenceHasBaseline)) {
+        if (in_array($occurrenceStatus, ['WORSENING', 'NEW_SIGNAL'], true) && ($occurrencePercentage > 0 || !$occurrenceHasBaseline)) {
             $insights[] = $this->formatter->make(
                 'school.occurrences_worsening', InsightPriority::ATTENTION, 'OCCURRENCE',
                 $occurrenceHasBaseline

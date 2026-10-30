@@ -18,6 +18,9 @@ require_once $root . '/app/Services/SchoolDataMaintenanceService.php';
 require_once $root . '/app/Services/Intelligence/InsightPriority.php';
 require_once $root . '/app/Services/Intelligence/InsightFormatter.php';
 require_once $root . '/app/Services/Intelligence/InsightGenerator.php';
+require_once $root . '/app/ValueObjects/Intelligence/StudentTrend.php';
+require_once $root . '/app/Services/Intelligence/TrendAnalysisService.php';
+require_once $root . '/app/Services/Intelligence/ClassTrendAnalysisService.php';
 require_once $root . '/app/Helpers/url.php';
 
 use App\Auth\Permissions;
@@ -337,6 +340,32 @@ $assert(str_contains($occurrenceHelperSource, 'canManageOccurrenceAction') && st
 $assert(str_contains($occurrenceProfileSource, '$canManageThisAction') && str_contains($occurrenceProfileSource, 'Editar providência'),'Perfil do aluno deve exibir a edição apenas para gestão ou autor da providência.');
 $assert(str_contains($occurrenceActionRepositorySource, 'latestStatusForOccurrence'),'Editar providência antiga deve preservar como situação atual o estado definido pela providência mais recente.');
 $assert(str_contains($occurrencePurposeSource, 'Situação que exige atenção — Ocorrência'),'Finalidade adversa deve ser identificada claramente como ocorrência.');
+
+$studentTrendService = (new ReflectionClass(App\Services\Intelligence\TrendAnalysisService::class))->newInstanceWithoutConstructor();
+$studentTrendResult = $studentTrendService->fromSnapshots([
+    ['snapshot_date' => '2026-10-03', 'analysis_window_days' => 30, 'attendance_percentage' => 80, 'total_occurrences' => 3, 'risk_score' => 40],
+    ['snapshot_date' => '2026-10-01', 'analysis_window_days' => 30, 'attendance_percentage' => 95, 'total_occurrences' => 1, 'risk_score' => 20],
+    ['snapshot_date' => '2026-10-02', 'analysis_window_days' => 15, 'attendance_percentage' => 60, 'total_occurrences' => 8, 'risk_score' => 80],
+])->toArray();
+$assert(($studentTrendResult['samples'] ?? 0) === 2 && ($studentTrendResult['frequency']['status'] ?? '') === 'WORSENING','Tendência do aluno deve ordenar as datas e comparar somente snapshots da janela de análise vigente.');
+
+$classTrendService = (new ReflectionClass(App\Services\Intelligence\ClassTrendAnalysisService::class))->newInstanceWithoutConstructor();
+$classTrendResult = $classTrendService->fromSnapshots([
+    ['snapshot_date' => '2026-10-02', 'analysis_window_days' => 30, 'attendance_percentage' => 80, 'total_occurrences' => 2, 'average_risk_score' => 25, 'priority_students' => 0, 'covered_students' => 0, 'pending_recommendations' => 0],
+    ['snapshot_date' => '2026-10-01', 'analysis_window_days' => 30, 'attendance_percentage' => 95, 'total_occurrences' => 1, 'average_risk_score' => 15, 'priority_students' => 0, 'covered_students' => 0, 'pending_recommendations' => 0],
+]);
+$assert(($classTrendResult['frequency']['status'] ?? '') === 'WORSENING','Tendência da turma deve ordenar snapshots cronologicamente antes de comparar os segmentos.');
+$assert(($classTrendResult['coverage']['status'] ?? '') === 'INSUFFICIENT','Ausência de alunos prioritários não deve ser apresentada falsamente como cobertura de 0%.');
+
+$intelligenceTrendSource = (string) file_get_contents($root . '/app/Services/Intelligence/IntelligenceService.php');
+$dailySnapshotRepositorySource = (string) file_get_contents($root . '/app/Repositories/Intelligence/IntelligenceDailySnapshotRepository.php');
+$occurrenceStatisticsSource = (string) file_get_contents($root . '/app/Repositories/Occurrence/Concerns/OccurrenceStatisticsQueries.php');
+$assert(str_contains($intelligenceTrendSource, "'NEW_SIGNAL'") && str_contains($intelligenceTrendSource, '!$hasBaseline'),'Primeiro registro após uma base zerada deve ser classificado como novo sinal, não como piora percentual confirmada.');
+$assert(str_contains($dailySnapshotRepositorySource, '$interval = $days - 1') && str_contains($dailySnapshotRepositorySource, "risk_level IN ('MODERATE','HIGH','CRITICAL')"),'Snapshots históricos devem respeitar a janela exata e cobertura apenas de alunos prioritários.');
+$assert(str_contains($attendanceChartSource, '$trendWeightedAverage') && str_contains($attendanceChartSource, '$trendSegmentSize'),'Tendência visual da frequência deve comparar segmentos ponderados, não apenas dois dias isolados.');
+$assert(str_contains($occurrenceStatisticsSource, 'LEAST(') && str_contains($occurrenceStatisticsSource, 'LAST_DAY('),'Variação mensal de ocorrências deve comparar intervalos equivalentes dos dois meses.');
+$schoolIndexCardSource = (string) file_get_contents($root . '/app/Views/components/dashboard/school-index-card.php');
+$assert(str_contains($schoolIndexSource, "'difference'=>null") && str_contains($schoolIndexCardSource, 'Sem histórico suficiente'),'Índice geral não deve declarar estabilidade quando existe apenas uma captura histórica.');
 
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {
