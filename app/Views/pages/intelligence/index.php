@@ -9,6 +9,7 @@ $classes = $data['classes'] ?? [];
 $improvingClasses = is_array($data['improving_classes'] ?? null) ? $data['improving_classes'] : [];
 $predictiveClasses = is_array($data['predictive_classes'] ?? null) ? $data['predictive_classes'] : [];
 $monitoring = $data['monitoring'] ?? [];
+$positiveIndicators = (array) ($data['positive_indicators'] ?? []);
 $insights = $data['insights'] ?? [];
 $period = $data['period'] ?? [];
 
@@ -83,6 +84,17 @@ component('base/page-header', [
             <div><small>Pendências críticas</small><strong><?= (int) ($summary['stale_critical_occurrences'] ?? 0) ?></strong><p>fora do prazo</p></div>
         </a>
     </section>
+
+    <?php if ((int) ($positiveIndicators['recognitions'] ?? 0) + (int) ($positiveIndicators['responses'] ?? 0) + (int) ($positiveIndicators['resolved_adverse'] ?? 0) > 0): ?>
+    <section class="intelligence-summary-grid intelligence-summary-grid--compact intelligence-positive-summary">
+        <a class="intelligence-summary-card intelligence-summary-card--info" href="<?= base_url('inteligencia/casos?tipo=positive_recognitions') ?>"><span><i data-lucide="award"></i></span><div><small>Reconhecimentos positivos</small><strong><?= (int) ($positiveIndicators['recognitions'] ?? 0) ?></strong><p><?= (int) ($positiveIndicators['students_recognized'] ?? 0) ?> aluno(s)</p></div></a>
+        <a class="intelligence-summary-card intelligence-summary-card--info" href="<?= base_url('inteligencia/casos?tipo=pedagogical_responses') ?>"><span><i data-lucide="message-circle-check"></i></span><div><small>Respostas pedagógicas</small><strong><?= (int) ($positiveIndicators['responses'] ?? 0) ?></strong><p><?= (int) ($positiveIndicators['students_with_response'] ?? 0) ?> aluno(s)</p></div></a>
+        <article class="intelligence-summary-card intelligence-summary-card--info"><span><i data-lucide="calendar-check"></i></span><div><small>Respostas sobre frequência</small><strong><?= (int) ($positiveIndicators['attendance_responses'] ?? 0) ?></strong><p>atuação registrada</p></div></article>
+        <article class="intelligence-summary-card intelligence-summary-card--info"><span><i data-lucide="shield-check"></i></span><div><small>Situações resolvidas</small><strong><?= (int) ($positiveIndicators['resolved_adverse'] ?? 0) ?></strong><p>histórico preservado</p></div></article>
+        <article class="intelligence-summary-card intelligence-summary-card--info"><span><i data-lucide="trending-up"></i></span><div><small>Alunos com evolução</small><strong><?= (int) ($positiveIndicators['students_with_verified_improvement'] ?? 0) ?></strong><p>melhora com atuação relacionada</p></div></article>
+        <article class="intelligence-summary-card intelligence-summary-card--info"><span><i data-lucide="shield-plus"></i></span><div><small>Fatores de proteção</small><strong><?= (int) ($positiveIndicators['students_with_protection'] ?? 0) ?></strong><p><?= (int) ($positiveIndicators['protection_points'] ?? 0) ?> ponto(s) atenuado(s)</p></div></article>
+    </section>
+    <?php endif; ?>
 
     <?php component('intelligence/insights-panel', [
         'insights' => array_slice($insights, 0, 4),

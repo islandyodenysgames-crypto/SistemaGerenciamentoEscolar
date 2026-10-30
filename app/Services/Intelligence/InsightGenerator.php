@@ -17,6 +17,7 @@ final class InsightGenerator
         $occurrences = $data['occurrences'] ?? [];
         $classes = $data['classes'] ?? [];
         $period = $data['period'] ?? [];
+        $positive = (array) ($data['positive_indicators'] ?? []);
         $insights = [];
 
         $criticalStudents = (int) ($summary['critical_students'] ?? 0);
@@ -149,6 +150,19 @@ final class InsightGenerator
                     'top_score' => $topScore,
                     'top_risk_level' => $topRiskLevel,
                 ]
+            );
+        }
+
+        $responses = (int) ($positive['responses'] ?? 0);
+        $recognitions = (int) ($positive['recognitions'] ?? 0);
+        if ($responses > 0 || $recognitions > 0) {
+            $insights[] = $this->formatter->make(
+                'school.positive_actions', InsightPriority::POSITIVE, 'STUDENT',
+                ($responses + $recognitions) . ' registro(s) de atuação positiva',
+                $responses . ' resposta(s) pedagógica(s) e ' . $recognitions . ' reconhecimento(s) foram registrados no período.',
+                'Consulte os alunos envolvidos e acompanhe se a evolução se mantém nos próximos registros.',
+                'sparkles', 'inteligencia/casos?tipo=pedagogical_responses', $period,
+                ['responses' => $responses, 'recognitions' => $recognitions]
             );
         }
 

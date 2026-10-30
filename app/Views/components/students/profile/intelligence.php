@@ -3,6 +3,8 @@ $studentIntelligence = (array) ($studentIntelligence ?? []);
 $risk = (array) ($studentIntelligence['risk'] ?? ['score' => 0, 'level' => 'LOW']);
 $attendance = (array) ($studentIntelligence['attendance'] ?? []);
 $occurrences = (array) ($studentIntelligence['occurrences'] ?? []);
+$positiveIndicators = (array) ($studentIntelligence['positive_indicators'] ?? []);
+$protection = (array) ($studentIntelligence['protection'] ?? []);
 $monitoringTimeline = (array) ($studentMonitoring['monitoring_timeline'] ?? []);
 $timelineInitialLimit = 8;
 $timelineTotal = count($monitoringTimeline);
@@ -135,6 +137,35 @@ $eventLabels = [
         </article>
     </div>
 
+    <section class="student-positive-evidence" aria-label="Indicadores positivos do aluno">
+        <div class="student-positive-evidence__header">
+            <div><span><i data-lucide="sparkles"></i> Evidências positivas</span><h4>Respostas e avanços no período</h4></div>
+            <strong><?= e((string) ($protection['response_strength_label'] ?? 'Sem resposta registrada')) ?></strong>
+        </div>
+        <div class="student-positive-evidence__grid">
+            <article><i data-lucide="award"></i><strong><?= (int) ($positiveIndicators['recognitions'] ?? 0) ?></strong><span>Reconhecimento(s)</span></article>
+            <article><i data-lucide="message-circle-check"></i><strong><?= (int) ($positiveIndicators['responses'] ?? 0) ?></strong><span>Resposta(s) pedagógica(s)</span></article>
+            <article><i data-lucide="clipboard-check"></i><strong><?= (int) ($positiveIndicators['monitoring_actions'] ?? 0) ?></strong><span>Ação(ões) em acompanhamento</span></article>
+            <article><i data-lucide="shield-check"></i><strong><?= (int) ($positiveIndicators['resolved_adverse'] ?? 0) ?></strong><span>Situação(ões) resolvida(s)</span></article>
+        </div>
+        <?php if ((int) ($protection['reduction'] ?? 0) > 0): ?>
+            <details class="student-positive-evidence__calculation">
+                <summary><span><i data-lucide="shield-plus"></i> Fatores de proteção reduziram <?= (int) $protection['reduction'] ?> ponto(s) do risco</span><i data-lucide="chevron-down"></i></summary>
+                <p>Risco observado: <b><?= (int) ($protection['raw_score'] ?? $riskScore) ?></b> · Risco ajustado: <b><?= (int) ($protection['adjusted_score'] ?? $riskScore) ?></b></p>
+                <ul><?php foreach ((array) ($protection['factors'] ?? []) as $factor): ?><li><?= e((string) ($factor['label'] ?? 'Fator de proteção')) ?>: −<?= (int) ($factor['value'] ?? 0) ?></li><?php endforeach; ?></ul>
+                <small>Reconhecimentos isolados valorizam o histórico, mas não reduzem automaticamente o risco.</small>
+            </details>
+        <?php endif; ?>
+        <?php if (!empty($positiveIndicators['timeline'])): ?>
+            <div class="student-positive-evidence__timeline">
+                <?php foreach (array_slice((array) $positiveIndicators['timeline'], 0, 4) as $positiveEvent): ?>
+                    <?php $positiveNature = (string) ($positiveEvent['nature'] ?? ''); ?>
+                    <article><i data-lucide="<?= $positiveNature === 'POSITIVE' ? 'award' : ($positiveNature === 'MONITORING_ACTION' ? 'clipboard-check' : 'heart-handshake') ?>"></i><div><strong><?= e((string) ($positiveEvent['title'] ?? 'Registro positivo')) ?></strong><span><?= e(date('d/m/Y', strtotime((string) ($positiveEvent['event_date'] ?? 'now')))) ?><?= $positiveNature === 'MONITORING_ACTION' ? ' · Acompanhamento' : '' ?></span></div></article>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </section>
+
     <details class="student-intelligence-explanation is-<?= e(strtolower($riskLevel)) ?>" aria-label="Explicação do nível de risco do aluno">
         <summary>
             <span><i data-lucide="circle-help"></i><strong>Por que esta análise?</strong></span>
@@ -144,7 +175,7 @@ $eventLabels = [
         <div class="student-intelligence-explanation__content">
             <?php $studentReasons = (array) ($studentIntelligence['reasons'] ?? []); ?>
             <?php if ($studentReasons !== []): ?>
-                <p>O nível <b><?= e(strtolower($riskLabels[$riskLevel] ?? $riskLevel)) ?></b> e a pontuação de <?= $riskScore ?>/100 consideram os seguintes registros:</p>
+                <p>O nível <b><?= e(strtolower($riskLabels[$riskLevel] ?? $riskLevel)) ?></b> e a pontuação ajustada de <?= $riskScore ?>/100 consideram os seguintes registros:</p>
                 <ul><?php foreach (array_slice($studentReasons, 0, 4) as $reason): ?><li><?= e((string) $reason) ?></li><?php endforeach; ?></ul>
             <?php else: ?>
                 <p>Não foram encontrados sinais prioritários na janela atual. A classificação permanece baixa com base nos registros disponíveis.</p>

@@ -46,6 +46,11 @@ final class SettingValidator
         if ((int)($values['class_attention_threshold'] ?? 0) < 1) {
             throw new InvalidArgumentException('O limite de atenção da turma deve ser maior que zero.');
         }
+
+        $protectionMaximum = (int) ($values['protection_max_reduction'] ?? 15);
+        if ($protectionMaximum < 0 || $protectionMaximum > 25) {
+            throw new InvalidArgumentException('A redução máxima por fatores de proteção deve ficar entre 0 e 25 pontos.');
+        }
     }
 
     private function integer(mixed $value): int

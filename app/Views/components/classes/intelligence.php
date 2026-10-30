@@ -5,6 +5,7 @@ $distribution = $intelligence['distribution'] ?? [];
 $attendance = $intelligence['attendance'] ?? [];
 $occurrences = $intelligence['occurrences'] ?? [];
 $attendanceResponse = $intelligence['attendance_response'] ?? [];
+$positiveIndicators = $intelligence['positive_indicators'] ?? [];
 $priorityStudents = $intelligence['priority_students'] ?? [];
 $recommendations = $intelligence['recommendations'] ?? [];
 $period = $intelligence['period'] ?? [];
@@ -139,6 +140,16 @@ $trendLabel = static function (array $trend): string {
             <i data-lucide="clipboard-check"></i>
             <div><strong><?= (int) ($attendanceResponse['interventions'] ?? 0) ?></strong><span>Intervenções sobre frequência</span></div>
             <small><?= (int) ($attendanceResponse['students_with_intervention'] ?? 0) ?> aluno(s) · <?= (int) ($attendanceResponse['point_responses'] ?? 0) ?> pontual(is) · <?= (int) ($attendanceResponse['monitoring_actions'] ?? 0) ?> em acompanhamento</small>
+        </div>
+        <div class="class-intelligence__metric class-intelligence__metric--response" data-class-metric-tooltip="Reconhecimentos positivos registrados para os alunos da turma. Eles valorizam o histórico, mas não compensam automaticamente faltas ou ocorrências.">
+            <i data-lucide="award"></i>
+            <div><strong><?= (int) ($positiveIndicators['recognitions'] ?? 0) ?></strong><span>Reconhecimentos positivos</span></div>
+            <small><?= (int) ($positiveIndicators['students_recognized'] ?? 0) ?> aluno(s) reconhecido(s)</small>
+        </div>
+        <div class="class-intelligence__metric class-intelligence__metric--response" data-class-metric-tooltip="Quantidade de alunos que receberam resposta pedagógica pontual no período. O indicador demonstra a cobertura da atuação da escola.">
+            <i data-lucide="heart-handshake"></i>
+            <div><strong><?= (int) ($positiveIndicators['students_with_response'] ?? 0) ?></strong><span>Alunos com resposta pedagógica</span></div>
+            <small><?= (int) ($positiveIndicators['responses'] ?? 0) ?> resposta(s) · <?= (int) ($positiveIndicators['resolved_adverse'] ?? 0) ?> situação(ões) resolvida(s)</small>
         </div>
     </div>
 

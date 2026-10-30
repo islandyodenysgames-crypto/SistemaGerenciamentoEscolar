@@ -52,7 +52,9 @@ final class IntelligenceDailySnapshotService
                 $records = (int) ($attendance['total_records'] ?? 0);
                 $presences = (int) ($attendance['presences'] ?? 0);
                 $attendancePercentage = $records > 0 ? round(($presences / $records) * 100, 2) : null;
-                $riskLevel = strtoupper((string) ($risk['level'] ?? 'LOW'));
+                // A série histórica preserva o risco observado antes dos fatores
+                // de proteção, mantendo as comparações auditáveis entre períodos.
+                $riskLevel = strtoupper((string) ($risk['raw_level'] ?? $risk['level'] ?? 'LOW'));
                 if (!isset($riskCounts[$riskLevel])) {
                     $riskLevel = 'LOW';
                 }
@@ -71,7 +73,7 @@ final class IntelligenceDailySnapshotService
                     'class_name' => ($student['class_name'] ?? null) !== null ? (string) $student['class_name'] : null,
                     'analysis_window_days' => (int) ($dashboard['period']['days'] ?? 30),
                     'risk_level' => $riskLevel,
-                    'risk_score' => (int) ($risk['score'] ?? 0),
+                    'risk_score' => (int) ($risk['raw_score'] ?? $risk['score'] ?? 0),
                     'attendance_records' => $records,
                     'presences' => $presences,
                     'attendance_percentage' => $attendancePercentage,

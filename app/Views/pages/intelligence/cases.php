@@ -67,7 +67,7 @@ $queryBase = ['tipo' => $type, 'q' => $filters['q'] ?? '', 'risco' => $filters['
         <form class="intelligence-case-filters" method="get" action="<?= base_url('inteligencia/casos') ?>">
             <input type="hidden" name="tipo" value="<?= e($type) ?>">
             <label class="intelligence-case-search"><i data-lucide="search"></i><input type="search" name="q" value="<?= e((string) ($filters['q'] ?? '')) ?>" placeholder="Pesquisar aluno, turma ou ocorrência"></label>
-            <?php if ($kind !== 'occurrences'): ?>
+            <?php if (in_array($kind, ['students', 'classes'], true)): ?>
                 <select name="risco" aria-label="Filtrar por risco">
                     <option value="">Todos os riscos</option>
                     <?php foreach ($riskLabels as $value => $label): ?><option value="<?= e($value) ?>" <?= ($filters['risk'] ?? '') === $value ? 'selected' : '' ?>><?= e($label) ?></option><?php endforeach; ?>
@@ -123,6 +123,7 @@ $queryBase = ['tipo' => $type, 'q' => $filters['q'] ?? '', 'risco' => $filters['
                         <?php endif; ?>
                         <td>
                             <?php $followers = (int) ($item['active_followers'] ?? 0); ?>
+                            <?php $positive = (array) ($item['positive_indicators'] ?? []); ?>
                             <?php if ($type === 'unjustified_absences'): ?>
                                 <?php $pointResponses = (int) ($item['point_responses'] ?? 0); ?>
                                 <span class="risk-badge <?= $pointResponses > 0 ? 'risk-badge--moderate' : 'risk-badge--low' ?>">
@@ -139,6 +140,9 @@ $queryBase = ['tipo' => $type, 'q' => $filters['q'] ?? '', 'risco' => $filters['
                                 <small>Sem acompanhante ativo</small>
                             <?php endif; ?>
                             <?php endif; ?>
+                            <?php if ((int) ($positive['recognitions'] ?? 0) > 0): ?><small><i data-lucide="award"></i> <?= (int) $positive['recognitions'] ?> reconhecimento(s)</small><?php endif; ?>
+                            <?php if ((int) ($positive['responses'] ?? 0) > 0): ?><small><i data-lucide="message-circle-check"></i> <?= (int) $positive['responses'] ?> resposta(s) pedagógica(s)</small><?php endif; ?>
+                            <?php if ((int) (($item['protection']['reduction'] ?? 0)) > 0): ?><small><i data-lucide="shield-plus"></i> −<?= (int) $item['protection']['reduction'] ?> ponto(s) por fatores de proteção</small><?php endif; ?>
                         </td>
                         <td>
                             <?php if ($type === 'unjustified_absences'): ?>
@@ -152,6 +156,17 @@ $queryBase = ['tipo' => $type, 'q' => $filters['q'] ?? '', 'risco' => $filters['
                                 <?php if((int)($item['active_case_count']??0)>0): ?><small><?= (int)$item['active_case_count'] ?> outro(s) caso(s) ativo(s)</small><?php endif; ?>
                             <?php endif; ?>
                         </td>
+                    </tr><?php endforeach; ?>
+                <?php elseif ($kind === 'positive'): ?>
+                    <thead><tr><th>Aluno</th><th>Turma</th><th>Registros</th><th>Área atendida</th><th>Último registro</th><th>Ações</th></tr></thead>
+                    <tbody>
+                    <?php foreach ($items as $item): ?><tr>
+                        <td><strong><?= e((string) ($item['name'] ?? '')) ?></strong><small><?= e((string) ($item['registration'] ?? '')) ?></small></td>
+                        <td><?= e((string) ($item['class_name'] ?? 'Sem turma')) ?></td>
+                        <td><span class="risk-badge risk-badge--low"><?= (int) ($item['positive_records'] ?? 0) ?> registro(s)</span></td>
+                        <td><?= e((string) (($item['focus_areas'] ?? '') !== '' ? $item['focus_areas'] : 'Reconhecimento positivo')) ?></td>
+                        <td><?= !empty($item['latest_positive_date']) ? e(date('d/m/Y', strtotime((string) $item['latest_positive_date']))) : '—' ?></td>
+                        <td><a class="intelligence-case-action" href="<?= base_url('alunos/perfil?id=' . (int) ($item['id'] ?? 0) . '#studentIntelligence') ?>"><i data-lucide="user-round-search"></i> Ver aluno</a></td>
                     </tr><?php endforeach; ?>
                 <?php elseif ($kind === 'classes'): ?>
                     <thead><tr><th>Turma</th><th>Alunos ativos</th><th>Risco</th><th>Faltas F</th><th>Ocorrências</th><th>Ações</th></tr></thead>

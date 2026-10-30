@@ -18,6 +18,7 @@ final class DefaultSettings
             self::item('risk_moderate_threshold', 20, 'integer', 'Níveis de risco', 'Atenção a partir de', 'Ao atingir esta pontuação, o aluno deixa o nível Baixo e passa para Atenção.', 70),
             self::item('risk_high_threshold', 45, 'integer', 'Níveis de risco', 'Risco alto a partir de', 'Ao atingir esta pontuação, o aluno passa a ser classificado com risco Alto.', 80),
             self::item('risk_critical_threshold', 70, 'integer', 'Níveis de risco', 'Risco crítico a partir de', 'Ao atingir esta pontuação, o aluno passa para o nível máximo de prioridade.', 90),
+            self::item('protection_max_reduction', 15, 'integer', 'Fatores de proteção', 'Redução máxima do risco', 'Limite de pontos que evidências de melhora relacionadas a uma intervenção podem reduzir do risco observado. Reconhecimentos isolados não reduzem o risco.', 95),
             self::item('class_attention_threshold', 20, 'integer', 'Turmas', 'Limite de atenção da turma', 'Pontuação mínima para uma turma aparecer em atenção.', 100),
             self::item('trend_stable_margin', 5, 'integer', 'Tendências', 'Margem de estabilidade', 'Variações percentuais abaixo deste valor são consideradas estáveis.', 110),
             self::item('notification_recurrent_student', true, 'boolean', 'Notificações', 'Aluno reincidente', 'Gerar notificação quando um aluno atingir reincidência.', 120),

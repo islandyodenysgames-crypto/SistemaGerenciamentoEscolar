@@ -59,6 +59,10 @@ $schoolCalendar = is_array($schoolCalendar ?? null) ? $schoolCalendar : [];
 
 <?php endif; ?>
 
+<?php component('dashboard/positive-indicators', [
+    'positive' => (array) ($intelligence['positive_indicators'] ?? []),
+]); ?>
+
 <?php component('dashboard/executive-panel', array_merge($executive, ['schoolGoals' => $schoolGoals, 'schoolIndex' => $schoolIndex ?? []])); ?>
 
 

@@ -728,4 +728,149 @@ class IntelligenceRepository extends BaseRepository
         } catch (\Throwable $e) { }
     }
 
+    /**
+     * Consolida respostas pedagógicas, reconhecimentos e ações de acompanhamento
+     * por aluno. Os registros adversos permanecem separados e nunca são apagados.
+     */
+    public function positiveIndicatorsByStudents(array $studentIds, string $from, string $to): array
+    {
+        $studentIds = array_values(array_unique(array_filter(array_map('intval', $studentIds), static fn (int $id): bool => $id > 0)));
+        if ($studentIds === []) return [];
+
+        $marks = implode(',', array_fill(0, count($studentIds), '?'));
+        $result = [];
+
+        $stmt = $this->db->prepare("SELECT student_id,
+                SUM(nature='POSITIVE') AS recognitions,
+                SUM(nature='RESPONSE') AS responses,
+                SUM(nature='RESPONSE' AND focus_area='ATTENDANCE') AS attendance_responses,
+                SUM(nature='RESPONSE' AND focus_area='BEHAVIOR') AS behavior_responses,
+                SUM(nature='RESPONSE' AND focus_area='LEARNING') AS learning_responses,
+                SUM(nature='ADVERSE' AND status='RESOLVED') AS resolved_adverse,
+                MAX(CASE WHEN nature='POSITIVE' THEN occurrence_date END) AS latest_recognition_date,
+                MAX(CASE WHEN nature='RESPONSE' THEN occurrence_date END) AS latest_response_date
+            FROM student_occurrences
+            WHERE student_id IN ({$marks}) AND occurrence_date BETWEEN ? AND ?
+            GROUP BY student_id");
+        $stmt->execute([...$studentIds, $from, $to]);
+        foreach ($stmt->fetchAll() as $row) $result[(int) $row['student_id']] = $row;
+
+        $actions = $this->db->prepare("SELECT sm.student_id,
+                COUNT(DISTINCT sma.id) AS monitoring_actions,
+                COUNT(DISTINCT CASE WHEN sm.problem_code='FREQUENCY' OR smp.target_metric='ATTENDANCE' THEN sma.id END) AS frequency_actions,
+                COUNT(DISTINCT CASE WHEN sm.problem_code='BEHAVIOR' THEN sma.id END) AS behavior_actions,
+                MAX(sma.action_date) AS latest_monitoring_action_date
+            FROM student_monitoring sm
+            INNER JOIN student_monitoring_actions sma ON sma.monitoring_id=sm.id AND sma.deleted_at IS NULL
+            LEFT JOIN student_monitoring_plans smp ON smp.monitoring_id=sm.id
+            WHERE sm.student_id IN ({$marks}) AND sma.action_date BETWEEN ? AND ?
+            GROUP BY sm.student_id");
+        $actions->execute([...$studentIds, $from, $to]);
+        foreach ($actions->fetchAll() as $row) {
+            $id = (int) $row['student_id'];
+            $result[$id] = array_merge($result[$id] ?? ['student_id' => $id], $row);
+        }
+
+        foreach ($studentIds as $id) {
+            $result[$id] = array_merge([
+                'student_id' => $id, 'recognitions' => 0, 'responses' => 0,
+                'attendance_responses' => 0, 'behavior_responses' => 0,
+                'learning_responses' => 0, 'resolved_adverse' => 0,
+                'monitoring_actions' => 0, 'frequency_actions' => 0,
+                'behavior_actions' => 0, 'latest_recognition_date' => null,
+                'latest_response_date' => null, 'latest_monitoring_action_date' => null,
+            ], $result[$id] ?? []);
+        }
+        return $result;
+    }
+
+    public function positiveStudentTimeline(int $studentId, string $from, string $to, int $limit = 8): array
+    {
+        $limit = max(1, min(30, $limit));
+        $stmt = $this->db->prepare("SELECT positive_events.* FROM (
+                SELECT so.id, so.occurrence_date AS event_date, so.nature, so.focus_area,
+                       so.title, so.description, so.created_at, 'INTERVENTION' AS source_type
+                FROM student_occurrences so
+                WHERE so.student_id=:occurrence_student_id
+                  AND so.nature IN ('RESPONSE','POSITIVE')
+                  AND so.occurrence_date BETWEEN :occurrence_from AND :occurrence_to
+                UNION ALL
+                SELECT sma.id, sma.action_date AS event_date, 'MONITORING_ACTION' AS nature,
+                       CASE
+                           WHEN sm.problem_code='FREQUENCY' OR smp.target_metric='ATTENDANCE' THEN 'ATTENDANCE'
+                           WHEN sm.problem_code='BEHAVIOR' THEN 'BEHAVIOR'
+                           WHEN sm.problem_code='LEARNING' THEN 'LEARNING'
+                           ELSE sm.problem_code
+                       END AS focus_area,
+                       sma.action_type_label AS title, sma.description, sma.created_at,
+                       'MONITORING_ACTION' AS source_type
+                FROM student_monitoring sm
+                INNER JOIN student_monitoring_actions sma
+                    ON sma.monitoring_id=sm.id AND sma.deleted_at IS NULL
+                LEFT JOIN student_monitoring_plans smp ON smp.monitoring_id=sm.id
+                WHERE sm.student_id=:monitoring_student_id
+                  AND sma.action_date BETWEEN :monitoring_from AND :monitoring_to
+            ) positive_events
+            ORDER BY event_date DESC, created_at DESC, id DESC LIMIT {$limit}");
+        $stmt->execute([
+            'occurrence_student_id' => $studentId,
+            'occurrence_from' => $from,
+            'occurrence_to' => $to,
+            'monitoring_student_id' => $studentId,
+            'monitoring_from' => $from,
+            'monitoring_to' => $to,
+        ]);
+        return $stmt->fetchAll();
+    }
+
+    public function classPositiveIndicators(int $classId, string $from, string $to): array
+    {
+        $stmt = $this->db->prepare("SELECT
+                COUNT(DISTINCT CASE WHEN so.nature='POSITIVE' THEN e.student_id END) AS students_recognized,
+                COUNT(DISTINCT CASE WHEN so.nature='RESPONSE' THEN e.student_id END) AS students_with_response,
+                COUNT(DISTINCT CASE WHEN so.nature IN ('POSITIVE','RESPONSE') THEN e.student_id END) AS students_with_positive_evidence,
+                SUM(so.nature='POSITIVE') AS recognitions,
+                SUM(so.nature='RESPONSE') AS responses,
+                SUM(so.nature='RESPONSE' AND so.focus_area='ATTENDANCE') AS attendance_responses,
+                SUM(so.nature='ADVERSE' AND so.status='RESOLVED') AS resolved_adverse
+            FROM enrollments e
+            LEFT JOIN student_occurrences so ON so.student_id=e.student_id AND so.occurrence_date BETWEEN :date_from AND :date_to
+            WHERE e.school_class_id=:class_id AND e.active=1");
+        $stmt->execute(['class_id' => $classId, 'date_from' => $from, 'date_to' => $to]);
+        return $stmt->fetch() ?: [];
+    }
+
+    public function schoolPositiveIndicators(string $from, string $to): array
+    {
+        $stmt = $this->db->prepare("SELECT
+                COUNT(DISTINCT CASE WHEN nature='POSITIVE' THEN student_id END) AS students_recognized,
+                COUNT(DISTINCT CASE WHEN nature='RESPONSE' THEN student_id END) AS students_with_response,
+                SUM(nature='POSITIVE') AS recognitions,
+                SUM(nature='RESPONSE') AS responses,
+                SUM(nature='RESPONSE' AND focus_area='ATTENDANCE') AS attendance_responses,
+                SUM(nature='ADVERSE' AND status='RESOLVED') AS resolved_adverse
+            FROM student_occurrences WHERE occurrence_date BETWEEN :date_from AND :date_to");
+        $stmt->execute(['date_from' => $from, 'date_to' => $to]);
+        return $stmt->fetch() ?: [];
+    }
+
+    public function positiveStudentCases(string $nature, string $from, string $to): array
+    {
+        $nature = $nature === 'POSITIVE' ? 'POSITIVE' : 'RESPONSE';
+        $stmt = $this->db->prepare("SELECT s.id, s.name, s.registration,
+                COALESCE(sc.name,'Sem turma') AS class_name,
+                COUNT(so.id) AS positive_records,
+                MAX(so.occurrence_date) AS latest_positive_date,
+                GROUP_CONCAT(DISTINCT so.focus_area ORDER BY so.focus_area SEPARATOR ',') AS focus_areas
+            FROM students s
+            INNER JOIN student_occurrences so ON so.student_id=s.id AND so.nature=:nature AND so.occurrence_date BETWEEN :date_from AND :date_to
+            LEFT JOIN enrollments e ON e.id=(SELECT e2.id FROM enrollments e2 WHERE e2.student_id=s.id AND e2.active=1 ORDER BY e2.id DESC LIMIT 1)
+            LEFT JOIN school_classes sc ON sc.id=e.school_class_id
+            WHERE s.active=1
+            GROUP BY s.id,s.name,s.registration,sc.name
+            ORDER BY positive_records DESC, latest_positive_date DESC, s.name");
+        $stmt->execute(['nature' => $nature, 'date_from' => $from, 'date_to' => $to]);
+        return $stmt->fetchAll();
+    }
+
 }

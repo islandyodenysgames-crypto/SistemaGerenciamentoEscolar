@@ -9,7 +9,7 @@ use App\Core\Settings\SettingManager;
 
 class IntelligenceService
 {
-    public function __construct(private IntelligenceRepository $repository, private SettingManager $settings, private InsightEngine $insightEngine, private IntelligenceTimeline $timeline, private TrendAnalysisService $trendAnalysis, private PredictiveAnalysisService $predictiveAnalysis, private ClassTrendAnalysisService $classTrendAnalysis, private ClassPredictiveAnalysisService $classPredictiveAnalysis)
+    public function __construct(private IntelligenceRepository $repository, private SettingManager $settings, private InsightEngine $insightEngine, private IntelligenceTimeline $timeline, private TrendAnalysisService $trendAnalysis, private PredictiveAnalysisService $predictiveAnalysis, private ClassTrendAnalysisService $classTrendAnalysis, private ClassPredictiveAnalysisService $classPredictiveAnalysis, private PositiveIndicatorService $positiveIndicators)
     {
     }
 
@@ -29,6 +29,53 @@ class IntelligenceService
         $attendanceStudents = $this->repository->attendanceRiskStudents($currentStart, $currentEnd, 500);
         $occurrenceStudents = $this->repository->occurrenceRiskStudents($currentStart, $currentEnd, 500);
         $students = $this->mergeStudentSignals($attendanceStudents, $occurrenceStudents);
+        $previousStudents = $this->mergeStudentSignals(
+            $this->repository->attendanceRiskStudents($previousStart, $previousEnd, 500),
+            $this->repository->occurrenceRiskStudents($previousStart, $previousEnd, 500)
+        );
+        $previousByStudent = [];
+        foreach ($previousStudents as $previousStudent) $previousByStudent[(int) $previousStudent['id']] = $previousStudent;
+        $positiveByStudent = $this->positiveIndicators->forStudents(array_column($students, 'id'), $currentStart, $currentEnd);
+        foreach ($students as &$student) {
+            $id = (int) $student['id'];
+            $previous = $previousByStudent[$id] ?? [];
+            $attendanceStudentTrend = $this->trend((int) $student['unjustified_absences'], (int) ($previous['unjustified_absences'] ?? 0), true);
+            $occurrenceStudentTrend = $this->trend((int) $student['total_occurrences'], (int) ($previous['total_occurrences'] ?? 0), true);
+            $positive = $positiveByStudent[$id] ?? [];
+            $protection = $this->positiveIndicators->applyProtection(
+                ['score' => (int) $student['risk_score'], 'level' => (string) $student['risk_level']],
+                $student,
+                $positive,
+                $attendanceStudentTrend,
+                $occurrenceStudentTrend
+            );
+            $student['raw_risk_score'] = (int) $student['risk_score'];
+            $student['raw_risk_level'] = (string) $student['risk_level'];
+            $student['risk_score'] = (int) $protection['adjusted_score'];
+            $student['risk_level'] = (string) $protection['level'];
+            $student['positive_indicators'] = $positive;
+            $student['protection'] = $protection;
+        }
+        unset($student);
+        usort($students, static fn(array $a, array $b): int => $b['risk_score'] <=> $a['risk_score']);
+        $schoolPositiveIndicators = $this->positiveIndicators->forSchool($currentStart, $currentEnd);
+        $schoolPositiveIndicators['students_with_protection'] = count(array_filter(
+            $students,
+            static fn (array $student): bool => (int) ($student['protection']['reduction'] ?? 0) > 0
+        ));
+        $schoolPositiveIndicators['protection_points'] = array_sum(array_map(
+            static fn (array $student): int => (int) ($student['protection']['reduction'] ?? 0),
+            $students
+        ));
+        $schoolPositiveIndicators['students_with_verified_improvement'] = count(array_filter(
+            $students,
+            static function (array $student): bool {
+                foreach ((array) ($student['protection']['factors'] ?? []) as $factor) {
+                    if (in_array((string) ($factor['code'] ?? ''), ['ATTENDANCE_IMPROVEMENT', 'NO_RECURRENCE'], true)) return true;
+                }
+                return false;
+            }
+        ));
         $classSignals = $this->repository->classSignals($currentStart, $currentEnd, 200);
         $allClassSignals = $this->repository->classComparisonSignals($currentStart, $currentEnd);
         $predictiveClasses = array_map([$this, 'decorateClass'], $allClassSignals);
@@ -114,6 +161,7 @@ class IntelligenceService
                 'open' => (int) ($occurrenceCurrent['open_occurrences'] ?? 0),
                 'trend' => $occurrenceTrend,
             ],
+            'positive_indicators' => $schoolPositiveIndicators,
             'students' => array_slice($priorityStudents, 0, 5),
             'classes' => array_slice($classes, 0, 3),
             'predictive_classes' => $predictiveClasses,
@@ -127,7 +175,7 @@ class IntelligenceService
 
     public function cases(string $type, array $filters = []): array
     {
-        $allowed = ['low_attendance', 'students_attention', 'unjustified_absences', 'occurrences_period', 'serious_occurrences', 'critical_students', 'combined_risk', 'attention_classes', 'stale_critical_occurrences', 'stale_monitoring_actions'];
+        $allowed = ['low_attendance', 'students_attention', 'unjustified_absences', 'occurrences_period', 'serious_occurrences', 'critical_students', 'combined_risk', 'attention_classes', 'stale_critical_occurrences', 'stale_monitoring_actions', 'positive_recognitions', 'pedagogical_responses'];
         if (!in_array($type, $allowed, true)) {
             $type = 'students_attention';
         }
@@ -135,6 +183,8 @@ class IntelligenceService
         $window = max(1, (int) $this->settings->get('intelligence.analysis_window_days', 30));
         $end = date('Y-m-d');
         $start = date('Y-m-d', strtotime('-' . ($window - 1) . ' days'));
+        $previousEnd = date('Y-m-d', strtotime('-' . $window . ' days'));
+        $previousStart = date('Y-m-d', strtotime('-' . (($window * 2) - 1) . ' days'));
         $search = mb_strtolower(trim((string) ($filters['q'] ?? '')));
         $riskFilter = strtoupper(trim((string) ($filters['risk'] ?? '')));
         $classFilter = trim((string) ($filters['class'] ?? ''));
@@ -142,7 +192,10 @@ class IntelligenceService
         $items = [];
         $kind = 'students';
 
-        if ($type === 'attention_classes') {
+        if (in_array($type, ['positive_recognitions', 'pedagogical_responses'], true)) {
+            $kind = 'positive';
+            $items = $this->repository->positiveStudentCases($type === 'positive_recognitions' ? 'POSITIVE' : 'RESPONSE', $start, $end);
+        } elseif ($type === 'attention_classes') {
             $kind = 'classes';
             $items = array_map([$this, 'decorateClass'], $this->repository->classSignals($start, $end, 200));
             usort($items, static function (array $a, array $b): int {
@@ -183,6 +236,31 @@ class IntelligenceService
                 $this->repository->attendanceRiskStudents($start, $end, 500),
                 $this->repository->occurrenceRiskStudents($start, $end, 500)
             );
+            $previousStudents = $this->mergeStudentSignals(
+                $this->repository->attendanceRiskStudents($previousStart, $previousEnd, 500),
+                $this->repository->occurrenceRiskStudents($previousStart, $previousEnd, 500)
+            );
+            $previousByStudent = [];
+            foreach ($previousStudents as $previousStudent) $previousByStudent[(int) $previousStudent['id']] = $previousStudent;
+            $positiveByStudent = $this->positiveIndicators->forStudents(array_column($students, 'id'), $start, $end);
+            foreach ($students as &$student) {
+                $studentId = (int) $student['id'];
+                $previous = $previousByStudent[$studentId] ?? [];
+                $protection = $this->positiveIndicators->applyProtection(
+                    ['score' => (int) $student['risk_score'], 'level' => (string) $student['risk_level']],
+                    $student,
+                    $positiveByStudent[$studentId] ?? [],
+                    $this->trend((int) $student['unjustified_absences'], (int) ($previous['unjustified_absences'] ?? 0), true),
+                    $this->trend((int) $student['total_occurrences'], (int) ($previous['total_occurrences'] ?? 0), true)
+                );
+                $student['raw_risk_score'] = (int) $student['risk_score'];
+                $student['raw_risk_level'] = (string) $student['risk_level'];
+                $student['risk_score'] = (int) $protection['adjusted_score'];
+                $student['risk_level'] = (string) $protection['level'];
+                $student['positive_indicators'] = $positiveByStudent[$studentId] ?? [];
+                $student['protection'] = $protection;
+            }
+            unset($student);
             $priorityStudents = array_values(array_filter($students, static fn(array $s): bool => $s['risk_level'] !== 'LOW'));
             $items = match ($type) {
                 'unjustified_absences' => array_values(array_filter($students, static fn(array $s): bool => (int) ($s['unjustified_absences'] ?? 0) > 0)),
@@ -230,6 +308,7 @@ class IntelligenceService
         // é apresentado como destino do alerta.
         if ($kind === 'students' && $items !== []) {
             $studentIds=array_column($items,'id');
+            $positiveByStudent = $this->positiveIndicators->forStudents($studentIds, $start, $end);
             $pointResponses = in_array($type, ['low_attendance', 'unjustified_absences'], true)
                 ? $this->repository->attendancePointResponsesByStudent($studentIds, $start, $end)
                 : [];
@@ -238,6 +317,7 @@ class IntelligenceService
             $explicitLinks=$this->repository->linkedCasesForAlert($studentIds,(string)$alert['key']);
             foreach($items as &$item){
                 $studentId=(int)($item['id']??0);
+                $item['positive_indicators'] = $positiveByStudent[$studentId] ?? [];
                 $item['point_responses'] = (int) ($pointResponses[$studentId]['point_responses'] ?? 0);
                 $item['latest_point_response_date'] = $pointResponses[$studentId]['latest_response_date'] ?? null;
                 $cases=(array)($caseGroups[$studentId]??[]);
@@ -548,12 +628,21 @@ class IntelligenceService
             'stale_critical_occurrences' => ['title' => 'Ocorrências críticas atrasadas', 'subtitle' => 'Ocorrências críticas abertas além do prazo configurado.', 'icon' => 'clock-alert', 'tone' => 'danger'],
             'without_monitoring' => ['title' => 'Alunos prioritários sem acompanhamento', 'subtitle' => 'Alunos classificados como prioritários que não possuem nenhum participante ativo em seus casos.', 'icon' => 'user-minus', 'tone' => 'danger'],
             'stale_monitoring_actions' => ['title' => 'Alunos sem atualização de intervenção', 'subtitle' => 'Casos prioritários com acompanhamento ativo cuja última intervenção ocorreu há 14 dias ou mais; quando não há intervenção, o prazo é contado desde o início do acompanhamento.', 'icon' => 'history', 'tone' => 'warning'],
+            'positive_recognitions' => ['title' => 'Alunos com reconhecimento positivo', 'subtitle' => 'Reconhecimentos registrados no período, sem impacto negativo no risco.', 'icon' => 'award', 'tone' => 'success'],
+            'pedagogical_responses' => ['title' => 'Alunos com resposta pedagógica', 'subtitle' => 'Respostas pontuais registradas pela escola, organizadas pela área atendida.', 'icon' => 'message-circle-check', 'tone' => 'success'],
             default => ['title' => 'Alunos em atenção', 'subtitle' => 'Alunos classificados nos níveis Atenção, Alto ou Crítico.', 'icon' => 'user-round-search', 'tone' => 'warning'],
         };
     }
 
     private function caseSummary(array $items, string $kind, string $type = ''): array
     {
+        if ($kind === 'positive') {
+            return [
+                ['label' => 'Alunos', 'value' => count($items), 'icon' => 'users-round'],
+                ['label' => 'Registros positivos', 'value' => array_sum(array_map(static fn(array $i): int => (int) ($i['positive_records'] ?? 0), $items)), 'icon' => 'sparkles'],
+                ['label' => 'Turmas envolvidas', 'value' => count(array_unique(array_filter(array_column($items, 'class_name')))), 'icon' => 'school'],
+            ];
+        }
         if ($kind === 'occurrences') {
             return [
                 ['label' => 'Total de casos', 'value' => count($items), 'icon' => 'files'],
@@ -696,7 +785,6 @@ class IntelligenceService
             'open_occurrences' => (int) ($occurrences['open_occurrences'] ?? 0),
         ];
 
-        $risk = $this->assessRisk($signal);
         $attendanceTrend = $this->trend(
             $signal['unjustified_absences'],
             (int) ($attendancePrevious['unjustified_absences'] ?? 0),
@@ -707,6 +795,16 @@ class IntelligenceService
             (int) ($occurrencesPrevious['total_occurrences'] ?? 0),
             true
         );
+        $rawRisk = $this->assessRisk($signal);
+        $positive = $this->positiveIndicators->forStudent($studentId, $currentStart, $currentEnd);
+        $protection = $this->positiveIndicators->applyProtection($rawRisk, $signal, $positive, $attendanceTrend, $occurrenceTrend);
+        $risk = [
+            'score' => (int) $protection['adjusted_score'],
+            'level' => (string) $protection['level'],
+            'raw_score' => (int) $protection['raw_score'],
+            'raw_level' => (string) $protection['raw_level'],
+            'reduction' => (int) $protection['reduction'],
+        ];
 
         $recommendations = [];
         if ($risk['level'] === 'CRITICAL') {
@@ -773,6 +871,8 @@ class IntelligenceService
                 'resolved' => (int) ($occurrences['resolved_occurrences'] ?? 0),
                 'trend' => $occurrenceTrend,
             ],
+            'positive_indicators' => $positive,
+            'protection' => $protection,
             'reasons' => array_values(array_filter([
                 $signal['unjustified_absences'] > 0 ? $signal['unjustified_absences'] . ' falta(s) sem justificativa' : null,
                 $signal['total_occurrences'] > 0 ? $signal['total_occurrences'] . ' ocorrência(s) no período' : null,
@@ -798,6 +898,7 @@ class IntelligenceService
 
         $attendance = $this->repository->classAttendanceTotals($classId, $currentStart, $currentEnd);
         $attendanceResponse = $this->repository->classAttendanceResponse($classId, $currentStart, $currentEnd);
+        $positiveIndicators = $this->positiveIndicators->forClass($classId, $currentStart, $currentEnd);
         $attendancePrevious = $this->repository->classAttendanceTotals($classId, $previousStart, $previousEnd);
         $occurrences = $this->repository->classOccurrenceTotals($classId, $currentStart, $currentEnd);
         $occurrencesPrevious = $this->repository->classOccurrenceTotals($classId, $previousStart, $previousEnd);
@@ -878,6 +979,7 @@ class IntelligenceService
                 'monitoring_actions' => (int) ($attendanceResponse['monitoring_actions'] ?? 0),
                 'point_responses' => (int) ($attendanceResponse['point_responses'] ?? 0),
             ],
+            'positive_indicators' => $positiveIndicators,
             'occurrences' => [
                 'total' => (int) ($occurrences['total_occurrences'] ?? 0),
                 'serious' => (int) ($occurrences['serious_occurrences'] ?? 0),

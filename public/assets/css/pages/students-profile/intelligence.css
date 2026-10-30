@@ -428,3 +428,14 @@
 .student-trends-panel{box-shadow:none;border-color:#e2e8f0;background:#fff}.student-trend-card{box-shadow:none;background:#f8fafc}
 
 @media(max-width:650px){.student-intelligence-explanation{margin-left:14px;margin-right:14px}.student-intelligence-explanation summary{grid-template-columns:1fr auto}.student-intelligence-explanation summary small{display:none}.student-intelligence-explanation__content{padding-left:16px}.student-prediction-panel__expandable{margin-left:14px;margin-right:14px}}
+.student-positive-evidence{margin:1rem 0;padding:1rem;border:1px solid #bbf7d0;border-radius:16px;background:linear-gradient(135deg,#f0fdf4,#fff)}
+.student-positive-evidence__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.student-positive-evidence__header span{display:flex;align-items:center;gap:.45rem;color:#15803d;font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.student-positive-evidence__header h4{margin:.25rem 0 0;color:#142033}
+.student-positive-evidence__header>strong{padding:.45rem .7rem;border-radius:999px;background:#dcfce7;color:#166534;font-size:.82rem}
+.student-positive-evidence__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem}
+.student-positive-evidence__grid article{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;gap:.1rem .55rem;padding:.8rem;border-radius:12px;background:#fff;border:1px solid #dcfce7}
+.student-positive-evidence__grid svg{grid-row:1/3;color:#16a34a}.student-positive-evidence__grid strong{font-size:1.35rem}.student-positive-evidence__grid span{font-size:.78rem;color:#64748b}
+.student-positive-evidence__calculation{margin-top:.8rem;padding:.75rem;border-radius:12px;background:#ecfdf5}.student-positive-evidence__calculation summary{display:flex;justify-content:space-between;cursor:pointer;color:#166534;font-weight:700}.student-positive-evidence__calculation ul{margin:.6rem 0;padding-left:1.2rem}
+.student-positive-evidence__timeline{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;margin-top:.8rem}.student-positive-evidence__timeline article{display:flex;align-items:center;gap:.55rem;padding:.65rem;border-radius:10px;background:#fff}.student-positive-evidence__timeline svg{color:#16a34a}.student-positive-evidence__timeline div{display:flex;flex-direction:column}.student-positive-evidence__timeline span{font-size:.75rem;color:#64748b}
+@media(max-width:760px){.student-positive-evidence__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.student-positive-evidence__timeline{grid-template-columns:1fr}.student-positive-evidence__header{align-items:flex-start;flex-direction:column}}

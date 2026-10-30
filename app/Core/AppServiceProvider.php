@@ -40,6 +40,7 @@ use App\Services\Intelligence\TrendAnalysisService;
 use App\Services\Intelligence\PredictiveAnalysisService;
 use App\Services\Intelligence\ClassTrendAnalysisService;
 use App\Services\Intelligence\ClassPredictiveAnalysisService;
+use App\Services\Intelligence\PositiveIndicatorService;
 use App\Services\Monitoring\StudentMonitoringService;
 use App\Rules\Occurrence\RecurrentStudentRule;
 use App\Rules\Occurrence\RuleRegistry;
@@ -124,6 +125,7 @@ class AppServiceProvider
         $container->singleton(PredictiveAnalysisService::class);
         $container->singleton(ClassTrendAnalysisService::class);
         $container->singleton(ClassPredictiveAnalysisService::class);
+        $container->singleton(PositiveIndicatorService::class);
         $container->singleton(StudentMonitoringService::class);
         $container->singleton(SettingCache::class);
         $container->singleton(SettingValidator::class);
