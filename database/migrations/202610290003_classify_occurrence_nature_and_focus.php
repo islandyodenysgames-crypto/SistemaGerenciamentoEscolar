@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 use App\Database\Migration;
 use App\Database\Schema;
+use App\Database\Connection;
 
 return new class extends Migration
 {
     public function up(): void
     {
+        $db = Connection::getInstance();
         if (!Schema::hasColumn('student_occurrences', 'nature')) {
-            $this->db->exec("
+            $db->exec("
                 ALTER TABLE student_occurrences
                 ADD COLUMN nature VARCHAR(20) NOT NULL DEFAULT 'ADVERSE' AFTER type,
                 ADD COLUMN focus_area VARCHAR(30) NULL AFTER nature,
@@ -18,7 +20,7 @@ return new class extends Migration
             ");
         }
 
-        $this->db->exec("
+        $db->exec("
             UPDATE student_occurrences
             SET nature = 'POSITIVE', focus_area = NULL,
                 severity = 'NOT_APPLICABLE', status = 'RESOLVED'
@@ -32,13 +34,14 @@ return new class extends Migration
 
     public function down(): void
     {
+        $db = Connection::getInstance();
         if (Schema::hasColumn('student_occurrences', 'nature')) {
-            $this->db->exec("
+            $db->exec("
                 UPDATE student_occurrences
                 SET severity = 'LOW'
                 WHERE nature = 'RESPONSE' AND severity = 'NOT_APPLICABLE'
             ");
-            $this->db->exec("
+            $db->exec("
                 ALTER TABLE student_occurrences
                 DROP INDEX idx_occurrence_nature_focus_date,
                 DROP COLUMN focus_area,
