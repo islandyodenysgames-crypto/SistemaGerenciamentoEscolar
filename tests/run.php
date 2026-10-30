@@ -331,14 +331,16 @@ $positiveIndicatorServiceSource = file_get_contents(__DIR__ . '/../app/Services/
 $defaultSettingsSource = file_get_contents(__DIR__ . '/../app/Core/Settings/DefaultSettings.php');
 $snapshotServiceSource = file_get_contents(__DIR__ . '/../app/Services/Intelligence/IntelligenceDailySnapshotService.php');
 $studentIntelligenceViewSource = file_get_contents(__DIR__ . '/../app/Views/components/students/profile/intelligence.php');
-$dashboardPositiveViewSource = file_get_contents(__DIR__ . '/../app/Views/components/dashboard/positive-indicators.php');
+$dashboardPageSource = file_get_contents(__DIR__ . '/../app/Views/components/dashboard/page.php');
+$insightGeneratorSource = file_get_contents(__DIR__ . '/../app/Services/Intelligence/InsightGenerator.php');
 $assert(str_contains($positiveIndicatorServiceSource, 'protection_max_reduction') && !str_contains($positiveIndicatorServiceSource, "'code' => 'RECOGNITION'"), 'Fatores de proteção devem possuir redução máxima configurável e não usar elogios como compensação automática.');
 $assert(!str_contains($positiveIndicatorServiceSource, "'code' => 'ATTENDANCE_RESPONSE'") && !str_contains($positiveIndicatorServiceSource, "'code' => 'BEHAVIOR_RESPONSE'"), 'Registrar uma resposta sem melhora comprovada não deve reduzir o risco.');
 $assert(str_contains($positiveIndicatorServiceSource, 'ATTENDANCE_IMPROVEMENT') && str_contains($positiveIndicatorServiceSource, 'NO_RECURRENCE'), 'Atenuação deve exigir evolução relacionada à frequência ou às ocorrências.');
 $assert(str_contains($defaultSettingsSource, "'protection_max_reduction', 15") && str_contains($snapshotServiceSource, "risk['raw_score']"), 'Limite de proteção deve ser configurável e snapshots devem preservar o risco observado.');
 $assert(str_contains($studentIntelligenceViewSource, 'Evidências positivas') && str_contains($studentIntelligenceViewSource, 'Risco observado'), 'Perfil do aluno deve explicar indicadores positivos e a diferença entre risco observado e ajustado.');
 $assert(str_contains($classIntelligenceViewSource, 'Reconhecimentos positivos') && str_contains($classIntelligenceViewSource, 'Alunos com resposta pedagógica'), 'Painel da turma deve exibir métricas positivas e cobertura pedagógica.');
-$assert(str_contains($dashboardPositiveViewSource, 'Respostas e sinais positivos'), 'Página Inicial deve destacar respostas, reconhecimentos e situações resolvidas.');
+$assert(!str_contains($dashboardPageSource, "component('dashboard/positive-indicators'") && str_contains($dashboardPageSource, 'Prioridades e sinais positivos'), 'Página Inicial não deve manter um painel positivo separado do painel de prioridades.');
+$assert(str_contains($insightGeneratorSource, 'school.pedagogical_responses') && str_contains($insightGeneratorSource, 'school.positive_recognitions') && str_contains($insightGeneratorSource, 'school.resolved_situations'), 'Painel de insights deve integrar respostas, reconhecimentos e situações resolvidas.');
 $assert(str_contains($intelligenceCasesSource, 'Resposta pontual') && str_contains($intelligenceServiceSource, "'label' => 'Com resposta pontual'"),'Visão analítica de infrequência deve informar e permitir registrar respostas pontuais.');
 $assert(str_contains($classPageSource, "'ocorrencias/nova?aluno='") && str_contains($classPageSource, 'Intervenção'),'Painel da turma deve oferecer intervenção individual para cada aluno autorizado.');
 

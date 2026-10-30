@@ -25,7 +25,7 @@ $levelLabels = ['CRITICAL' => 'Crítico', 'ATTENTION' => 'Atenção', 'POSITIVE'
             <div><h3 id="<?= e($panelId) ?>-title"><?= e($title) ?></h3><p><?= e($subtitle) ?></p></div>
         </div>
         <div class="intelligence-insights__header-actions">
-            <span class="intelligence-insights__count" data-insights-count><?= count($insights) ?> <?= $actionOriented ? 'prioridade(s)' : 'insight(s)' ?></span>
+            <span class="intelligence-insights__count" data-insights-count><?= count($insights) ?> <?= $actionOriented ? 'sinal(is)' : 'insight(s)' ?></span>
             <?php if ($collapsible): ?>
                 <button type="button" class="intelligence-insights__toggle" data-insights-toggle aria-expanded="true" aria-controls="<?= e($panelId) ?>-body">
                     <i data-lucide="chevron-up"></i><span>Ocultar painel</span>
@@ -152,7 +152,7 @@ document.querySelectorAll('[data-insights-panel]').forEach(function (panel) {
                 item.hidden = !show;
                 if (show) visible++;
             });
-            if (count) count.textContent = visible + (panel.classList.contains('intelligence-insights--action-oriented') ? ' prioridade(s)' : ' insight(s)');
+            if (count) count.textContent = visible + (panel.classList.contains('intelligence-insights--action-oriented') ? ' sinal(is)' : ' insight(s)');
             if (empty) empty.hidden = visible !== 0;
         });
     });

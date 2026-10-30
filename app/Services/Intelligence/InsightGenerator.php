@@ -154,15 +154,42 @@ final class InsightGenerator
         }
 
         $responses = (int) ($positive['responses'] ?? 0);
+        $attendanceResponses = (int) ($positive['attendance_responses'] ?? 0);
         $recognitions = (int) ($positive['recognitions'] ?? 0);
-        if ($responses > 0 || $recognitions > 0) {
+        $resolvedAdverse = (int) ($positive['resolved_adverse'] ?? 0);
+
+        if ($responses > 0) {
             $insights[] = $this->formatter->make(
-                'school.positive_actions', InsightPriority::POSITIVE, 'STUDENT',
-                ($responses + $recognitions) . ' registro(s) de atuação positiva',
-                $responses . ' resposta(s) pedagógica(s) e ' . $recognitions . ' reconhecimento(s) foram registrados no período.',
-                'Consulte os alunos envolvidos e acompanhe se a evolução se mantém nos próximos registros.',
-                'sparkles', 'inteligencia/casos?tipo=pedagogical_responses', $period,
-                ['responses' => $responses, 'recognitions' => $recognitions]
+                'school.pedagogical_responses', InsightPriority::POSITIVE, 'STUDENT',
+                $responses . ' resposta(s) pedagógica(s) registrada(s)',
+                'A escola registrou atuação pontual para ' . (int) ($positive['students_with_response'] ?? 0)
+                    . ' aluno(s); ' . $attendanceResponses . ' resposta(s) trataram de frequência ou infrequência.',
+                'Acompanhe os registros seguintes para verificar se as respostas produziram evolução sustentada.',
+                'message-circle-check', 'inteligencia/casos?tipo=pedagogical_responses', $period,
+                ['count' => $responses, 'attendance_responses' => $attendanceResponses]
+            );
+        }
+
+        if ($recognitions > 0) {
+            $insights[] = $this->formatter->make(
+                'school.positive_recognitions', InsightPriority::POSITIVE, 'STUDENT',
+                $recognitions . ' reconhecimento(s) positivo(s)',
+                (int) ($positive['students_recognized'] ?? 0)
+                    . ' aluno(s) receberam elogios ou reconhecimentos no período analisado.',
+                'Valorize os avanços registrados e observe quais práticas podem ser fortalecidas.',
+                'award', 'inteligencia/casos?tipo=positive_recognitions', $period,
+                ['count' => $recognitions]
+            );
+        }
+
+        if ($resolvedAdverse > 0) {
+            $insights[] = $this->formatter->make(
+                'school.resolved_situations', InsightPriority::POSITIVE, 'OCCURRENCE',
+                $resolvedAdverse . ' situação(ões) resolvida(s)',
+                'Registros que exigiam atenção foram encerrados no período sem apagar o histórico escolar.',
+                'Revise as providências que contribuíram para a resolução e monitore possíveis reincidências.',
+                'shield-check', 'ocorrencias', $period,
+                ['count' => $resolvedAdverse]
             );
         }
 

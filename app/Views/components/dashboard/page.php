@@ -51,17 +51,13 @@ $schoolCalendar = is_array($schoolCalendar ?? null) ? $schoolCalendar : [];
         'compact' => true,
         'actionOriented' => true,
         'title' => 'O que merece atenção hoje',
-        'subtitle' => 'Prioridades organizadas automaticamente para orientar as ações da gestão escolar.',
+        'subtitle' => 'Prioridades e sinais positivos organizados automaticamente para orientar a gestão escolar.',
         'collapsible' => true,
         'collapsedByDefault' => false,
         'storageKey' => 'sfe.dashboard.attentionToday.collapsed',
     ]); ?>
 
 <?php endif; ?>
-
-<?php component('dashboard/positive-indicators', [
-    'positive' => (array) ($intelligence['positive_indicators'] ?? []),
-]); ?>
 
 <?php component('dashboard/executive-panel', array_merge($executive, ['schoolGoals' => $schoolGoals, 'schoolIndex' => $schoolIndex ?? []])); ?>
 

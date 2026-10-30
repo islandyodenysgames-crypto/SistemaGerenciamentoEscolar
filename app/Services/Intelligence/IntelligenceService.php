@@ -168,7 +168,10 @@ class IntelligenceService
             'improving_classes' => array_slice($improvingClasses, 0, 3),
             'monitoring' => $monitoring,
         ];
-        $dashboard['insights'] = $this->insightEngine->school($dashboard);
+        // Mantém no painel as prioridades de ação e também os sinais positivos.
+        // O limite ampliado evita que reconhecimentos e respostas pedagógicas
+        // desapareçam quando há vários alertas de maior pontuação.
+        $dashboard['insights'] = $this->insightEngine->school($dashboard, 12);
 
         return $dashboard;
     }
