@@ -346,7 +346,7 @@ $studentRepositorySource = file_get_contents(__DIR__ . '/../app/Repositories/Stu
 $studentReportSource = file_get_contents(__DIR__ . '/../app/Views/pages/students/report.php');
 $studentProfileActionsSource = file_get_contents(__DIR__ . '/../app/Controllers/Concerns/Student/StudentProfileActions.php');
 $assert(str_contains($studentRepositorySource, 'attendanceSummaryByYear') && str_contains($studentRepositorySource, 'total_atestados_medicos') && str_contains($studentRepositorySource, 'total_faltas_onibus'), 'Relatório individual deve consolidar todos os estados de frequência por ano.');
-$assert(str_contains($studentReportSource, 'Totais de frequência') && !str_contains($studentReportSource, '<h2>Histórico de frequência</h2>'), 'Relatório individual não deve listar cada data do histórico de frequência.');
+$assert(str_contains($studentReportSource, '<h2>Resumo mensal</h2>') && str_contains($studentReportSource, '<th>Atestados</th>') && str_contains($studentReportSource, '<th>Transporte</th>') && !str_contains($studentReportSource, '<h2>Histórico de frequência</h2>') && !str_contains($studentReportSource, '<h2>Totais de frequência</h2>'), 'Relatório individual deve consolidar cada situação no resumo mensal sem criar uma lista histórica separada.');
 $assert(str_contains($studentProfileActionsSource, 'attendanceSummaryByYear($id, $year)'), 'Relatório individual deve usar totais limitados ao ano selecionado.');
 
 $occurrenceActionControllerSource = (string) file_get_contents($root . '/app/Controllers/Concerns/Occurrence/Actions/OccurrenceActionActions.php');

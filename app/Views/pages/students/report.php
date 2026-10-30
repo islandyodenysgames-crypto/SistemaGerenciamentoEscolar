@@ -28,26 +28,6 @@ $totalJustificadas = (int) (
     $statistics['total_justificadas'] ?? 0
 );
 
-$totalFaltasJustificadas = (int) (
-    $statistics['total_faltas_justificadas'] ?? 0
-);
-
-$totalAtestadosMedicos = (int) (
-    $statistics['total_atestados_medicos'] ?? 0
-);
-
-$totalFaltasOnibus = (int) (
-    $statistics['total_faltas_onibus'] ?? 0
-);
-
-$statusLabels = [
-    'P' => 'Presença',
-    'F' => 'Falta',
-    'FJ' => 'Falta Justificada',
-    'AM' => 'Atestado Médico',
-    'FO' => 'Falta de Ônibus',
-];
-
 $monthLabels = [
     1 => 'Janeiro',
     2 => 'Fevereiro',
@@ -313,8 +293,12 @@ component('base/page-header', [
                     <thead>
                         <tr>
                             <th>Mês</th>
-                            <th>Chamadas</th>
                             <th>Presenças</th>
+                            <th>Faltas</th>
+                            <th>Justificadas</th>
+                            <th>Atestados</th>
+                            <th>Transporte</th>
+                            <th>Total</th>
                             <th>Frequência</th>
                         </tr>
                     </thead>
@@ -345,15 +329,15 @@ component('base/page-header', [
 
                                 <td>
                                     <?= (int) (
-                                        $month['total_records'] ?? 0
-                                    ) ?>
-                                </td>
-
-                                <td>
-                                    <?= (int) (
                                         $month['total_presentes'] ?? 0
                                     ) ?>
                                 </td>
+
+                                <td><?= (int) ($month['total_faltas'] ?? 0) ?></td>
+                                <td><?= (int) ($month['total_faltas_justificadas'] ?? 0) ?></td>
+                                <td><?= (int) ($month['total_atestados_medicos'] ?? 0) ?></td>
+                                <td><?= (int) ($month['total_faltas_onibus'] ?? 0) ?></td>
+                                <td><?= (int) ($month['total_records'] ?? 0) ?></td>
 
                                 <td>
                                     <strong>
@@ -367,66 +351,6 @@ component('base/page-header', [
                                 </td>
                             </tr>
 
-                        <?php endforeach; ?>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        <?php endif; ?>
-
-    </section>
-
-    <section class="student-report-section">
-
-        <div class="student-report-section-title">
-
-            <h2>Totais de frequência</h2>
-
-            <p>
-                Quantidade de registros por situação no ano de <?= $reportYear ?>.
-            </p>
-
-        </div>
-
-        <?php if ($totalRecords === 0): ?>
-
-            <div class="student-report-empty">
-                Nenhum registro de frequência encontrado para o ano selecionado.
-            </div>
-
-        <?php else: ?>
-
-            <div class="student-report-table-wrap">
-
-                <table class="student-report-table">
-
-                    <thead>
-                        <tr>
-                            <th>Situação</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <?php foreach ([
-                            'P' => $totalPresentes,
-                            'F' => $totalFaltas,
-                            'FJ' => $totalFaltasJustificadas,
-                            'AM' => $totalAtestadosMedicos,
-                            'FO' => $totalFaltasOnibus,
-                        ] as $statusCode => $statusTotal): ?>
-                            <tr>
-                                <td>
-                                    <?= e($statusLabels[$statusCode] ?? $statusCode) ?>
-                                </td>
-                                <td>
-                                    <strong><?= (int) $statusTotal ?></strong>
-                                </td>
-                            </tr>
                         <?php endforeach; ?>
 
                     </tbody>

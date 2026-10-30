@@ -681,7 +681,12 @@ class StudentRepository extends BaseRepository
                         THEN 1
                         ELSE 0
                     END
-                ) AS total_presentes
+                ) AS total_presentes,
+
+                COALESCE(SUM(attendance_items.status = 'F'), 0) AS total_faltas,
+                COALESCE(SUM(attendance_items.status = 'FJ'), 0) AS total_faltas_justificadas,
+                COALESCE(SUM(attendance_items.status = 'AM'), 0) AS total_atestados_medicos,
+                COALESCE(SUM(attendance_items.status = 'FO'), 0) AS total_faltas_onibus
 
             FROM attendance_items
 
@@ -717,6 +722,10 @@ class StudentRepository extends BaseRepository
                     : 0,
                 'total_records' => $records,
                 'total_presentes' => $presentes,
+                'total_faltas' => (int) ($row['total_faltas'] ?? 0),
+                'total_faltas_justificadas' => (int) ($row['total_faltas_justificadas'] ?? 0),
+                'total_atestados_medicos' => (int) ($row['total_atestados_medicos'] ?? 0),
+                'total_faltas_onibus' => (int) ($row['total_faltas_onibus'] ?? 0),
             ];
         }
 
