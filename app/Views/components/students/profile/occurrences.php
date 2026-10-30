@@ -497,8 +497,8 @@ foreach ($occurrences as $occurrence) {
                             );
 
                             $typeLabel =
-                                $occurrenceTypes[$type]
-                                ?? 'Outro';
+                                $occurrence['type_label']
+                                ?? ($occurrenceTypes[$type] ?? 'Outro');
 
                             $typeClass =
                                 $typeClasses[$type]
@@ -693,6 +693,9 @@ foreach ($occurrences as $occurrence) {
                                                 class="student-occurrence-type"
                                             >
                                                 <?= e($typeLabel) ?>
+                                                <?php if (!empty($occurrence['focus_area_label'])): ?>
+                                                    · <?= e($occurrence['focus_area_label']) ?>
+                                                <?php endif; ?>
                                             </span>
 
                                             <h4>

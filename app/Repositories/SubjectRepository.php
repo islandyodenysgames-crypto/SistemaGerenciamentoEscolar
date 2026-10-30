@@ -40,6 +40,7 @@ class SubjectRepository extends BaseRepository
             LEFT JOIN student_occurrences
                 ON student_occurrences.subject_id =
                     subjects.id
+               AND student_occurrences.nature = 'ADVERSE'
 
             GROUP BY
                 subjects.id,
@@ -129,6 +130,7 @@ class SubjectRepository extends BaseRepository
             LEFT JOIN student_occurrences
                 ON student_occurrences.subject_id =
                     subjects.id
+               AND student_occurrences.nature = 'ADVERSE'
 
             WHERE subjects.id = :id
 
@@ -697,6 +699,7 @@ class SubjectRepository extends BaseRepository
             LEFT JOIN student_occurrences
                 ON student_occurrences.subject_id =
                     subjects.id
+               AND student_occurrences.nature = 'ADVERSE'
 
             GROUP BY
                 subjects.id,

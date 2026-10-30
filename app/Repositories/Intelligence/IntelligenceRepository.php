@@ -103,7 +103,7 @@ class IntelligenceRepository extends BaseRepository
             )
             WHERE student_occurrences.occurrence_date BETWEEN :date_from AND :date_to
               AND students.active = 1
-              AND student_occurrences.type <> 'PRAISE'
+              AND student_occurrences.nature = 'ADVERSE'
             GROUP BY students.id, students.name, students.registration, school_classes.name
             ORDER BY serious_occurrences DESC, total_occurrences DESC, open_occurrences DESC, students.name ASC
             LIMIT {$limit}
@@ -302,7 +302,7 @@ class IntelligenceRepository extends BaseRepository
                 COUNT(DISTINCT student_id) AS students_with_occurrences
             FROM student_occurrences
             WHERE occurrence_date BETWEEN :date_from AND :date_to
-              AND type <> 'PRAISE'
+              AND nature = 'ADVERSE'
         ");
         $stmt->execute(['date_from' => $from, 'date_to' => $to]);
         return $stmt->fetch() ?: [];
@@ -322,7 +322,7 @@ class IntelligenceRepository extends BaseRepository
             LEFT JOIN enrollments ON enrollments.school_class_id = school_classes.id AND enrollments.active = 1
             LEFT JOIN attendance ON attendance.school_class_id = school_classes.id AND attendance.attendance_date BETWEEN :att_from AND :att_to
             LEFT JOIN attendance_items ON attendance_items.attendance_id = attendance.id AND attendance_items.student_id = enrollments.student_id
-            LEFT JOIN student_occurrences ON student_occurrences.student_id = enrollments.student_id AND student_occurrences.occurrence_date BETWEEN :occ_from AND :occ_to AND student_occurrences.type <> 'PRAISE'
+            LEFT JOIN student_occurrences ON student_occurrences.student_id = enrollments.student_id AND student_occurrences.occurrence_date BETWEEN :occ_from AND :occ_to AND student_occurrences.nature = 'ADVERSE'
             WHERE school_classes.active = 1
             GROUP BY school_classes.id, school_classes.name
             HAVING unjustified_absences > 0 OR total_occurrences > 0
@@ -368,7 +368,7 @@ class IntelligenceRepository extends BaseRepository
             FROM student_occurrences
             WHERE student_id = :student_id
               AND occurrence_date BETWEEN :date_from AND :date_to
-              AND type <> 'PRAISE'
+              AND nature = 'ADVERSE'
         ");
         $stmt->execute([
             'student_id' => $studentId,
@@ -446,6 +446,7 @@ class IntelligenceRepository extends BaseRepository
                     WHEN sm.status = 'ACTIVE'
                      AND sm.start_date <= :date_to_case
                      AND sm.end_date >= :date_from_case
+                     AND (sm.problem_code = 'FREQUENCY' OR smp.target_metric = 'ATTENDANCE')
                      AND EXISTS (
                          SELECT 1 FROM student_monitoring_users smu
                          WHERE smu.monitoring_id = sm.id
@@ -455,18 +456,34 @@ class IntelligenceRepository extends BaseRepository
                      )
                     THEN sm.student_id
                 END) AS students_with_followup,
-                COUNT(DISTINCT CASE WHEN sma.id IS NOT NULL THEN sm.student_id END) AS students_with_intervention,
-                COUNT(DISTINCT sma.id) AS interventions
+                COUNT(DISTINCT CASE
+                    WHEN (sma.id IS NOT NULL AND (sm.problem_code = 'FREQUENCY' OR smp.target_metric = 'ATTENDANCE'))
+                      OR sor.id IS NOT NULL
+                    THEN e.student_id
+                END) AS students_with_intervention,
+                COUNT(DISTINCT CASE
+                    WHEN sm.problem_code = 'FREQUENCY' OR smp.target_metric = 'ATTENDANCE'
+                    THEN sma.id
+                END) + COUNT(DISTINCT sor.id) AS interventions,
+                COUNT(DISTINCT CASE
+                    WHEN sm.problem_code = 'FREQUENCY' OR smp.target_metric = 'ATTENDANCE'
+                    THEN sma.id
+                END) AS monitoring_actions,
+                COUNT(DISTINCT sor.id) AS point_responses
             FROM enrollments e
-            INNER JOIN student_monitoring sm ON sm.student_id = e.student_id
+            LEFT JOIN student_monitoring sm ON sm.student_id = e.student_id
             LEFT JOIN student_monitoring_plans smp ON smp.monitoring_id = sm.id AND smp.status = 'ACTIVE'
             LEFT JOIN student_monitoring_actions sma
                 ON sma.monitoring_id = sm.id
                AND sma.deleted_at IS NULL
                AND sma.action_date BETWEEN :date_from AND :date_to
+            LEFT JOIN student_occurrences sor
+                ON sor.student_id = e.student_id
+               AND sor.nature = 'RESPONSE'
+               AND sor.focus_area = 'ATTENDANCE'
+               AND sor.occurrence_date BETWEEN :response_from AND :response_to
             WHERE e.school_class_id = :class_id
               AND e.active = 1
-              AND (sm.problem_code = 'FREQUENCY' OR smp.target_metric = 'ATTENDANCE')
         ");
         $stmt->execute([
             'class_id' => $classId,
@@ -476,8 +493,39 @@ class IntelligenceRepository extends BaseRepository
             'date_to_case' => $to,
             'date_from_link' => $from,
             'date_to_link' => $to,
+            'response_from' => $from,
+            'response_to' => $to,
         ]);
         return $stmt->fetch() ?: [];
+    }
+
+    public function attendancePointResponsesByStudent(array $studentIds, string $from, string $to): array
+    {
+        $studentIds = array_values(array_unique(array_filter(array_map('intval', $studentIds), static fn(int $id): bool => $id > 0)));
+        if ($studentIds === []) {
+            return [];
+        }
+
+        $marks = implode(',', array_fill(0, count($studentIds), '?'));
+        $stmt = $this->db->prepare("
+            SELECT student_id, COUNT(*) AS point_responses, MAX(occurrence_date) AS latest_response_date
+            FROM student_occurrences
+            WHERE student_id IN ({$marks})
+              AND nature = 'RESPONSE'
+              AND focus_area = 'ATTENDANCE'
+              AND occurrence_date BETWEEN ? AND ?
+            GROUP BY student_id
+        ");
+        $stmt->execute([...$studentIds, $from, $to]);
+
+        $result = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $result[(int) $row['student_id']] = [
+                'point_responses' => (int) ($row['point_responses'] ?? 0),
+                'latest_response_date' => $row['latest_response_date'] ?? null,
+            ];
+        }
+        return $result;
     }
 
     public function classOccurrenceTotals(int $classId, string $from, string $to): array
@@ -494,7 +542,7 @@ class IntelligenceRepository extends BaseRepository
             WHERE enrollments.school_class_id = :class_id
               AND enrollments.active = 1
               AND student_occurrences.occurrence_date BETWEEN :date_from AND :date_to
-              AND student_occurrences.type <> 'PRAISE'
+              AND student_occurrences.nature = 'ADVERSE'
         ");
         $stmt->execute([
             'class_id' => $classId,
@@ -551,7 +599,7 @@ class IntelligenceRepository extends BaseRepository
             INNER JOIN school_classes ON school_classes.id = enrollments.school_class_id
             LEFT JOIN student_occurrences ON student_occurrences.student_id = students.id
                 AND student_occurrences.occurrence_date BETWEEN :date_from AND :date_to
-                AND student_occurrences.type <> 'PRAISE'
+                AND student_occurrences.nature = 'ADVERSE'
             WHERE enrollments.school_class_id = :class_id
               AND enrollments.active = 1
               AND students.active = 1
@@ -612,7 +660,7 @@ class IntelligenceRepository extends BaseRepository
                 INNER JOIN student_occurrences ON student_occurrences.student_id = enrollments.student_id
                 WHERE enrollments.active = 1
                   AND student_occurrences.occurrence_date BETWEEN :occ_from AND :occ_to
-                  AND student_occurrences.type <> 'PRAISE'
+                  AND student_occurrences.nature = 'ADVERSE'
                 GROUP BY enrollments.school_class_id
             ) occurrence_data ON occurrence_data.school_class_id = school_classes.id
             WHERE school_classes.active = 1

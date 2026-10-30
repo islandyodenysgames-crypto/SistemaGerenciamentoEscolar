@@ -48,8 +48,28 @@ trait OccurrenceFormattingOperations
 
                 $item['type'] = $type;
 
+                $nature = strtoupper((string) ($item['nature'] ?? 'ADVERSE'));
+                $focusArea = strtoupper((string) ($item['focus_area'] ?? ''));
+                $item['nature'] = $nature;
+                $item['focus_area'] = $focusArea !== '' ? $focusArea : null;
+
                 $item['type_label'] =
-                    $types[$type] ?? 'Outro';
+                    match ($nature) {
+                        'RESPONSE' => 'Resposta pedagógica',
+                        'POSITIVE' => 'Reconhecimento positivo',
+                        default => $types[$type] ?? 'Outro',
+                    };
+
+                $item['focus_area_label'] = match ($focusArea) {
+                    'ATTENDANCE' => 'Frequência / infrequência',
+                    'BEHAVIOR' => 'Comportamento e convivência',
+                    'LEARNING' => 'Aprendizagem',
+                    'WELLBEING' => 'Bem-estar socioemocional',
+                    'HEALTH' => 'Saúde',
+                    'TRANSPORT' => 'Transporte escolar',
+                    'OTHER' => 'Outra área',
+                    default => null,
+                };
 
                 $item['severity'] =
                     $severity;

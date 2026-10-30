@@ -49,6 +49,8 @@ trait OccurrenceDashboardQueries
                 ON students.id =
                     student_occurrences.student_id
 
+            WHERE student_occurrences.nature = 'ADVERSE'
+
             GROUP BY
                 students.id,
                 students.name,
@@ -120,6 +122,8 @@ trait OccurrenceDashboardQueries
                 ON school_classes.id =
                     enrollments.school_class_id
 
+            WHERE student_occurrences.nature = 'ADVERSE'
+
             GROUP BY
                 school_classes.id,
                 school_classes.name,
@@ -182,6 +186,8 @@ trait OccurrenceDashboardQueries
             LEFT JOIN subjects
                 ON subjects.id =
                     student_occurrences.subject_id
+
+            WHERE student_occurrences.nature = 'ADVERSE'
 
             GROUP BY
                 student_occurrences.subject_id,

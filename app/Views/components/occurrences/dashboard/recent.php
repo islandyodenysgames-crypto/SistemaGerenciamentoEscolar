@@ -370,6 +370,9 @@ $typeIcons = [
 
                             <span>
                                 <?= e($typeLabel) ?>
+                                <?php if (!empty($occurrence['focus_area_label'])): ?>
+                                    · <?= e($occurrence['focus_area_label']) ?>
+                                <?php endif; ?>
                             </span>
 
                             <h4>

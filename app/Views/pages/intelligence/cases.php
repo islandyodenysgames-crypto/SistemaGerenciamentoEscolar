@@ -93,6 +93,8 @@ $queryBase = ['tipo' => $type, 'q' => $filters['q'] ?? '', 'risco' => $filters['
                         <thead><tr><th>Aluno</th><th>Turma</th><th>Risco</th><th>Última atualização</th><th>Intervalo</th><th>Acompanhantes</th><th>Ações</th></tr></thead>
                     <?php elseif ($type === 'low_attendance'): ?>
                         <thead><tr><th>Aluno</th><th>Turma</th><th>Faixa</th><th>Frequência</th><th>Faltas F</th><th>Acompanhantes</th><th>Ações</th></tr></thead>
+                    <?php elseif ($type === 'unjustified_absences'): ?>
+                        <thead><tr><th>Aluno</th><th>Turma</th><th>Risco</th><th>Faltas F</th><th>Ocorrências adversas</th><th>Resposta da escola</th><th>Ações</th></tr></thead>
                     <?php else: ?>
                         <thead><tr><th>Aluno</th><th>Turma</th><th>Risco</th><th>Faltas F</th><th>Ocorrências</th><th>Acompanhantes</th><th>Ações</th></tr></thead>
                     <?php endif; ?>
@@ -121,6 +123,13 @@ $queryBase = ['tipo' => $type, 'q' => $filters['q'] ?? '', 'risco' => $filters['
                         <?php endif; ?>
                         <td>
                             <?php $followers = (int) ($item['active_followers'] ?? 0); ?>
+                            <?php if ($type === 'unjustified_absences'): ?>
+                                <?php $pointResponses = (int) ($item['point_responses'] ?? 0); ?>
+                                <span class="risk-badge <?= $pointResponses > 0 ? 'risk-badge--moderate' : 'risk-badge--low' ?>">
+                                    <?= $pointResponses ?> resposta(s) pontual(is)
+                                </span>
+                                <small><?= $followers > 0 ? $followers . ' acompanhante(s) ativo(s)' : 'Sem acompanhamento ativo' ?></small>
+                            <?php else: ?>
                             <span class="risk-badge <?= $followers > 0 ? 'risk-badge--moderate' : 'risk-badge--low' ?>" title="<?= e((string) ($item['follower_names'] ?? '')) ?>">
                                 <?= $followers ?> <?= $followers === 1 ? 'professor' : 'professores' ?>
                             </span>
@@ -129,8 +138,12 @@ $queryBase = ['tipo' => $type, 'q' => $filters['q'] ?? '', 'risco' => $filters['
                             <?php else: ?>
                                 <small>Sem acompanhante ativo</small>
                             <?php endif; ?>
+                            <?php endif; ?>
                         </td>
                         <td>
+                            <?php if ($type === 'unjustified_absences'): ?>
+                                <a class="intelligence-case-action" href="<?= base_url('ocorrencias/nova?aluno='.(int)($item['id']??0).'&finalidade=RESPONSE&area=ATTENDANCE') ?>"><i data-lucide="message-circle-plus"></i> Resposta pontual</a>
+                            <?php endif; ?>
                             <?php if(!empty($item['has_related_case']) && (int)($item['monitoring_id']??0)>0): ?>
                                 <a class="intelligence-case-action" href="<?= base_url('alunos/perfil?id='.(int)($item['id']??0).'&case_id='.(int)$item['monitoring_id'].'#studentMonitoring') ?>"><i data-lucide="folder-open"></i> Abrir caso</a>
                                 <?php if((string)($item['related_case_title']??'')!==''): ?><small><?= e((string)$item['related_case_title']) ?></small><?php endif; ?>

@@ -17,6 +17,8 @@ trait OccurrenceCrudQueries
                 subject_id,
                 occurrence_date,
                 type,
+                nature,
+                focus_area,
                 severity,
                 title,
                 description,
@@ -33,6 +35,8 @@ trait OccurrenceCrudQueries
                 :subject_id,
                 :occurrence_date,
                 :type,
+                :nature,
+                :focus_area,
                 :severity,
                 :title,
                 :description,
@@ -58,6 +62,12 @@ trait OccurrenceCrudQueries
 
             'type' =>
                 $data['type'],
+
+            'nature' =>
+                $data['nature'],
+
+            'focus_area' =>
+                $data['focus_area'],
 
             'severity' =>
                 $data['severity'] ?? 'LOW',
@@ -102,6 +112,8 @@ trait OccurrenceCrudQueries
                 subject_id,
                 occurrence_date,
                 type,
+                nature,
+                focus_area,
                 severity,
                 title,
                 description,
@@ -118,6 +130,8 @@ trait OccurrenceCrudQueries
                 :subject_id,
                 :occurrence_date,
                 :type,
+                :nature,
+                :focus_area,
                 :severity,
                 :title,
                 :description,
@@ -152,6 +166,12 @@ trait OccurrenceCrudQueries
 
                 'type' =>
                     $data['type'],
+
+                'nature' =>
+                    $data['nature'],
+
+                'focus_area' =>
+                    $data['focus_area'],
 
                 'severity' =>
                     $data['severity'] ?? 'LOW',
@@ -199,6 +219,8 @@ trait OccurrenceCrudQueries
                 subject_id = :subject_id,
                 occurrence_date = :occurrence_date,
                 type = :type,
+                nature = :nature,
+                focus_area = :focus_area,
                 severity = :severity,
                 title = :title,
                 description = :description,
@@ -220,6 +242,12 @@ trait OccurrenceCrudQueries
 
             'type' =>
                 $data['type'],
+
+            'nature' =>
+                $data['nature'],
+
+            'focus_area' =>
+                $data['focus_area'],
 
             'severity' =>
                 $data['severity'] ?? 'LOW',

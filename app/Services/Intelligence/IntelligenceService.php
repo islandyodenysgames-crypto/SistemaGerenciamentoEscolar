@@ -230,11 +230,16 @@ class IntelligenceService
         // é apresentado como destino do alerta.
         if ($kind === 'students' && $items !== []) {
             $studentIds=array_column($items,'id');
+            $pointResponses = in_array($type, ['low_attendance', 'unjustified_absences'], true)
+                ? $this->repository->attendancePointResponsesByStudent($studentIds, $start, $end)
+                : [];
             $caseGroups=$this->repository->activeMonitoringCases($studentIds);
             $alert=$this->alertDefinition($type);
             $explicitLinks=$this->repository->linkedCasesForAlert($studentIds,(string)$alert['key']);
             foreach($items as &$item){
                 $studentId=(int)($item['id']??0);
+                $item['point_responses'] = (int) ($pointResponses[$studentId]['point_responses'] ?? 0);
+                $item['latest_point_response_date'] = $pointResponses[$studentId]['latest_response_date'] ?? null;
                 $cases=(array)($caseGroups[$studentId]??[]);
                 $matched=null;
                 $previousMonitoringId=(int)($item['monitoring_id']??0);
@@ -577,8 +582,8 @@ class IntelligenceService
                 return [
                     ['label' => 'Alunos afetados', 'value' => count($items), 'icon' => 'users-round'],
                     ['label' => 'Total de faltas F', 'value' => array_sum(array_map(static fn(array $i): int => (int) ($i['unjustified_absences'] ?? 0), $items)), 'icon' => 'calendar-x'],
+                    ['label' => 'Com resposta pontual', 'value' => count(array_filter($items, static fn(array $i): bool => (int) ($i['point_responses'] ?? 0) > 0)), 'icon' => 'message-circle-check'],
                     ['label' => 'Já acompanhados', 'value' => count(array_filter($items, static fn(array $i): bool => (int) ($i['active_followers'] ?? 0) > 0)), 'icon' => 'user-round-check'],
-                    ['label' => 'Críticos', 'value' => count(array_filter($items, static fn(array $i): bool => ($i['risk_level'] ?? '') === 'CRITICAL')), 'icon' => 'siren'],
                 ];
             }
             return [
@@ -870,6 +875,8 @@ class IntelligenceService
                 'students_with_followup' => (int) ($attendanceResponse['students_with_followup'] ?? 0),
                 'students_with_intervention' => (int) ($attendanceResponse['students_with_intervention'] ?? 0),
                 'interventions' => (int) ($attendanceResponse['interventions'] ?? 0),
+                'monitoring_actions' => (int) ($attendanceResponse['monitoring_actions'] ?? 0),
+                'point_responses' => (int) ($attendanceResponse['point_responses'] ?? 0),
             ],
             'occurrences' => [
                 'total' => (int) ($occurrences['total_occurrences'] ?? 0),

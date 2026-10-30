@@ -35,6 +35,9 @@ $selectedType = strtoupper(
     )
 );
 
+$selectedNature = strtoupper((string) ($oldInput['nature'] ?? 'ADVERSE'));
+$selectedFocusArea = strtoupper((string) ($oldInput['focus_area'] ?? ''));
+
 $selectedSeverity = strtoupper(
     (string) (
         $oldInput['severity']
@@ -138,6 +141,8 @@ component('base/page-header', [
 
         <div class="form-grid">
 
+            <?php component('occurrences/intervention-purpose', compact('selectedNature', 'selectedFocusArea')); ?>
+
             <div class="form-group">
 
                 <label for="occurrence_date">
@@ -195,7 +200,7 @@ component('base/page-header', [
 
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="occurrenceTypeGroup">
 
                 <label for="type">
                     Tipo
@@ -300,7 +305,7 @@ component('base/page-header', [
 
                                     <?php if ($value === 'NOT_APPLICABLE'): ?>
 
-                                        Reconhecimento positivo, sem classificação de gravidade.
+                                        Resposta ou reconhecimento positivo, sem classificação de gravidade.
 
                                     <?php elseif (
                                         $value === 'LOW'
@@ -515,6 +520,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const severityGroup = document.getElementById('occurrenceSeverityGroup');
     const statusGroup = document.getElementById('occurrenceStatusGroup');
     const positiveRecordNotice = document.getElementById('positiveRecordNotice');
+    const responseRecordNotice = document.getElementById('responseRecordNotice');
+    const natureSelect = document.getElementById('nature');
+    const focusAreaGroup = document.getElementById('occurrenceFocusAreaGroup');
+    const focusAreaSelect = document.getElementById('focus_area');
+    const typeGroup = document.getElementById('occurrenceTypeGroup');
+    const actionsTakenInput = document.getElementById('actions_taken');
 
     const suggestions = <?= json_encode(
         $titleSuggestions,
@@ -572,15 +583,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updatePositiveRecordMode() {
-        const isPraise = typeSelect?.value === 'PRAISE';
+        let nature = natureSelect?.value || 'ADVERSE';
+        if (typeSelect?.value === 'PRAISE' && nature === 'ADVERSE') {
+            nature = 'POSITIVE';
+            natureSelect.value = nature;
+        }
+        if (nature === 'RESPONSE' && typeSelect) typeSelect.value = 'REFERRAL';
+        if (nature === 'POSITIVE' && typeSelect) typeSelect.value = 'PRAISE';
+        if (nature === 'ADVERSE' && typeSelect?.value === 'PRAISE') typeSelect.value = 'OBSERVATION';
+
+        const isResponse = nature === 'RESPONSE';
+        const isPraise = nature === 'POSITIVE';
+        const isNeutralSeverity = isResponse || isPraise;
         if (severityGroup) severityGroup.hidden = false;
-        if (statusGroup) statusGroup.hidden = isPraise;
+        if (statusGroup) statusGroup.hidden = isNeutralSeverity;
+        if (typeGroup) typeGroup.hidden = isNeutralSeverity;
+        if (focusAreaGroup) focusAreaGroup.hidden = !isResponse;
+        if (focusAreaSelect) focusAreaSelect.required = isResponse;
+        if (actionsTakenInput) actionsTakenInput.required = isResponse;
         if (positiveRecordNotice) positiveRecordNotice.hidden = !isPraise;
+        if (responseRecordNotice) responseRecordNotice.hidden = !isResponse;
         severityOptions.forEach((option) => {
             const input = option.querySelector('input[name="severity"]');
-            option.hidden = isPraise ? input?.value !== 'NOT_APPLICABLE' : input?.value === 'NOT_APPLICABLE';
+            option.hidden = isNeutralSeverity ? input?.value !== 'NOT_APPLICABLE' : input?.value === 'NOT_APPLICABLE';
         });
-        if (isPraise) {
+        if (isNeutralSeverity) {
             const notApplicable = document.querySelector('input[name="severity"][value="NOT_APPLICABLE"]');
             if (notApplicable) notApplicable.checked = true;
             if (statusSelect) statusSelect.value = 'RESOLVED';
@@ -590,12 +617,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (low) low.checked = true;
             updateSeveritySelection();
         }
+        updateTitleSuggestions();
     }
 
     typeSelect?.addEventListener(
         'change',
         () => { updateTitleSuggestions(); updatePositiveRecordMode(); }
     );
+    natureSelect?.addEventListener('change', updatePositiveRecordMode);
+    focusAreaSelect?.addEventListener('change', () => {
+        if (natureSelect?.value === 'RESPONSE' && focusAreaSelect.value === 'ATTENDANCE' && !titleInput?.value.trim()) {
+            titleInput.value = 'Intervenção sobre infrequência';
+        }
+    });
 
     severityInputs.forEach((input) => {
         input.addEventListener(

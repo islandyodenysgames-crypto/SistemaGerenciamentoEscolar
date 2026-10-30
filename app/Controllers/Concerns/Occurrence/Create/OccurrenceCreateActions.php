@@ -83,6 +83,23 @@ trait OccurrenceCreateActions
         Session::remove('occurrence_error');
         Session::remove('occurrence_old_input');
 
+        if (!is_array($oldInput) || $oldInput === []) {
+            $requestedNature = strtoupper(trim((string) Request::get('finalidade', '')));
+            $requestedArea = strtoupper(trim((string) Request::get('area', '')));
+            if ($requestedNature === 'RESPONSE') {
+                $oldInput = [
+                    'nature' => 'RESPONSE',
+                    'focus_area' => in_array($requestedArea, ['ATTENDANCE', 'BEHAVIOR', 'LEARNING', 'WELLBEING', 'HEALTH', 'TRANSPORT', 'OTHER'], true)
+                        ? $requestedArea
+                        : '',
+                    'type' => 'REFERRAL',
+                    'severity' => 'NOT_APPLICABLE',
+                    'status' => 'RESOLVED',
+                    'title' => $requestedArea === 'ATTENDANCE' ? 'Intervenção sobre infrequência' : '',
+                ];
+            }
+        }
+
         $this->view('pages/occurrences/create', [
             'title' => 'Nova Intervenção - '
                 . app_name(),

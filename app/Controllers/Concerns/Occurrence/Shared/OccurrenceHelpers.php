@@ -83,6 +83,14 @@ trait OccurrenceHelpers
                 )
             ),
 
+            'nature' => trim(
+                (string) Request::post('nature', 'ADVERSE')
+            ),
+
+            'focus_area' => trim(
+                (string) Request::post('focus_area', '')
+            ),
+
             /*
              * Gravidade da ocorrência:
              *
@@ -127,7 +135,15 @@ trait OccurrenceHelpers
             ),
         ];
 
-        if (strtoupper((string) $data['type']) === 'PRAISE') {
+        if (strtoupper((string) $data['nature']) === 'POSITIVE'
+            || strtoupper((string) $data['type']) === 'PRAISE') {
+            $data['nature'] = 'POSITIVE';
+            $data['focus_area'] = '';
+            $data['type'] = 'PRAISE';
+            $data['severity'] = 'NOT_APPLICABLE';
+            $data['status'] = 'RESOLVED';
+        } elseif (strtoupper((string) $data['nature']) === 'RESPONSE') {
+            $data['type'] = 'REFERRAL';
             $data['severity'] = 'NOT_APPLICABLE';
             $data['status'] = 'RESOLVED';
         }

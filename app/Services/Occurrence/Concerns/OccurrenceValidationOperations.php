@@ -37,6 +37,13 @@ trait OccurrenceValidationOperations
                 )
             );
 
+            $nature = strtoupper(trim((string) ($data['nature'] ?? 'ADVERSE')));
+            $focusArea = strtoupper(trim((string) ($data['focus_area'] ?? '')));
+
+            if (!in_array($nature, ['ADVERSE', 'RESPONSE', 'POSITIVE'], true)) {
+                throw new InvalidArgumentException('A finalidade da intervenção é inválida.');
+            }
+
             $severity = $this->severityService
                 ->validate(
                     $data['severity'] ?? 'LOW'
@@ -70,11 +77,22 @@ trait OccurrenceValidationOperations
 
             // Elogios são registros positivos: usam uma classificação neutra
             // e já nascem concluídos, sem alimentar os indicadores adversos.
-            if ($type === 'PRAISE') {
+            if ($nature === 'POSITIVE' || $type === 'PRAISE') {
+                $nature = 'POSITIVE';
+                $focusArea = '';
+                $type = 'PRAISE';
+                $severity = \App\Services\Occurrence\SeverityService::NOT_APPLICABLE;
+                $status = 'RESOLVED';
+            } elseif ($nature === 'RESPONSE') {
+                $allowedFocusAreas = ['ATTENDANCE', 'BEHAVIOR', 'LEARNING', 'WELLBEING', 'HEALTH', 'TRANSPORT', 'OTHER'];
+                if (!in_array($focusArea, $allowedFocusAreas, true)) {
+                    throw new InvalidArgumentException('Selecione a área atendida pela resposta pedagógica.');
+                }
+                $type = 'REFERRAL';
                 $severity = \App\Services\Occurrence\SeverityService::NOT_APPLICABLE;
                 $status = 'RESOLVED';
             } elseif ($severity === \App\Services\Occurrence\SeverityService::NOT_APPLICABLE) {
-                throw new InvalidArgumentException('A opção “Não se aplica” é exclusiva para elogios.');
+                throw new InvalidArgumentException('A opção “Não se aplica” é exclusiva para respostas pedagógicas e elogios.');
             }
 
             /*
@@ -148,6 +166,12 @@ trait OccurrenceValidationOperations
                 );
             }
 
+            if ($nature === 'RESPONSE' && $actionsTaken === '') {
+                throw new InvalidArgumentException(
+                    'Descreva a providência realizada pela escola.'
+                );
+            }
+
             if (
                 !in_array(
                     $status,
@@ -170,6 +194,12 @@ trait OccurrenceValidationOperations
 
                 'type' =>
                     $type,
+
+                'nature' =>
+                    $nature,
+
+                'focus_area' =>
+                    $focusArea !== '' ? $focusArea : null,
 
                 'severity' =>
                     $severity,

@@ -46,6 +46,10 @@ final class OccurrenceAnalysisContextFactory
             $startDate,
             $endDate
         );
+        $occurrences = array_values(array_filter(
+            $occurrences,
+            static fn(array $occurrence): bool => strtoupper((string) ($occurrence['nature'] ?? 'ADVERSE')) === 'ADVERSE'
+        ));
 
         return new AnalysisContextDTO(
             studentId: $studentId,

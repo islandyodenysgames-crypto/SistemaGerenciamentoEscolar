@@ -299,7 +299,7 @@ final class NotificationService
                 FROM enrollments e2
                 INNER JOIN student_occurrences so ON so.student_id = e2.student_id
                 WHERE e2.active = 1 AND so.occurrence_date BETWEEN :from_date2 AND :to_date2
-                  AND so.type <> 'PRAISE'
+                  AND so.nature = 'ADVERSE'
                 GROUP BY e2.school_class_id
             ) occ ON occ.school_class_id = sc.id
             WHERE e.student_id = :student_id AND e.active = 1

@@ -55,6 +55,11 @@ try {
     $checkZero('Itens de frequência órfãos', $scalar($db, 'SELECT COUNT(*) FROM attendance_items ai LEFT JOIN attendance a ON a.id=ai.attendance_id WHERE a.id IS NULL'), $errors);
     $checkZero('Status de frequência inválidos', $scalar($db, "SELECT COUNT(*) FROM attendance_items WHERE status NOT IN ('P','F','FJ','AM','FO')"), $errors);
     $checkZero('Elogios com gravidade ou situação incompatível', $scalar($db, "SELECT COUNT(*) FROM student_occurrences WHERE type='PRAISE' AND (severity<>'NOT_APPLICABLE' OR status<>'RESOLVED')"), $errors);
+    if (App\Database\Schema::hasColumn('student_occurrences', 'nature')) {
+        $checkZero('Intervenções com natureza inválida', $scalar($db, "SELECT COUNT(*) FROM student_occurrences WHERE nature NOT IN ('ADVERSE','RESPONSE','POSITIVE')"), $errors);
+        $checkZero('Respostas pedagógicas sem área ou estado neutro', $scalar($db, "SELECT COUNT(*) FROM student_occurrences WHERE nature='RESPONSE' AND (focus_area IS NULL OR focus_area='' OR severity<>'NOT_APPLICABLE' OR status<>'RESOLVED')"), $errors);
+        $checkZero('Elogios sem natureza positiva', $scalar($db, "SELECT COUNT(*) FROM student_occurrences WHERE type='PRAISE' AND nature<>'POSITIVE'"), $errors);
+    }
     $checkZero('Matrículas ativas duplicadas por aluno', $scalar($db, 'SELECT COUNT(*) FROM (SELECT student_id FROM enrollments WHERE active=1 GROUP BY student_id HAVING COUNT(*)>1) x'), $errors);
     $checkZero('Matrículas apontando para aluno ou turma inexistente', $scalar($db, 'SELECT COUNT(*) FROM enrollments e LEFT JOIN students s ON s.id=e.student_id LEFT JOIN school_classes sc ON sc.id=e.school_class_id WHERE s.id IS NULL OR sc.id IS NULL'), $errors);
     $checkZero('Casos de acompanhamento órfãos', $scalar($db, 'SELECT COUNT(*) FROM student_monitoring sm LEFT JOIN students s ON s.id=sm.student_id WHERE s.id IS NULL'), $errors);

@@ -319,10 +319,11 @@ $severityServiceSource = (string) file_get_contents($root . '/app/Services/Occur
 $classPageSource = (string) file_get_contents($root . '/app/Views/pages/students/class.php');
 $assert(str_contains($occurrenceValidationSource, 'SeverityService::NOT_APPLICABLE') && str_contains($occurrenceValidationSource, "\$status = 'RESOLVED'"),'Elogio deve ser normalizado como registro positivo concluído e com gravidade não aplicável.');
 $assert(str_contains($severityServiceSource, "public const NOT_APPLICABLE = 'NOT_APPLICABLE'") && str_contains($severityServiceSource, "self::NOT_APPLICABLE => 0"),'Gravidade não aplicável deve existir e ter peso adverso zero.');
-$assert(substr_count($intelligenceRepositorySource, "type <> 'PRAISE'") >= 7,'Elogios devem ser excluídos das consultas de risco de alunos e turmas.');
-$assert(str_contains($recurrenceSource, "so.type <> 'PRAISE'"),'Elogios não devem gerar reincidência negativa.');
-$assert(str_contains($occurrenceCreateSource, 'Elogios são registros positivos') && str_contains($occurrenceCreateSource, 'NOT_APPLICABLE') && str_contains($occurrenceCreateSource, 'updatePositiveRecordMode'),'Formulário deve mostrar apenas “Não se aplica” como gravidade ao registrar elogio.');
-$assert(str_contains($intelligenceRepositorySource, 'classAttendanceResponse') && str_contains($classIntelligenceViewSource, 'Intervenções sobre frequência'),'Inteligência da turma deve separar a resposta positiva da escola das faltas registradas.');
+$assert(substr_count($intelligenceRepositorySource, "nature = 'ADVERSE'") >= 7,'Somente intervenções adversas devem alimentar as consultas de risco de alunos e turmas.');
+$assert(str_contains($recurrenceSource, "so.nature = 'ADVERSE'"),'Respostas pedagógicas e elogios não devem gerar reincidência negativa.');
+$assert(str_contains($occurrenceCreateSource, 'responseRecordNotice') && str_contains($occurrenceCreateSource, 'NOT_APPLICABLE') && str_contains($occurrenceCreateSource, 'updatePositiveRecordMode'),'Formulário deve distinguir resposta pedagógica e reconhecimento positivo dos registros adversos.');
+$assert(str_contains($intelligenceRepositorySource, 'classAttendanceResponse') && str_contains($intelligenceRepositorySource, "sor.nature = 'RESPONSE'") && str_contains($classIntelligenceViewSource, 'Intervenções sobre frequência'),'Inteligência da turma deve somar respostas pontuais e ações em acompanhamentos sem alterar as faltas.');
+$assert(str_contains($intelligenceCasesSource, 'Resposta pontual') && str_contains($intelligenceServiceSource, "'label' => 'Com resposta pontual'"),'Visão analítica de infrequência deve informar e permitir registrar respostas pontuais.');
 $assert(str_contains($classPageSource, "'ocorrencias/nova?aluno='") && str_contains($classPageSource, 'Intervenção'),'Painel da turma deve oferecer intervenção individual para cada aluno autorizado.');
 
 echo sprintf("Testes executados: %d\n", $tests);

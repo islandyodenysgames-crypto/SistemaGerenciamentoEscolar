@@ -135,10 +135,10 @@ $trendLabel = static function (array $trend): string {
             <div><strong><?= (int) ($attendanceResponse['students_with_followup'] ?? 0) ?></strong><span>Alunos acompanhados por frequência</span></div>
             <small>Resposta ativa da escola ao sinal de infrequência</small>
         </div>
-        <div class="class-intelligence__metric class-intelligence__metric--response" data-class-metric-tooltip="Providências registradas em acompanhamentos de frequência no período. Elas contam como resposta positiva da escola, sem alterar artificialmente a frequência do aluno.">
+        <div class="class-intelligence__metric class-intelligence__metric--response" data-class-metric-tooltip="Soma das respostas pedagógicas pontuais e das ações em acompanhamentos de frequência no período. Elas demonstram a atuação da escola, sem apagar ou reclassificar faltas.">
             <i data-lucide="clipboard-check"></i>
             <div><strong><?= (int) ($attendanceResponse['interventions'] ?? 0) ?></strong><span>Intervenções sobre frequência</span></div>
-            <small><?= (int) ($attendanceResponse['students_with_intervention'] ?? 0) ?> aluno(s) receberam providência no período</small>
+            <small><?= (int) ($attendanceResponse['students_with_intervention'] ?? 0) ?> aluno(s) · <?= (int) ($attendanceResponse['point_responses'] ?? 0) ?> pontual(is) · <?= (int) ($attendanceResponse['monitoring_actions'] ?? 0) ?> em acompanhamento</small>
         </div>
     </div>
 
