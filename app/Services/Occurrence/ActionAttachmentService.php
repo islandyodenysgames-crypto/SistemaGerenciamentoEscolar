@@ -42,6 +42,18 @@ final class ActionAttachmentService
         return $grouped;
     }
 
+    public function byAction(int $actionId): array
+    {
+        if ($actionId <= 0) return [];
+        return array_map([$this, 'decorate'], $this->repository->byAction($actionId));
+    }
+
+    public function find(int $id): ?array
+    {
+        $item = $this->repository->find($id);
+        return $item ? $this->decorate($item) : null;
+    }
+
     public function remove(int $id): bool
     {
         $item=$this->repository->find($id);

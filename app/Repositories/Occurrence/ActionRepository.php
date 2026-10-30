@@ -8,6 +8,19 @@ use App\Repositories\BaseRepository;
 
 class ActionRepository extends BaseRepository
 {
+    public function find(int $id): ?array
+    {
+        $stmt = $this->db->prepare("
+            SELECT *
+            FROM occurrence_actions
+            WHERE id = :id
+            LIMIT 1
+        ");
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
+
     public function byOccurrence(
         int $occurrenceId
     ): array {
@@ -138,6 +151,38 @@ class ActionRepository extends BaseRepository
         ]);
 
         return (int) $this->db->lastInsertId();
+    }
+
+    public function update(int $id, array $data): bool
+    {
+        $stmt = $this->db->prepare("
+            UPDATE occurrence_actions
+            SET action_type = :action_type,
+                description = :description,
+                status_after = :status_after,
+                updated_at = NOW()
+            WHERE id = :id
+        ");
+        return $stmt->execute([
+            'id' => $id,
+            'action_type' => $data['action_type'],
+            'description' => $data['description'],
+            'status_after' => $data['status_after'],
+        ]);
+    }
+
+    public function latestStatusForOccurrence(int $occurrenceId): ?string
+    {
+        $stmt = $this->db->prepare("
+            SELECT status_after
+            FROM occurrence_actions
+            WHERE occurrence_id = :occurrence_id
+            ORDER BY created_at DESC, id DESC
+            LIMIT 1
+        ");
+        $stmt->execute(['occurrence_id' => $occurrenceId]);
+        $status = $stmt->fetchColumn();
+        return $status !== false ? (string) $status : null;
     }
 
     public function countByOccurrence(

@@ -58,6 +58,30 @@ trait OccurrenceHelpers
     }
 
     /**
+     * Gestão pode administrar qualquer providência.
+     * Demais usuários com permissão de registro podem alterar
+     * somente a providência que eles próprios criaram.
+     */
+    private function canManageOccurrenceAction(array $action): bool
+    {
+        if (Authorization::can(Permissions::OCCURRENCES_MANAGE)) {
+            return true;
+        }
+
+        if (!Authorization::can(Permissions::OCCURRENCES_CREATE)) {
+            return false;
+        }
+
+        $currentUserId = $this->currentUserId();
+        $createdBy = (int) ($action['created_by'] ?? 0);
+
+        return $currentUserId !== null
+            && $currentUserId > 0
+            && $createdBy > 0
+            && $currentUserId === $createdBy;
+    }
+
+    /**
      * Dados compartilhados pelos formulários
      * de ocorrência individual, múltipla e edição.
      */

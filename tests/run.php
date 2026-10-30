@@ -326,6 +326,18 @@ $assert(str_contains($intelligenceRepositorySource, 'classAttendanceResponse') &
 $assert(str_contains($intelligenceCasesSource, 'Resposta pontual') && str_contains($intelligenceServiceSource, "'label' => 'Com resposta pontual'"),'Visão analítica de infrequência deve informar e permitir registrar respostas pontuais.');
 $assert(str_contains($classPageSource, "'ocorrencias/nova?aluno='") && str_contains($classPageSource, 'Intervenção'),'Painel da turma deve oferecer intervenção individual para cada aluno autorizado.');
 
+$occurrenceActionControllerSource = (string) file_get_contents($root . '/app/Controllers/Concerns/Occurrence/Actions/OccurrenceActionActions.php');
+$occurrenceHelperSource = (string) file_get_contents($root . '/app/Controllers/Concerns/Occurrence/Shared/OccurrenceHelpers.php');
+$occurrenceActionRepositorySource = (string) file_get_contents($root . '/app/Repositories/Occurrence/ActionRepository.php');
+$occurrenceProfileSource = (string) file_get_contents($root . '/app/Views/components/students/profile/occurrences.php');
+$occurrencePurposeSource = (string) file_get_contents($root . '/app/Views/components/occurrences/intervention-purpose.php');
+$routesSource = (string) file_get_contents($root . '/routes/web.php');
+$assert(str_contains($routesSource, "'/ocorrencias/providencia/editar'") && str_contains($occurrenceActionControllerSource, 'function actionUpdate'),'Providências devem possuir fluxo próprio de edição e atualização.');
+$assert(str_contains($occurrenceHelperSource, 'canManageOccurrenceAction') && str_contains($occurrenceHelperSource, "\$action['created_by']"),'Edição de providência por usuário restrito deve validar a autoria do registro.');
+$assert(str_contains($occurrenceProfileSource, '$canManageThisAction') && str_contains($occurrenceProfileSource, 'Editar providência'),'Perfil do aluno deve exibir a edição apenas para gestão ou autor da providência.');
+$assert(str_contains($occurrenceActionRepositorySource, 'latestStatusForOccurrence'),'Editar providência antiga deve preservar como situação atual o estado definido pela providência mais recente.');
+$assert(str_contains($occurrencePurposeSource, 'Situação que exige atenção — Ocorrência'),'Finalidade adversa deve ser identificada claramente como ocorrência.');
+
 echo sprintf("Testes executados: %d\n", $tests);
 if ($failures !== []) {
     foreach ($failures as $failure) fwrite(STDERR, "FALHA: {$failure}\n");

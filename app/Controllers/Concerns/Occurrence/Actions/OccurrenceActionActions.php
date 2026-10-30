@@ -25,7 +25,7 @@ trait OccurrenceActionActions
 
         if (
             !$this->authorize(
-                Permissions::OCCURRENCES_VIEW,
+                Permissions::OCCURRENCES_CREATE,
                 base_url('alunos')
             )
         ) {
@@ -120,7 +120,7 @@ trait OccurrenceActionActions
 
         if (
             !$this->authorize(
-                Permissions::OCCURRENCES_VIEW,
+                Permissions::OCCURRENCES_CREATE,
                 base_url('alunos')
             )
         ) {
@@ -250,14 +250,129 @@ trait OccurrenceActionActions
         }
     }
 
+    public function actionEdit(): void
+    {
+        if (!$this->guard()) return;
+        if (!$this->authorize(Permissions::OCCURRENCES_VIEW, base_url('alunos'))) return;
+
+        $actionId = (int) Request::get('id', 0);
+        $action = $this->actionService->find($actionId);
+
+        if (!$action) {
+            Session::set('occurrence_error', 'Providência não encontrada.');
+            Response::redirect(base_url('alunos'));
+            return;
+        }
+
+        $occurrence = $this->service->find((int) ($action['occurrence_id'] ?? 0));
+        if (!$occurrence) {
+            Session::set('occurrence_error', 'Ocorrência não encontrada.');
+            Response::redirect(base_url('alunos'));
+            return;
+        }
+
+        $studentId = (int) ($occurrence['student_id'] ?? 0);
+        if (!$this->canManageOccurrenceAction($action)) {
+            Session::set('occurrence_error', 'Você não possui permissão para editar esta providência.');
+            Response::redirect($this->studentProfileUrl($studentId));
+            return;
+        }
+
+        $actionError = Session::get('occurrence_action_error');
+        $oldInput = Session::get('occurrence_action_old_input', []);
+        Session::remove('occurrence_action_error');
+        Session::remove('occurrence_action_old_input');
+
+        $this->view('pages/occurrences/action', [
+            'title' => 'Editar Providência - ' . app_name(),
+            'occurrence' => $occurrence,
+            'action' => $action,
+            'isEditing' => true,
+            'statuses' => $this->actionService->statuses(),
+            'actionTypes' => $this->actionService->actionTypes(),
+            'actionTypeIcons' => $this->actionService->actionTypeIcons(),
+            'actionError' => $actionError,
+            'oldInput' => is_array($oldInput) ? $oldInput : [],
+        ]);
+    }
+
+    public function actionUpdate(): void
+    {
+        if (!$this->guard()) return;
+        if (!$this->authorize(Permissions::OCCURRENCES_VIEW, base_url('alunos'))) return;
+
+        $actionId = (int) Request::post('action_id', 0);
+        $action = $this->actionService->find($actionId);
+
+        if (!$action) {
+            Session::set('occurrence_error', 'Providência não encontrada.');
+            Response::redirect(base_url('alunos'));
+            return;
+        }
+
+        $occurrence = $this->service->find((int) ($action['occurrence_id'] ?? 0));
+        if (!$occurrence) {
+            Session::set('occurrence_error', 'Ocorrência não encontrada.');
+            Response::redirect(base_url('alunos'));
+            return;
+        }
+
+        $studentId = (int) ($occurrence['student_id'] ?? 0);
+        if (!$this->canManageOccurrenceAction($action)) {
+            Session::set('occurrence_error', 'Você não possui permissão para alterar esta providência.');
+            Response::redirect($this->studentProfileUrl($studentId));
+            return;
+        }
+
+        $data = [
+            'action_type' => trim((string) Request::post('action_type', 'OTHER')),
+            'description' => trim((string) Request::post('description', '')),
+            'status_after' => trim((string) Request::post('status_after', 'OPEN')),
+        ];
+        Session::set('occurrence_action_old_input', $data);
+
+        try {
+            $this->actionService->update($actionId, $data);
+
+            if (isset($_FILES['attachments'])) {
+                $this->actionAttachmentService->uploadMany(
+                    $actionId,
+                    $_FILES['attachments'],
+                    $this->currentUserId(),
+                    $this->currentUserName()
+                );
+            }
+
+            Session::remove('occurrence_action_old_input');
+            Session::set('occurrence_success', 'Providência atualizada com sucesso.');
+            Response::redirect($this->studentProfileUrl($studentId));
+        } catch (InvalidArgumentException $exception) {
+            Session::set('occurrence_action_error', $exception->getMessage());
+            Response::redirect(base_url('ocorrencias/providencia/editar?id=' . $actionId));
+        } catch (Throwable $exception) {
+            Session::set('occurrence_action_error', 'Não foi possível atualizar a providência.');
+            Response::redirect(base_url('ocorrencias/providencia/editar?id=' . $actionId));
+        }
+    }
+
     public function actionAttachmentDelete(): void
     {
         if (!$this->guard()) return;
-        if (!$this->authorize(Permissions::OCCURRENCES_MANAGE, base_url('alunos'))) return;
+        if (!$this->authorize(Permissions::OCCURRENCES_VIEW, base_url('alunos'))) return;
 
         $attachmentId=(int)Request::post('attachment_id',0);
         $studentId=(int)Request::post('student_id',0);
         try {
+            $attachment = $this->actionAttachmentService->find($attachmentId);
+            $action = $attachment
+                ? $this->actionService->find((int) ($attachment['action_id'] ?? 0))
+                : null;
+            if (!$attachment || !$action) {
+                throw new InvalidArgumentException('Anexo não encontrado.');
+            }
+            if (!$this->canManageOccurrenceAction($action)) {
+                throw new InvalidArgumentException('Você não possui permissão para remover este anexo.');
+            }
             if (!$this->actionAttachmentService->remove($attachmentId)) {
                 throw new InvalidArgumentException('Anexo não encontrado.');
             }

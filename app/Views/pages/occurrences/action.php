@@ -5,6 +5,9 @@ $statuses = $statuses ?? [];
 $actionTypes = $actionTypes ?? [];
 $actionTypeIcons = $actionTypeIcons ?? [];
 $oldInput = $oldInput ?? [];
+$action = $action ?? [];
+$isEditing = (bool) ($isEditing ?? false);
+$actionId = (int) ($action['id'] ?? 0);
 
 $occurrenceId = (int) (
     $occurrence['id'] ?? 0
@@ -15,7 +18,9 @@ $studentId = (int) (
 );
 
 $description = (string) (
-    $oldInput['description'] ?? ''
+    $oldInput['description']
+    ?? $action['description']
+    ?? ''
 );
 
 $currentStatus = strtoupper(
@@ -27,6 +32,7 @@ $currentStatus = strtoupper(
 $selectedStatus = strtoupper(
     (string) (
         $oldInput['status_after']
+        ?? $action['status_after']
         ?? $currentStatus
     )
 );
@@ -34,14 +40,16 @@ $selectedStatus = strtoupper(
 $selectedActionType = strtoupper(
     (string) (
         $oldInput['action_type']
+        ?? $action['action_type']
         ?? 'ORIENTATION'
     )
 );
 
 component('base/page-header', [
-    'title' => 'Nova providência',
-    'subtitle' =>
-        'Registre uma intervenção para esta ocorrência.',
+    'title' => $isEditing ? 'Editar providência' : 'Nova providência',
+    'subtitle' => $isEditing
+        ? 'Corrija ou complemente a providência registrada.'
+        : 'Registre uma intervenção para esta ocorrência.',
 ]);
 
 ?>
@@ -127,7 +135,9 @@ component('base/page-header', [
         method="POST"
         enctype="multipart/form-data"
         action="<?= base_url(
-            'ocorrencias/providencia'
+            $isEditing
+                ? 'ocorrencias/providencia/editar'
+                : 'ocorrencias/providencia'
         ) ?>"
         class="occurrence-form"
     >
@@ -137,6 +147,10 @@ component('base/page-header', [
             name="occurrence_id"
             value="<?= $occurrenceId ?>"
         >
+
+        <?php if ($isEditing): ?>
+            <input type="hidden" name="action_id" value="<?= $actionId ?>">
+        <?php endif; ?>
 
         <div class="form-grid">
 
@@ -202,7 +216,7 @@ component('base/page-header', [
             </div>
 
             <div class="form-group form-group-full">
-                <label>Anexos da providência <span>(opcional)</span></label>
+                <label><?= $isEditing ? 'Adicionar novos anexos' : 'Anexos da providência' ?> <span>(opcional)</span></label>
                 <?php component('media/staged-file-upload', [
                     'inputId' => 'occurrenceActionAttachments',
                     'inputName' => 'attachments[]',
@@ -285,9 +299,14 @@ component('base/page-header', [
             <i data-lucide="history"></i>
 
             <p>
-                Esta providência será adicionada ao histórico
-                da ocorrência com seu nome, perfil de acesso,
-                data e hora. Registros anteriores não serão apagados.
+                <?php if ($isEditing): ?>
+                    A autoria e a data do registro original serão preservadas.
+                    A correção não criará uma nova providência no histórico.
+                <?php else: ?>
+                    Esta providência será adicionada ao histórico
+                    da ocorrência com seu nome, perfil de acesso,
+                    data e hora. Registros anteriores não serão apagados.
+                <?php endif; ?>
             </p>
 
         </div>
@@ -310,7 +329,7 @@ component('base/page-header', [
                 class="btn-primary"
             >
                 <i data-lucide="save"></i>
-                Salvar providência
+                <?= $isEditing ? 'Salvar alterações' : 'Salvar providência' ?>
             </button>
 
         </div>

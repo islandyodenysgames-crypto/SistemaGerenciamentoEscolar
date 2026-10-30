@@ -8,7 +8,7 @@ $selectedFocusArea = strtoupper((string) ($selectedFocusArea ?? ''));
 <div class="form-group form-group-full occurrence-purpose">
     <label for="nature">Finalidade da intervenção</label>
     <select id="nature" name="nature" required>
-        <option value="ADVERSE" <?= $selectedNature === 'ADVERSE' ? 'selected' : '' ?>>Registrar uma situação que exige atenção</option>
+        <option value="ADVERSE" <?= $selectedNature === 'ADVERSE' ? 'selected' : '' ?>>Situação que exige atenção — Ocorrência</option>
         <option value="RESPONSE" <?= $selectedNature === 'RESPONSE' ? 'selected' : '' ?>>Registrar uma resposta pedagógica pontual</option>
         <option value="POSITIVE" <?= $selectedNature === 'POSITIVE' ? 'selected' : '' ?>>Registrar um reconhecimento positivo</option>
     </select>

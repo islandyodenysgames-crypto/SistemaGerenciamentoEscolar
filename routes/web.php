@@ -350,6 +350,16 @@ $router->post(
     [OccurrenceController::class, 'actionStore']
 );
 
+$router->get(
+    '/ocorrencias/providencia/editar',
+    [OccurrenceController::class, 'actionEdit']
+);
+
+$router->post(
+    '/ocorrencias/providencia/editar',
+    [OccurrenceController::class, 'actionUpdate']
+);
+
 $router->post('/ocorrencias/providencia/anexo/excluir', [OccurrenceController::class, 'actionAttachmentDelete']);
 
 $router->get(

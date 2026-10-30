@@ -50,6 +50,15 @@ class ActionService
         return $actions;
     }
 
+    public function find(int $id): ?array
+    {
+        if ($id <= 0) return null;
+        $action = $this->repository->find($id);
+        if (!$action) return null;
+        $action['attachments'] = $this->attachmentService->byAction($id);
+        return $action;
+    }
+
     public function groupedByStudent(
         int $studentId
     ): array {
@@ -155,6 +164,36 @@ class ActionService
                 $db->rollBack();
             }
 
+            throw $exception;
+        }
+    }
+
+    public function update(int $id, array $data): bool
+    {
+        $existing = $this->repository->find($id);
+        if (!$existing) {
+            throw new InvalidArgumentException('Providência não encontrada.');
+        }
+
+        $data['occurrence_id'] = (int) ($existing['occurrence_id'] ?? 0);
+        $normalized = $this->normalizeData($data);
+        $db = Connection::getInstance();
+
+        try {
+            $db->beginTransaction();
+            if (!$this->repository->update($id, $normalized)) {
+                throw new InvalidArgumentException('Não foi possível atualizar a providência.');
+            }
+
+            $latestStatus = $this->repository->latestStatusForOccurrence($normalized['occurrence_id']);
+            if ($latestStatus !== null && !$this->occurrenceRepository->updateStatus($normalized['occurrence_id'], $latestStatus)) {
+                throw new InvalidArgumentException('Não foi possível atualizar a situação da ocorrência.');
+            }
+
+            $db->commit();
+            return true;
+        } catch (Throwable $exception) {
+            if ($db->inTransaction()) $db->rollBack();
             throw $exception;
         }
     }

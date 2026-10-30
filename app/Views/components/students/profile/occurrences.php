@@ -1034,6 +1034,26 @@ foreach ($occurrences as $occurrence) {
                                                         $actionStatus
                                                         === 'RESOLVED';
 
+                                                    $actionId = (int) (
+                                                        $action['id'] ?? 0
+                                                    );
+
+                                                    $actionCreatedBy = (int) (
+                                                        $action['created_by'] ?? 0
+                                                    );
+
+                                                    $isActionOwner =
+                                                        $currentUserId > 0
+                                                        && $actionCreatedBy > 0
+                                                        && $currentUserId === $actionCreatedBy;
+
+                                                    $canManageThisAction =
+                                                        $canManageAllOccurrences
+                                                        || (
+                                                            $canCreateOccurrences
+                                                            && $isActionOwner
+                                                        );
+
                                                     $actionAuthor = trim(
                                                         (string) (
                                                             $action[
@@ -1174,6 +1194,18 @@ foreach ($occurrences as $occurrence) {
                                                                 ) ?>
                                                             </p>
 
+                                                            <?php if ($canManageThisAction): ?>
+                                                                <div class="occurrence-action-edit">
+                                                                    <a
+                                                                        href="<?= base_url('ocorrencias/providencia/editar?id=' . $actionId) ?>"
+                                                                        class="btn-secondary"
+                                                                    >
+                                                                        <i data-lucide="pencil"></i>
+                                                                        Editar providência
+                                                                    </a>
+                                                                </div>
+                                                            <?php endif; ?>
+
                                                             <?php $actionAttachments=(array)($action['attachments']??[]); ?>
                                                             <?php if($actionAttachments): ?>
                                                                 <?php component('media/attachment-carousel', ['attachments' => $actionAttachments, 'title' => 'Imagens da ação']); ?>
@@ -1186,7 +1218,7 @@ foreach ($occurrences as $occurrence) {
                                                                                 <span><?= e((string)$attachment['original_name']) ?></span>
                                                                                 <small><?= e((string)$attachment['size_label']) ?></small>
                                                                             </a>
-                                                                            <?php if($canManageThisOccurrence): ?>
+                                                                            <?php if($canManageThisAction): ?>
                                                                                 <form method="post" action="<?= base_url('ocorrencias/providencia/anexo/excluir') ?>" onsubmit="return confirm('Remover este anexo da providência?');">
                                                                                     <input type="hidden" name="attachment_id" value="<?= (int)$attachment['id'] ?>">
                                                                                     <input type="hidden" name="student_id" value="<?= (int)($student['id']??0) ?>">
@@ -1317,4 +1349,5 @@ foreach ($occurrences as $occurrence) {
 </section>
 <style>
 .occurrence-action-attachments{margin:.8rem 0;display:grid;gap:.45rem;padding:.7rem;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc}.occurrence-action-attachments>strong{display:flex;align-items:center;gap:.4rem}.occurrence-action-attachments>strong svg{width:16px;height:16px}.occurrence-action-attachment{display:flex;align-items:center;gap:.5rem;background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:.45rem .55rem}.occurrence-action-attachment>a{min-width:0;flex:1;display:flex;align-items:center;gap:.45rem;text-decoration:none;color:inherit}.occurrence-action-attachment>a svg{width:17px;height:17px}.occurrence-action-attachment>a span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.occurrence-action-attachment>a small{margin-left:auto;color:#64748b}.occurrence-action-attachment form{margin:0}.occurrence-action-attachment button{border:0;background:transparent;color:#b91c1c;cursor:pointer;padding:.3rem}.occurrence-action-attachment button svg{width:16px;height:16px}
+.occurrence-action-edit{display:flex;justify-content:flex-end;margin:.65rem 0}.occurrence-action-edit .btn-secondary{display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .7rem;font-size:.82rem}.occurrence-action-edit .btn-secondary svg{width:15px;height:15px}
 </style>
