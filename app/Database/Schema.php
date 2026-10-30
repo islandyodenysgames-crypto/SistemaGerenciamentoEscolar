@@ -58,6 +58,26 @@ class Schema
         return (int) $stmt->fetchColumn() > 0;
     }
 
+    public static function hasColumn(string $table, string $column): bool
+    {
+        $table = self::validateIdentifier($table);
+        $column = self::validateIdentifier($column);
+
+        $stmt = Connection::getInstance()->prepare("
+            SELECT COUNT(*)
+            FROM information_schema.columns
+            WHERE table_schema = DATABASE()
+              AND table_name = :table
+              AND column_name = :column
+        ");
+        $stmt->execute([
+            'table' => $table,
+            'column' => $column,
+        ]);
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
     private static function validateIdentifier(
         string $identifier
     ): string {
