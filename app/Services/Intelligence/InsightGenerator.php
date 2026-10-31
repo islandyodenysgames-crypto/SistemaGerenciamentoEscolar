@@ -77,7 +77,6 @@ final class InsightGenerator
                     'current' => (int) ($attendanceTrend['current'] ?? 0),
                     'action_label' => 'Ver faltas sem justificativa',
                     'action_icon' => 'calendar-x',
-                    'allow_compare' => true,
                 ]
             );
         } elseif ($attendanceStatus === 'IMPROVING' && $attendancePercentage > 0) {
@@ -112,7 +111,6 @@ final class InsightGenerator
                     'current' => (int) ($occurrenceTrend['current'] ?? 0),
                     'action_label' => 'Ver casos do período',
                     'action_icon' => 'clipboard-list',
-                    'allow_compare' => true,
                 ]
             );
         } elseif ($occurrenceStatus === 'IMPROVING' && $occurrencePercentage > 0) {
@@ -165,7 +163,6 @@ final class InsightGenerator
                     'top_risk_level' => $topRiskLevel,
                     'action_label' => 'Ver turmas em atenção',
                     'action_icon' => 'school',
-                    'allow_compare' => true,
                 ]
             );
         }

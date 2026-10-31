@@ -143,15 +143,16 @@ final class InsightFormatter
             ];
         }
 
-        if (($context['allow_compare'] ?? false) === true
-            && $target !== 'inteligencia/comparacoes') {
-            $actions[] = [
-                'label' => 'Comparar',
-                'icon' => 'scale',
-                'target' => 'inteligencia/comparacoes',
-            ];
+        // Um insight oferece somente a ação diretamente relacionada ao dado.
+        // A comparação geral já possui acesso próprio no cabeçalho da Central.
+        $unique = [];
+        foreach ($actions as $action) {
+            $actionTarget = trim((string) ($action['target'] ?? ''));
+            if ($actionTarget !== '' && !isset($unique[$actionTarget])) {
+                $unique[$actionTarget] = $action;
+            }
         }
 
-        return $actions;
+        return array_values($unique);
     }
 }
