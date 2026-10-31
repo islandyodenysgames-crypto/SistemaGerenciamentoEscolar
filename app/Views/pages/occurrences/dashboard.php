@@ -73,6 +73,10 @@ $selectedDate = (string) (
     $selectedDate ?? ''
 );
 
+$selectedOccurrenceId = (int) (
+    $selectedOccurrenceId ?? 0
+);
+
 $selectedDateOccurrences =
     $selectedDateOccurrences ?? [];
 
@@ -133,6 +137,9 @@ component('base/page-header', [
 
             'selectedDate' =>
                 $selectedDate,
+
+            'selectedOccurrenceId' =>
+                $selectedOccurrenceId,
 
             'selectedDateOccurrences' =>
                 $selectedDateOccurrences,

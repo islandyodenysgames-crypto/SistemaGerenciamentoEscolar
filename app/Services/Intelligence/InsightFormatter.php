@@ -36,7 +36,7 @@ final class InsightFormatter
             'impact' => $impact,
             'confidence' => $this->confidence($context),
             'explanation' => $this->explanation($priority, $category, $context, $period),
-            'actions' => $this->actions($category, $target),
+            'actions' => $this->actions($category, $target, $context),
         ];
     }
 
@@ -118,7 +118,7 @@ final class InsightFormatter
         return $items;
     }
 
-    private function actions(string $category, ?string $target): array
+    private function actions(string $category, ?string $target, array $context = []): array
     {
         $actions = [];
         if ($target !== null && trim($target) !== '') {
@@ -126,7 +126,9 @@ final class InsightFormatter
                 'label' => match (strtoupper($category)) {
                     'STUDENT' => 'Ver alunos',
                     'CLASS' => 'Ver turmas',
-                    'OCCURRENCE' => 'Ver ocorrências',
+                    'OCCURRENCE' => (int) ($context['occurrence_id'] ?? 0) > 0
+                        ? 'Ver ocorrência'
+                        : 'Ver ocorrências',
                     'ATTENDANCE' => 'Analisar frequência',
                     default => 'Ver detalhes',
                 },

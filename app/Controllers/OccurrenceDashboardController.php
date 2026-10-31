@@ -41,6 +41,7 @@ class OccurrenceDashboardController extends BaseController
         }
 
         $selectedDate = trim((string) Request::get('dia', ''));
+        $selectedOccurrenceId = max(0, (int) Request::get('ocorrencia', 0));
 
         if (!$this->isValidDate($selectedDate)) {
             $selectedDate = '';
@@ -105,6 +106,7 @@ class OccurrenceDashboardController extends BaseController
             'calendarYear' => $year,
             'calendarMonth' => $month,
             'selectedDate' => $selectedDate,
+            'selectedOccurrenceId' => $selectedOccurrenceId,
             'selectedDateOccurrences' => $selectedDate !== ''
                 ? $this->service->byDate($selectedDate)
                 : [],

@@ -29,6 +29,10 @@ $selectedDate = (string) (
     $selectedDate ?? ''
 );
 
+$selectedOccurrenceId = (int) (
+    $selectedOccurrenceId ?? 0
+);
+
 $monthNames = [
     1 => 'Janeiro',
     2 => 'Fevereiro',
@@ -664,12 +668,17 @@ if ($selectedDate !== '') {
                                 : false;
 
                         ?>
-                                                <article
+                        <?php $isHighlightedOccurrence = $selectedOccurrenceId > 0
+                            && (int) ($occurrence['id'] ?? 0) === $selectedOccurrenceId; ?>
+                        <article
+                            id="occurrence-<?= (int) ($occurrence['id'] ?? 0) ?>"
                             class="
                                 occurrences-calendar-occurrence
                                 <?= e($typeClass) ?>
                                 <?= e($severityClass) ?>
+                                <?= $isHighlightedOccurrence ? 'is-highlighted' : '' ?>
                             "
+                            <?= $isHighlightedOccurrence ? 'aria-current="true"' : '' ?>
                         >
 
                             <div

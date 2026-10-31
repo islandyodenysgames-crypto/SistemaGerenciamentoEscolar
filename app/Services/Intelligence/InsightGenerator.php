@@ -183,13 +183,26 @@ final class InsightGenerator
         }
 
         if ($resolvedAdverse > 0) {
+            $resolvedId = (int) ($positive['latest_resolved_occurrence_id'] ?? 0);
+            $resolvedDate = (string) ($positive['latest_resolved_occurrence_date'] ?? '');
+            $resolvedTarget = 'ocorrencias';
+            if ($resolvedId > 0 && preg_match('/^\d{4}-\d{2}-\d{2}$/', $resolvedDate) === 1) {
+                $resolvedTimestamp = strtotime($resolvedDate);
+                if ($resolvedTimestamp !== false) {
+                    $resolvedTarget = 'ocorrencias?mes=' . date('n', $resolvedTimestamp)
+                        . '&ano=' . date('Y', $resolvedTimestamp)
+                        . '&dia=' . $resolvedDate
+                        . '&ocorrencia=' . $resolvedId
+                        . '#occurrence-' . $resolvedId;
+                }
+            }
             $insights[] = $this->formatter->make(
                 'school.resolved_situations', InsightPriority::POSITIVE, 'OCCURRENCE',
                 $resolvedAdverse . ' situação(ões) resolvida(s)',
                 'Registros que exigiam atenção foram encerrados no período sem apagar o histórico escolar.',
                 'Revise as providências que contribuíram para a resolução e monitore possíveis reincidências.',
-                'shield-check', 'ocorrencias', $period,
-                ['count' => $resolvedAdverse]
+                'shield-check', $resolvedTarget, $period,
+                ['count' => $resolvedAdverse, 'occurrence_id' => $resolvedId, 'occurrence_date' => $resolvedDate]
             );
         }
 

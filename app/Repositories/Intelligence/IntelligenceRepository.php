@@ -848,9 +848,34 @@ class IntelligenceRepository extends BaseRepository
                 SUM(nature='POSITIVE') AS recognitions,
                 SUM(nature='RESPONSE') AS responses,
                 SUM(nature='RESPONSE' AND focus_area='ATTENDANCE') AS attendance_responses,
-                SUM(nature='ADVERSE' AND status='RESOLVED') AS resolved_adverse
+                SUM(nature='ADVERSE' AND status='RESOLVED') AS resolved_adverse,
+                (
+                    SELECT resolved.id
+                    FROM student_occurrences resolved
+                    WHERE resolved.nature='ADVERSE'
+                      AND resolved.status='RESOLVED'
+                      AND resolved.occurrence_date BETWEEN :resolved_from AND :resolved_to
+                    ORDER BY resolved.occurrence_date DESC, resolved.id DESC
+                    LIMIT 1
+                ) AS latest_resolved_occurrence_id,
+                (
+                    SELECT resolved.occurrence_date
+                    FROM student_occurrences resolved
+                    WHERE resolved.nature='ADVERSE'
+                      AND resolved.status='RESOLVED'
+                      AND resolved.occurrence_date BETWEEN :resolved_date_from AND :resolved_date_to
+                    ORDER BY resolved.occurrence_date DESC, resolved.id DESC
+                    LIMIT 1
+                ) AS latest_resolved_occurrence_date
             FROM student_occurrences WHERE occurrence_date BETWEEN :date_from AND :date_to");
-        $stmt->execute(['date_from' => $from, 'date_to' => $to]);
+        $stmt->execute([
+            'date_from' => $from,
+            'date_to' => $to,
+            'resolved_from' => $from,
+            'resolved_to' => $to,
+            'resolved_date_from' => $from,
+            'resolved_date_to' => $to,
+        ]);
         return $stmt->fetch() ?: [];
     }
 
