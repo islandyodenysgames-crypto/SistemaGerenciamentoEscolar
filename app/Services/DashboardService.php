@@ -37,6 +37,7 @@ class DashboardService
         $attentionThreshold = max(0.0, $frequencyGoal - 5.0);
 
         $intelligence = $this->intelligenceService->dashboard();
+        $dailyIntelligence = $this->intelligenceService->dailyInsights();
         $frequencyForIndex = (array) ($central['summary'] ?? []);
         $frequencyContextLabel = 'nas chamadas de hoje';
         if ((int) ($frequencyForIndex['total_students'] ?? 0) === 0) {
@@ -166,6 +167,7 @@ class DashboardService
              * Inteligência escolar
              */
             'intelligence' => $intelligence,
+            'dailyIntelligence' => $dailyIntelligence,
             'schoolIndex' => $schoolIndex,
 
             'favorites' => $this->favoriteService->allForUser((int) ($user['id'] ?? 0)),

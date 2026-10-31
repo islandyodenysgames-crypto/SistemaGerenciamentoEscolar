@@ -28,6 +28,7 @@ $activeNoticesCount = (int) (
 );
 
 $intelligence = is_array($intelligence ?? null) ? $intelligence : [];
+$dailyIntelligence = is_array($dailyIntelligence ?? null) ? $dailyIntelligence : [];
 $schoolCalendar = is_array($schoolCalendar ?? null) ? $schoolCalendar : [];
 
 ?>
@@ -44,14 +45,14 @@ $schoolCalendar = is_array($schoolCalendar ?? null) ? $schoolCalendar : [];
 
 <?php endif; ?>
 
-<?php if (!empty($intelligence['insights'])): ?>
+<?php if (!empty($dailyIntelligence['insights'])): ?>
 
     <?php component('intelligence/insights-panel', [
-        'insights' => $intelligence['insights'],
+        'insights' => $dailyIntelligence['insights'],
         'compact' => true,
         'actionOriented' => true,
         'title' => 'O que merece atenção hoje',
-        'subtitle' => 'Prioridades e sinais positivos organizados automaticamente para orientar a gestão escolar.',
+        'subtitle' => 'Acontecimentos positivos e situações de atenção registrados hoje.',
         'collapsible' => true,
         'collapsedByDefault' => false,
         'storageKey' => 'sfe.dashboard.attentionToday.collapsed',

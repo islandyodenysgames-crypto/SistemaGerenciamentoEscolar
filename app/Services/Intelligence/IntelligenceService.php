@@ -176,6 +176,71 @@ class IntelligenceService
         return $dashboard;
     }
 
+    /**
+     * Sinais restritos ao dia atual para a Página Inicial.
+     * Não reutiliza pendências históricas nem a janela analítica da Central.
+     */
+    public function dailyInsights(): array
+    {
+        $today = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+
+        $attendanceCurrent = $this->repository->attendanceTotals($today, $today);
+        $attendancePrevious = $this->repository->attendanceTotals($yesterday, $yesterday);
+        $occurrenceCurrent = $this->repository->occurrenceTotals($today, $today);
+        $occurrencePrevious = $this->repository->occurrenceTotals($yesterday, $yesterday);
+
+        $students = $this->mergeStudentSignals(
+            $this->repository->attendanceRiskStudents($today, $today, 500),
+            $this->repository->occurrenceRiskStudents($today, $today, 500)
+        );
+        $classes = array_values(array_filter(
+            array_map([$this, 'decorateClass'], $this->repository->classComparisonSignals($today, $today)),
+            static fn (array $class): bool => ($class['risk_level'] ?? 'LOW') !== 'LOW'
+        ));
+        usort($classes, static fn (array $a, array $b): int =>
+            (int) ($b['risk_score'] ?? 0) <=> (int) ($a['risk_score'] ?? 0)
+        );
+
+        $positive = $this->positiveIndicators->forSchool($today, $today);
+        $data = [
+            'period' => ['start' => $today, 'end' => $today, 'days' => 1],
+            'summary' => [
+                'students_in_attention' => count(array_filter($students, static fn (array $student): bool => ($student['risk_level'] ?? 'LOW') !== 'LOW')),
+                'critical_students' => count(array_filter($students, static fn (array $student): bool => ($student['risk_level'] ?? 'LOW') === 'CRITICAL')),
+                'classes_in_attention' => count($classes),
+                'combined_risk' => count(array_filter($students, static fn (array $student): bool => (int) ($student['unjustified_absences'] ?? 0) > 0 && (int) ($student['total_occurrences'] ?? 0) > 0)),
+                // Pendências antigas pertencem à Central, não aos acontecimentos de hoje.
+                'stale_critical_occurrences' => 0,
+            ],
+            'attendance' => [
+                'unjustified_absences' => (int) ($attendanceCurrent['unjustified_absences'] ?? 0),
+                'students_affected' => (int) ($attendanceCurrent['students_with_unjustified_absence'] ?? 0),
+                'trend' => $this->trend(
+                    (int) ($attendanceCurrent['unjustified_absences'] ?? 0),
+                    (int) ($attendancePrevious['unjustified_absences'] ?? 0),
+                    true
+                ),
+            ],
+            'occurrences' => [
+                'total' => (int) ($occurrenceCurrent['total_occurrences'] ?? 0),
+                'serious' => (int) ($occurrenceCurrent['serious_occurrences'] ?? 0),
+                'open' => (int) ($occurrenceCurrent['open_occurrences'] ?? 0),
+                'trend' => $this->trend(
+                    (int) ($occurrenceCurrent['total_occurrences'] ?? 0),
+                    (int) ($occurrencePrevious['total_occurrences'] ?? 0),
+                    true
+                ),
+            ],
+            'positive_indicators' => $positive,
+            'students' => $students,
+            'classes' => $classes,
+        ];
+        $data['insights'] = $this->insightEngine->school($data, 12);
+
+        return $data;
+    }
+
     public function cases(string $type, array $filters = []): array
     {
         $allowed = ['low_attendance', 'students_attention', 'unjustified_absences', 'occurrences_period', 'serious_occurrences', 'critical_students', 'combined_risk', 'attention_classes', 'stale_critical_occurrences', 'stale_monitoring_actions', 'positive_recognitions', 'pedagogical_responses'];

@@ -11,6 +11,18 @@ $predictiveClasses = is_array($data['predictive_classes'] ?? null) ? $data['pred
 $monitoring = $data['monitoring'] ?? [];
 $positiveIndicators = (array) ($data['positive_indicators'] ?? []);
 $insights = $data['insights'] ?? [];
+$actionInsights = array_values(array_filter(
+    $insights,
+    static fn (array $insight): bool => in_array(
+        strtoupper((string) ($insight['level'] ?? '')),
+        ['CRITICAL', 'ATTENTION'],
+        true
+    )
+));
+$positiveInsights = array_values(array_filter(
+    $insights,
+    static fn (array $insight): bool => strtoupper((string) ($insight['level'] ?? '')) === 'POSITIVE'
+));
 $period = $data['period'] ?? [];
 
 $riskLabels = [
@@ -96,12 +108,32 @@ component('base/page-header', [
     </section>
     <?php endif; ?>
 
-    <?php component('intelligence/insights-panel', [
-        'insights' => array_slice($insights, 0, 4),
-        'title' => 'Situações que exigem ação',
-        'subtitle' => 'Prioridades atuais com orientação direta para a próxima providência.',
-        'actionOriented' => true,
-    ]); ?>
+    <?php if ($actionInsights !== []): ?>
+        <?php component('intelligence/insights-panel', [
+            'insights' => array_slice($actionInsights, 0, 6),
+            'title' => 'Situações que exigem ação',
+            'subtitle' => 'Prioridades atuais com orientação direta para a próxima providência.',
+            'actionOriented' => true,
+        ]); ?>
+    <?php else: ?>
+        <section class="intelligence-panel panel-hover">
+            <header class="intelligence-panel__header">
+                <div>
+                    <span class="intelligence-panel__icon"><i data-lucide="circle-check-big"></i></span>
+                    <div><h3>Situações que exigem ação</h3><p>Nenhuma prioridade crítica ou de atenção foi identificada no período.</p></div>
+                </div>
+            </header>
+        </section>
+    <?php endif; ?>
+
+    <?php if ($positiveInsights !== []): ?>
+        <?php component('intelligence/insights-panel', [
+            'insights' => $positiveInsights,
+            'title' => 'Evoluções e respostas positivas',
+            'subtitle' => 'Reconhecimentos, respostas pedagógicas e avanços identificados no período analisado.',
+            'actionOriented' => false,
+        ]); ?>
+    <?php endif; ?>
 
     <section class="intelligence-panel intelligence-monitoring-panel panel-hover">
         <header class="intelligence-panel__header">
