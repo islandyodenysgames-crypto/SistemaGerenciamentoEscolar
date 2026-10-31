@@ -349,6 +349,8 @@ $assert(!str_contains($insightGeneratorSource, "'allow_compare'") && str_contain
 $assert(str_contains($insightFormatterSource, 'return array_values($unique)') && !str_contains($insightFormatterSource, "'label' => 'Comparar'"), 'Formatador deve eliminar destinos duplicados e não criar botões genéricos redundantes.');
 $assert(str_contains($intelligenceServiceSource, 'public function dailyInsights()') && str_contains($dashboardServiceSource, 'dailyIntelligence'), 'Página Inicial deve receber uma leitura diária independente da janela da Central de Inteligência.');
 $assert(str_contains($intelligenceIndexSource, 'Evoluções e respostas positivas') && str_contains($intelligenceIndexSource, '$actionInsights') && str_contains($intelligenceIndexSource, '$positiveInsights'), 'Central de Inteligência deve separar situações de ação dos resultados positivos do período.');
+$intelligenceCasesViewSource = file_get_contents(__DIR__ . '/../app/Views/pages/intelligence/cases.php');
+$assert(substr_count($intelligenceCasesViewSource, 'panel-hover') >= 4, 'Listagens analíticas devem aplicar a animação padrão aos seus painéis e cartões de resumo.');
 $assert(str_contains($intelligenceCasesSource, 'Resposta pontual') && str_contains($intelligenceServiceSource, "'label' => 'Com resposta pontual'"),'Visão analítica de infrequência deve informar e permitir registrar respostas pontuais.');
 $assert(str_contains($classPageSource, "'ocorrencias/nova?aluno='") && str_contains($classPageSource, 'Intervenção'),'Painel da turma deve oferecer intervenção individual para cada aluno autorizado.');
 

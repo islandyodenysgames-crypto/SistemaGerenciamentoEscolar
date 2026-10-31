@@ -19,7 +19,7 @@ component('base/page-header', [
 $queryBase = ['tipo' => $type, 'q' => $filters['q'] ?? '', 'risco' => $filters['risk'] ?? '', 'turma' => $filters['class'] ?? '', 'por_pagina' => $filters['per_page'] ?? 10];
 ?>
 <div class="intelligence-page intelligence-cases-page">
-    <section class="intelligence-hero intelligence-cases-hero">
+    <section class="intelligence-hero intelligence-cases-hero panel-hover">
         <div>
             <a class="intelligence-back-link" href="<?= base_url('inteligencia') ?>"><i data-lucide="arrow-left"></i> Voltar à Central</a>
             <span class="intelligence-eyebrow"><i data-lucide="<?= e((string) ($meta['icon'] ?? 'brain-circuit')) ?>"></i> Central de casos</span>
@@ -34,7 +34,7 @@ $queryBase = ['tipo' => $type, 'q' => $filters['q'] ?? '', 'risco' => $filters['
     </section>
 
     <?php if (!empty($meta['explanation'])): ?>
-        <section class="intelligence-indicator-explanation" aria-label="Explicação do indicador">
+        <section class="intelligence-indicator-explanation panel-hover" aria-label="Explicação do indicador">
             <div>
                 <span><i data-lucide="circle-help"></i></span>
                 <div><h3>O que este indicador significa</h3><p><?= e((string) $meta['explanation']) ?></p></div>
@@ -52,14 +52,14 @@ $queryBase = ['tipo' => $type, 'q' => $filters['q'] ?? '', 'risco' => $filters['
 
     <section class="intelligence-case-summary">
         <?php foreach ($summary as $card): ?>
-            <article class="intelligence-case-summary__card">
+            <article class="intelligence-case-summary__card panel-hover">
                 <span><i data-lucide="<?= e((string) ($card['icon'] ?? 'chart-no-axes-column')) ?>"></i></span>
                 <div><strong><?= (int) ($card['value'] ?? 0) ?><?= e((string) ($card['suffix'] ?? '')) ?></strong><small><?= e((string) ($card['label'] ?? 'Indicador')) ?></small></div>
             </article>
         <?php endforeach; ?>
     </section>
 
-    <section class="intelligence-panel">
+    <section class="intelligence-panel panel-hover">
         <header class="intelligence-panel__header">
             <div><span class="intelligence-panel__icon"><i data-lucide="list-filter"></i></span><div><h3>Casos encontrados</h3><p>Pesquise e filtre os registros que compõem o indicador.</p></div></div>
         </header>
