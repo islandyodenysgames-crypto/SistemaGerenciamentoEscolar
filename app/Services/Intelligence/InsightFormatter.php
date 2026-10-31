@@ -123,7 +123,7 @@ final class InsightFormatter
         $actions = [];
         if ($target !== null && trim($target) !== '') {
             $actions[] = [
-                'label' => match (strtoupper($category)) {
+                'label' => (string) ($context['action_label'] ?? match (strtoupper($category)) {
                     'STUDENT' => 'Ver alunos',
                     'CLASS' => 'Ver turmas',
                     'OCCURRENCE' => (int) ($context['occurrence_id'] ?? 0) > 0
@@ -131,19 +131,19 @@ final class InsightFormatter
                         : 'Ver ocorrências',
                     'ATTENDANCE' => 'Analisar frequência',
                     default => 'Ver detalhes',
-                },
-                'icon' => match (strtoupper($category)) {
+                }),
+                'icon' => (string) ($context['action_icon'] ?? match (strtoupper($category)) {
                     'STUDENT' => 'users',
                     'CLASS' => 'school',
                     'OCCURRENCE' => 'clipboard-list',
                     'ATTENDANCE' => 'calendar-check',
                     default => 'arrow-up-right',
-                },
+                }),
                 'target' => $target,
             ];
         }
 
-        if (in_array(strtoupper($category), ['CLASS', 'ATTENDANCE', 'OCCURRENCE'], true)
+        if (($context['allow_compare'] ?? false) === true
             && $target !== 'inteligencia/comparacoes') {
             $actions[] = [
                 'label' => 'Comparar',

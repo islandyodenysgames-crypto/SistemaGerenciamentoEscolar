@@ -28,7 +28,7 @@ final class InsightGenerator
                 'Há estudantes cuja combinação de faltas, reincidência e gravidade atingiu o nível mais alto de risco.',
                 'Priorize a análise individual, revise os registros recentes e defina responsáveis pelo acompanhamento.',
                 'siren', 'inteligencia/casos?tipo=critical_students', $period,
-                ['count' => $criticalStudents]
+                ['count' => $criticalStudents, 'action_label' => 'Ver alunos críticos', 'action_icon' => 'siren']
             );
         }
 
@@ -40,7 +40,7 @@ final class InsightGenerator
                 'Existem ocorrências críticas abertas além do prazo definido nas configurações de inteligência.',
                 'Revise as providências pendentes e registre a resolução ou o próximo encaminhamento.',
                 'clock-alert', 'inteligencia/casos?tipo=stale_critical_occurrences', $period,
-                ['count' => $stale]
+                ['count' => $stale, 'action_label' => 'Revisar ocorrências', 'action_icon' => 'clock-alert']
             );
         }
 
@@ -52,7 +52,7 @@ final class InsightGenerator
                 'O motor identificou alunos em nível moderado, alto ou crítico no período analisado.',
                 'Distribua os casos entre a equipe e registre as ações adotadas para cada estudante.',
                 'user-round-search', 'inteligencia/casos?tipo=students_attention', $period,
-                ['count' => $attentionStudents]
+                ['count' => $attentionStudents, 'action_label' => 'Ver alunos prioritários', 'action_icon' => 'users']
             );
         }
 
@@ -70,8 +70,15 @@ final class InsightGenerator
                     ? 'O período atual apresenta piora em comparação com o período anterior de mesma duração.'
                     : 'Não havia faltas sem justificativa no período anterior; por isso não existe uma variação percentual válida.',
                 'Verifique as turmas mais afetadas e procure padrões por aluno e por período.',
-                'trending-up', 'inteligencia/casos?tipo=students_attention', $period,
-                ['percentage' => $attendancePercentage, 'baseline_available' => $attendanceHasBaseline, 'current' => (int) ($attendanceTrend['current'] ?? 0)]
+                'trending-up', 'inteligencia/casos?tipo=unjustified_absences', $period,
+                [
+                    'percentage' => $attendancePercentage,
+                    'baseline_available' => $attendanceHasBaseline,
+                    'current' => (int) ($attendanceTrend['current'] ?? 0),
+                    'action_label' => 'Ver faltas sem justificativa',
+                    'action_icon' => 'calendar-x',
+                    'allow_compare' => true,
+                ]
             );
         } elseif ($attendanceStatus === 'IMPROVING' && $attendancePercentage > 0) {
             $insights[] = $this->formatter->make(
@@ -80,7 +87,7 @@ final class InsightGenerator
                 'A frequência apresentou evolução positiva em relação ao período anterior.',
                 'Identifique as ações que contribuíram para a melhora e mantenha o acompanhamento.',
                 'trending-down', 'inteligencia/comparacoes', $period,
-                ['percentage' => $attendancePercentage]
+                ['percentage' => $attendancePercentage, 'action_label' => 'Comparar turmas', 'action_icon' => 'scale']
             );
         }
 
@@ -98,8 +105,15 @@ final class InsightGenerator
                     ? 'O volume de ocorrências cresceu em relação ao período anterior de mesma duração.'
                     : 'Não havia ocorrências no período anterior; por isso não existe uma variação percentual válida.',
                 'Compare as turmas e concentre a intervenção onde houver maior gravidade ou reincidência.',
-                'triangle-alert', 'inteligencia/comparacoes', $period,
-                ['percentage' => $occurrencePercentage, 'baseline_available' => $occurrenceHasBaseline, 'current' => (int) ($occurrenceTrend['current'] ?? 0)]
+                'triangle-alert', 'inteligencia/casos?tipo=occurrences_period', $period,
+                [
+                    'percentage' => $occurrencePercentage,
+                    'baseline_available' => $occurrenceHasBaseline,
+                    'current' => (int) ($occurrenceTrend['current'] ?? 0),
+                    'action_label' => 'Ver casos do período',
+                    'action_icon' => 'clipboard-list',
+                    'allow_compare' => true,
+                ]
             );
         } elseif ($occurrenceStatus === 'IMPROVING' && $occurrencePercentage > 0) {
             $insights[] = $this->formatter->make(
@@ -108,7 +122,7 @@ final class InsightGenerator
                 'O período atual registrou menos ocorrências que o período anterior.',
                 'Mantenha as práticas preventivas e acompanhe se a melhora se sustenta nas próximas análises.',
                 'badge-check', 'inteligencia/comparacoes', $period,
-                ['percentage' => $occurrencePercentage]
+                ['percentage' => $occurrencePercentage, 'action_label' => 'Comparar turmas', 'action_icon' => 'scale']
             );
         }
 
@@ -149,6 +163,9 @@ final class InsightGenerator
                     'top_class' => (string) ($topClass['name'] ?? ''),
                     'top_score' => $topScore,
                     'top_risk_level' => $topRiskLevel,
+                    'action_label' => 'Ver turmas em atenção',
+                    'action_icon' => 'school',
+                    'allow_compare' => true,
                 ]
             );
         }
@@ -166,7 +183,7 @@ final class InsightGenerator
                     . ' aluno(s); ' . $attendanceResponses . ' resposta(s) trataram de frequência ou infrequência.',
                 'Acompanhe os registros seguintes para verificar se as respostas produziram evolução sustentada.',
                 'message-circle-check', 'inteligencia/casos?tipo=pedagogical_responses', $period,
-                ['count' => $responses, 'attendance_responses' => $attendanceResponses]
+                ['count' => $responses, 'attendance_responses' => $attendanceResponses, 'action_label' => 'Ver respostas pedagógicas', 'action_icon' => 'message-circle-check']
             );
         }
 
@@ -178,7 +195,7 @@ final class InsightGenerator
                     . ' aluno(s) receberam elogios ou reconhecimentos no período analisado.',
                 'Valorize os avanços registrados e observe quais práticas podem ser fortalecidas.',
                 'award', 'inteligencia/casos?tipo=positive_recognitions', $period,
-                ['count' => $recognitions]
+                ['count' => $recognitions, 'action_label' => 'Ver reconhecimentos', 'action_icon' => 'award']
             );
         }
 
@@ -202,7 +219,13 @@ final class InsightGenerator
                 'Registros que exigiam atenção foram encerrados no período sem apagar o histórico escolar.',
                 'Revise as providências que contribuíram para a resolução e monitore possíveis reincidências.',
                 'shield-check', $resolvedTarget, $period,
-                ['count' => $resolvedAdverse, 'occurrence_id' => $resolvedId, 'occurrence_date' => $resolvedDate]
+                [
+                    'count' => $resolvedAdverse,
+                    'occurrence_id' => $resolvedId,
+                    'occurrence_date' => $resolvedDate,
+                    'action_label' => $resolvedId > 0 ? 'Ver ocorrência' : 'Ver ocorrências',
+                    'action_icon' => 'shield-check',
+                ]
             );
         }
 
